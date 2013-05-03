@@ -13,7 +13,7 @@ class Entity(object):
         self.props = EntityProperties(definition)
         self.handlers = {}
         
-        for component in get_game().resource_manager.get('definition', definition).components:
+        for component in get_game().resource_manager.get('definition', definition)[components]:
             get_game().component_manager.add(component, self)
         
         if properties:
@@ -46,6 +46,6 @@ class EntityProperties(object):
         
     def __getattr__(self, name):
         try:
-            get_game().resource_manager.get('definition', self._definition).properties[name]
+            get_game().resource_manager.get('definition', self._definition)[properties][name]
         except KeyError, ke:
             raise AttributeError(ke)
