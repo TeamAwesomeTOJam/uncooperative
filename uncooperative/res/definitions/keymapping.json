@@ -17,12 +17,12 @@
        },
        "3": {
             "input": "JOYSTICK",
-            "joystick": 1,
+            "joystick": 0,
             "USE": "1"
         },
         "4": {
             "input": "JOYSTICK",
-            "joystick": 2,
+            "joystick": 1,
             "USE": "1"
         }
     }

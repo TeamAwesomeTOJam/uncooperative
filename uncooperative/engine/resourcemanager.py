@@ -45,7 +45,8 @@ def LoadImage(prefix, key):
     image_surface.convert()
     return image_surface
 
-def LoadInputMapping(prefix):
+def LoadInputMapping(prefix, key):
     with open(os.path.join(prefix, 'definitions', 'keymapping.json')) as in_file:
         definition = json.load(in_file)
-    return definition
+        
+    return definition['input']

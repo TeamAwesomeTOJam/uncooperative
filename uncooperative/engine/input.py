@@ -47,9 +47,9 @@ class InputEvent:
         elif event.type == pygame.KEYUP:
             self.key = event.key
             self.key_down = False
-
+        
         for player_number, player_mapping in input_map.iteritems():
-            if self.event_source == InputSource.KEYBOARD and self.key_down and player_mapping['type'] == "KEYBOARD":
+            if self.event_source == InputSource.KEYBOARD and self.key_down and player_mapping['input'] == "KEYBOARD":
                 if player_mapping[self.key]:
                     self.action = player_mapping[self.key]
                     if self.action == "UP" or self.action == "RIGHT":
@@ -59,8 +59,10 @@ class InputEvent:
 
                     self.player = player_number
                     return
-            elif self.event_source == InputSource.JOYSTICK and player_mapping['type'] == "JOYSTICK":
+            elif self.event_source == InputSource.JOYSTICK and player_mapping['input'] == "JOYSTICK":
+                print "joy"
                 if player_mapping["joystick"] == self.joy:
+                    print "joy player"
                     self.player = player_number
                     if self.button_down and self.button == player_mapping[self.button]:
                         self.action = player_mapping[self.button]
