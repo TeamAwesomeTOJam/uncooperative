@@ -40,22 +40,6 @@ class Render:
         self.draw_surface = self.world_surface.copy()
 
 
-    def setTile(self,x,y):
-        value = randint(0,1)#self.game.map[x][y]
-        #value = self.game.grid[x][y]
-        if value == 0:
-            pygame.draw.rect(\
-                    self.world_surface,(255,0,0),\
-                    (self.tile_size[0] * x,self.tile_size[1] * y\
-                    ,self.tile_size[0],self.tile_size[1])\
-                    )
-        elif value == 1:
-            pygame.draw.rect(\
-                    self.world_surface,(0,255,0),\
-                    (self.tile_size[0] * x,self.tile_size[1] * y\
-                    ,self.tile_size[0],self.tile_size[1])\
-                    )
-
     def render(self):
         offx = int(self.screen_size[0] / 2)
         offy = int(self.screen_size[1] / 2)

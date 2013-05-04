@@ -14,6 +14,7 @@ from entitymanager import EntityManager
 from entity import Entity
 from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
+from collision import CollisionGrid
 
 from render import Render
 from input import InputEvent, InputManager
@@ -33,8 +34,6 @@ class Game(object):
         self.tile_size = (32,32)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
         
-        #self.grid = Grid(self.world_size[0],self.world_size[1])
-        #GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
         pygame.init()
         
         self.clock = pygame.time.Clock()
@@ -54,6 +53,8 @@ class Game(object):
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
+
+        self.collision_grid = CollisionGrid(64)
 
         self.entities_to_update = []
         self.entities_to_input = []
