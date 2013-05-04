@@ -23,8 +23,57 @@ class Render:
         for x in range(self.map_size[0]):
             for y in range(self.map_size[1]):
                 if self.grid[x][y]:
-                    #impassible
-                    tile = Entity('impassabletile',{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
+                    up = self.grid[x][(y-1) % self.map_size[1]]
+                    down = self.grid[x][(y+1) % self.map_size[1]]
+                    left = self.grid[(x-1)% self.map_size[0]][y]
+                    right = self.grid[(x+1)% self.map_size[0]][y]
+                    type = 'impassabletile'
+                    if up and down and left and right:
+                        upleft = self.grid[(x-1)% self.map_size[0]][(y-1)% self.map_size[1]]
+                        upright = self.grid[(x+1)% self.map_size[0]][(y-1)% self.map_size[1]]
+                        downleft = self.grid[(x-1)% self.map_size[0]][(y+1)% self.map_size[1]]
+                        downright = self.grid[(x+1)% self.map_size[0]][(y+1)% self.map_size[1]]
+                        if not upleft:
+                            type = 'impassabletileBR'
+                        elif not upright:
+                            type = 'impassabletileBL'
+                        elif not downleft:
+                            type = 'impassabletileTR'
+                        elif not downright:
+                            type = 'impassabletileTL'
+                        else:
+                            type = 'impassabletile'
+                    elif up and down and left and not right:
+                        type = 'impassabletileL'
+                    elif up and down and not left and right:
+                        type = 'impassabletileR'
+                    elif up and down and not left and not right:
+                        type = 'impassabletileCV'
+                    elif up and not down and left and right:
+                        type = 'impassabletileT'
+                    elif up and not down and left and not right:
+                        type = 'impassabletileCBR'
+                    elif up and not down and not left and right:
+                        type = 'impassabletileCBL'
+                    elif up and not down and not left and not right:
+                        type = 'impassabletileCT'
+                    elif not up and down and left and right:
+                        type = 'impassabletileB'
+                    elif not up and down and left and not right:
+                        type = 'impassabletileCTR'
+                    elif not up and down and not left and right:
+                        type = 'impassabletileCTL'
+                    elif not up and down and not left and not right:
+                        type = 'impassabletileCB'
+                    elif not up and not down and left and right:
+                        type = 'impassabletileCH'
+                    elif not up and not down and left and not right:
+                        type = 'impassabletileCR'
+                    elif not up and not down and not left and right:
+                        type = 'impassabletileCL'
+                    elif not up and not down and not left and not right:
+                        type = 'impassabletileC'
+                    tile = Entity(type,{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
                 else:
                     #passable
                     tile = Entity('passabletile',{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
