@@ -7,6 +7,8 @@ Created on May 3, 2013
 import json
 import os
 
+import pygame
+
 
 class ResourceManager(object):
     
@@ -31,5 +33,10 @@ class ResourceManager(object):
         
         
 def LoadEntityDefinition(prefix, key):
-    with open(os.path.join(prefix, key)) as in_file:
+    with open(os.path.join(prefix, 'defintions', key + '.json')) as in_file:
         return json.load(in_file)
+    
+def LoadImage(prefix, key):
+    image_surface = pygame.image.load(os.path.join('data', 'bla.png'))
+    image_surface.convert()
+    return image_surface
