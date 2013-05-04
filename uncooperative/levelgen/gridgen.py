@@ -2,10 +2,11 @@ from grid import Grid
 from grid import Vec2
 from random import randint
 class GridGenerator:
-    def __init__(self, grid = Grid(5,5)):
+    def __init__(self, grid = Grid(128,128), blocksize=Vec2(7,7)):
         self.grid = grid
         self.ni = grid.ni
         self.nj = grid.nj
+        self.blocksize = blocksize
 
     def makeCircle(self,center,radius):#center: Vec2, radius: Vec2
         for m in range(self.ni):
@@ -13,16 +14,19 @@ class GridGenerator:
                 if (m-center.x)**2 + (n-center.y)**2 < radius**2:
                     self.grid[m][n] = 0
 
-    def makeSquare(self,corner,side):#center: Vec2, radius: Vec2
-        for m in range(side.x):
-            for n in range(side.y):
-                    self.grid[corner.x+m][corner.y+n] = 0
+    def makeSquare(self,center,side):#center: Vec2, radius: Vec2
+        for m in range(side.y,side.x):
+            for n in range(-side.y,side.y):
+                try:
+                    self.grid[center.x+m][center.y+n] = 0
+                except IndexError:
+                    continue
         
 
-    def randomDepthFirstSearch(self,origin,blocksize):#origin: Vec2, bttomleft: Vec2, topright: Vec2
-        path = [origin]
+    def randomDepthFirstSearch(self):
+        path = [Vec2(0,0)]
         hasMoves = True
-        unvisited = Grid(int(self.ni/blocksize.x),int(self.nj/blocksize.y))
+        unvisited = Grid(int(self.ni/self.blocksize.x),int(self.nj/self.blocksize.y))
 
         while 1:
             validMoves = [
@@ -51,23 +55,60 @@ class GridGenerator:
                 except IndexError:
                     continue
             if hasMoved:
-                print(unvisited)
                 continue
             elif len(path)==1:
                 break
             else:
                 path.pop()
+        moves = [
+                Vec2(0,1),
+                Vec2(0,-1),
+                Vec2(1,0),
+                Vec2(-1,0)
+                ]
         for m in range(unvisited.ni):
             for n in range(unvisited.nj):
-                for i in range(blocksize.x):
-                    for j in range(blocksize.y):
+                mypos = Vec2(m,n)
+                myval = unvisited[m][n]
+                if myval == 0:
+                    for move in moves:
                         try:
-                            self.grid[m*blocksize.x + i][n * blocksize.y + j] = unvisited[m][n]
+                            theirval = unvisited.get(mypos+move)
+                            if theirval == 0:
+                                #this is all arbitray positioning stuff :)
+                                myrange = Vec2(.3, .3)
+                                start = Vec2(1,1)
+                                if move.x != 0:
+                                    myrange.y = .3
+                                    start.x = move.x * .25 + .5+.5
+                                    
+                                if move.y != 0:
+                                    myrange.x = .3
+                                    start.y = move.y * .25 + .5+.5
+                                
+    
+    
+                                myrange = Vec2(int(myrange.x * self.blocksize.x), int(myrange.y * self.blocksize.y))
+                                start = Vec2(int(start.x * self.blocksize.x), int(start.y *self.blocksize.y))
+                                for i in range(-myrange.x,myrange.x):
+                                    for j in range(-myrange.y,myrange.y):
+                                        try:
+                                            pos = Vec2(m*self.blocksize.x + start.x + i,n * self.blocksize.y +start.y + j)
+                
+                                            self.grid.set(pos,myval)
+                                        except IndexError:
+                                            continue
                         except IndexError:
                             continue
+            
 
 
 
+    def genMap(self):
+        self.randomDepthFirstSearch()
+        for times in range(int(self.ni**.7)):
+            self.makeSquare(Vec2(randint(0,self.ni),randint(0,self.ni)),\
+                    Vec2(5*randint(0,int(self.ni/10)),5*randint(0,int(self.nj/10))))
 
 
 
