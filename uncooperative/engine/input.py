@@ -13,9 +13,9 @@ class InputEvent:
         input_map = game.get_game().resource_manager.get('inputmap', "input")
 
         self.event = event
-        self.event_source, self.joy, self.axis, self.value = None
-        self.ball, self.rel, self.button, self.button_down = None
-        self.hat = None
+        self.event_source, self.joy, self.axis, self.value = None, None, None, None
+        self.ball, self.rel, self.button, self.button_down = None, None, None, None
+        self.hat, self.action, self.magnitude = None, None, None
 
         if event.type == pygame.JOYAXISMOTION or \
                 event.type == pygame.JOYBALLMOTION or \
@@ -52,13 +52,20 @@ class InputEvent:
             self.key_down = False
         
         for player_number, player_mapping in input_map.iteritems():
-            if self.event_source == InputSource.KEYBOARD and self.key_down and player_mapping['input'] == "KEYBOARD":
-                if player_mapping[self.key]:
-                    self.action = player_mapping[self.key]
+            if self.event_source == InputSource.KEYBOARD and player_mapping['input'] == "KEYBOARD":
+                string_key = pygame.key.name(self.key)
+                if player_mapping[string_key]:
+                    self.action = player_mapping[string_key]
                     if self.action == "UP" or self.action == "RIGHT":
-                        self.magnitude = 1
+                        if self.button_down:
+                            self.magnitude = 1
+                        else:
+                            self.magnitude = 0
                     else:
-                        self.magnitude = -1
+                        if self.button_down:
+                            self.magnitude = -1
+                        else:
+                            self.magnitude = 0
 
                     self.player = player_number
                     return
@@ -67,7 +74,7 @@ class InputEvent:
                 if player_mapping["joystick"] == self.joy:
                     print "joy player"
                     self.player = player_number
-                    if self.button_down and self.button == player_mapping[self.button]:
+                    if self.button == player_mapping[self.button]:
                         self.action = player_mapping[self.button]
                         return
                     elif self.axis == 0 or self.hat == 0:
