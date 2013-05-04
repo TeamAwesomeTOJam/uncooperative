@@ -39,6 +39,8 @@ class Game(object):
     def run(self):
         while True:
             dt = self.clock.tick() / 1000.0
+            for e in pygame.event.get():
+                 if e.type == pygame.QUIT: sys.exit()
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
 
