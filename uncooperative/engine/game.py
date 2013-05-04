@@ -13,7 +13,7 @@ import componentmanager
 from entitymanager import EntityManager
 from camera import Camera
 from entity import Entity
-from component import MovementComponent
+from component import MovementComponent, ExampleComponent
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
 from input import InputEvent, InputManager
@@ -34,6 +34,7 @@ class Game(object):
         
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
+        self.component_manager.register_component('ExampleComponent', ExampleComponent())
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -62,6 +63,9 @@ class Game(object):
         self.camera2 = Entity('camera')
         self.camera3 = Entity('camera')
         self.camera4 = Entity('camera')
+        
+        test_entity = Entity('test-include')
+        print test_entity.props.test
         
         self.cameras = [self.camera1,self.camera2,self.camera3, self.camera4]
         self.current_camera = 0
