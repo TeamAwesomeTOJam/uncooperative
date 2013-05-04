@@ -40,7 +40,9 @@ class Entity(object):
                 
                     
     def register_handler(self, event, handler):
-        self.handlers[event] = self.handlers.get(event, []).append(handler)
+        if not self.handlers.get(event):
+            self.handlers[event] = []
+        self.handlers.get(event).append(handler)
         
     def unregister_handler(self, event, handler):
         try:
@@ -56,11 +58,11 @@ class Entity(object):
 class EntityProperties(object):
 
     def __init__(self, definition):
-        self._definitions = definitions
+        self._definitions = definition
         
     def __getattr__(self, name):
         for definition in self._definitions:
-            props = get_game().resource_manager.get('definition', definition)['properties']
+            props = game.get_game().resource_manager.get('definition', definition)['properties']
             if name in props: 
                 return props[name]
         raise AttributeError
