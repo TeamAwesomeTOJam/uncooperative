@@ -33,12 +33,11 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.entity_manager = EntityManager()
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
+        self.input_manager = InputManager()
+        self.input_manager.init_joysticks()
         
         self.entities_to_update = []
         self.entities_to_input = []
-
-        InputManager.init_joysticks()
-
         
         self.camera1 = Camera(500,500)
         self.camera2 = Camera(500,500)
@@ -56,6 +55,9 @@ class Game(object):
         
     def register_for_updates(self, entity):
         self.entities_to_update.append(entity)
+        
+    def register_for_input(self, entity):
+        self.entities_to_input.append(entities)
         
     def run(self):
         while True:
