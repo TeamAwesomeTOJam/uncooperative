@@ -57,7 +57,7 @@ class InputEvent:
                 string_key = pygame.key.name(self.key)
                 if player_mapping[string_key]:
                     self.action = player_mapping[string_key]
-                    if self.action == "UP" or self.action == "RIGHT":
+                    if self.action == "DOWN" or self.action == "RIGHT":
                         if self.button_down:
                             self.magnitude = 1
                         else:
