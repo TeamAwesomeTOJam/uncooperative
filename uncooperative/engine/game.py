@@ -30,11 +30,11 @@ class Game(object):
     def __init__(self):
         self.screen_size = (500,500)
         self.map_size = (128,128)
-        self.tile_size = (5,5)
+        self.tile_size = (32,32)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
         
-        self.grid = Grid(self.world_size[0],self.world_size[1])
-        GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
+        #self.grid = Grid(self.world_size[0],self.world_size[1])
+        #GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
         pygame.init()
         
         self.clock = pygame.time.Clock()
@@ -57,7 +57,6 @@ class Game(object):
 
         self.entities_to_update = []
         self.entities_to_input = []
-        self.entities_to_draw_tiles = []
         
         
     def register_for_updates(self, entity):
@@ -65,9 +64,6 @@ class Game(object):
         
     def register_for_input(self, entity):
         self.entities_to_input.append(entity)
-    
-    def register_for_draw_tiles(self,entity):
-        self.entities_to_draw_tiles.append(entity)
         
     def run(self):
         
@@ -109,8 +105,6 @@ class Game(object):
                         else:
                             entity.handle('input', event)
 
-            for entity in self.entities_to_draw_tiles:
-                entity.handle('draw-tiles',self.world_surface)
             
             for entity in self.entities_to_update:
                 entity.handle('update', dt)

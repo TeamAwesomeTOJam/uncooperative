@@ -3,7 +3,8 @@
 import pygame
 from random import randint
 from camera import Camera
-
+from gridgen import GridGenerator
+from entity import Entity
 
 
 class Render:
@@ -14,12 +15,23 @@ class Render:
         self.map_size = game.map_size
         self.screen_size = game.screen_size
         self.world_size = game.world_size
-        print(self.world_size)
         self.world_surface = pygame.Surface(self.world_size)
+        self.grid = GridGenerator(self.map_size).genMap()
+        
+        self.tiles = []
+        
         for x in range(self.map_size[0]):
             for y in range(self.map_size[1]):
-                self.setTile(x,y)
-            print
+                if self.grid[x][y]:
+                    #impassible
+                    tile = Entity('impassabletile',{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
+                else:
+                    #passable
+                    tile = Entity('passabletile',{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
+                self.tiles.append(tile)
+        
+        for t in self.tiles:
+            t.handle('draw-tiles',self.world_surface)
 
         pygame.image.save(self.world_surface,"file.png")
 
@@ -31,7 +43,6 @@ class Render:
     def setTile(self,x,y):
         value = randint(0,1)#self.game.map[x][y]
         #value = self.game.grid[x][y]
-        print value,
         if value == 0:
             pygame.draw.rect(\
                     self.world_surface,(255,0,0),\
@@ -58,7 +69,6 @@ class Render:
         rect.center = self.cameras[3].pos()
         self.screen.blit(self.draw_surface,(offx,offy),rect)
         pygame.display.flip()
-        pygame.image.save(self.draw_surface,"file.png")
         self.draw_surface = self.world_surface.copy()
 
 
