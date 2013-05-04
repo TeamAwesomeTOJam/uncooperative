@@ -40,7 +40,9 @@ class Entity(object):
                 
                     
     def register_handler(self, event, handler):
-        self.handlers[event] = self.handlers.get(event, []).append(handler)
+        if not self.handlers.get(event):
+            self.handlers[event] = []
+        self.handlers.get(event).append(handler)
         
     def unregister_handler(self, event, handler):
         try:
