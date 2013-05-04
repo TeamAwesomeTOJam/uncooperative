@@ -49,4 +49,6 @@ class TileDraw(object):
         entity.unregister_handler('draw-tiles', self.handle_update)
         
     def handle_update(self, entity, surface):
-        surface.blit(game.get_game().resource_manager.get('image', entity.props.image),(entity.props.x,entity.props.y))
+        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image),(entity.props.x,entity.props.y))
+
+

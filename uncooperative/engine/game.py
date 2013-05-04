@@ -13,10 +13,12 @@ import componentmanager
 from entitymanager import EntityManager
 from camera import Camera
 from entity import Entity
-from component import MovementComponent, ExampleComponent
+from component import *
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
 from input import InputEvent, InputManager
+
+from random import randint
 
 _game = None
 
@@ -25,7 +27,7 @@ class Game(object):
     
     def __init__(self):
         self.screen_size = (500,500)
-        self.world_size = (5000,5000)
+        self.world_size = (1000,1000)
         
         pygame.init()
         
@@ -35,6 +37,7 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
+        self.component_manager.register_component('TileDraw', TileDraw())
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -46,6 +49,7 @@ class Game(object):
 
         self.entities_to_update = []
         self.entities_to_input = []
+        self.entities_to_draw_tiles = []
         
         self.world_surface = pygame.Surface(self.world_size)
         for x in range(0,self.world_size[0],10):
@@ -57,8 +61,21 @@ class Game(object):
         
     def register_for_input(self, entity):
         self.entities_to_input.append(entity)
+    
+    def register_for_draw_tiles(self,entity):
+        self.entities_to_draw_tiles.append(entity)
         
     def run(self):
+        self.world_surface = pygame.Surface(self.world_size)
+        for x in range(0,self.world_size[0],32):
+            for y in range(0,self.world_size[1],32):
+                passable = randint(0,1)
+                if passable:
+                    tile = Entity('testpassabletile',{'x':x,'y':y})
+                else:
+                    tile = Entity('testimpassabletile',{'x':x,'y':y})
+                self.register_for_draw_tiles(tile)
+        
         self.camera1 = Entity('camera')
         self.camera2 = Entity('camera')
         self.camera3 = Entity('camera')
@@ -99,6 +116,8 @@ class Game(object):
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
             
+            for entity in self.entities_to_draw_tiles:
+                entity.handle('draw-tiles',self.world_surface)
             
             rect = pygame.Rect(0,0,250,250)
             rect.center = (self.camera1.props.x,self.camera1.props.y)
