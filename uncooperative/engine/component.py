@@ -66,16 +66,17 @@ class InputMovementComponent(object):
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
 
-class TileDraw(object):
+
+class DrawComponent(object):
     
     def add(self, entity):
-        entity.register_handler('draw-tiles', self.handle_update)
+        entity.register_handler('draw', self.handle_update)
     
     def remove(self, entity):
-        entity.unregister_handler('draw-tiles', self.handle_update)
+        entity.unregister_handler('draw', self.handle_update)
         
     def handle_update(self, entity, surface):
-        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image),(entity.props.x,entity.props.y))
+        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x,entity.props.y))
 
 
 class ZombieAIComponent(object):
