@@ -14,6 +14,7 @@ from entitymanager import EntityManager
 from entity import Entity
 from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
+from collision import CollisionGrid
 
 from render import Render
 from input import InputEvent, InputManager
@@ -55,6 +56,8 @@ class Game(object):
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
+
+        self.collision_grid = CollisionGrid(64)
 
         self.entities_to_update = []
         self.entities_to_input = []

@@ -11,7 +11,7 @@ class Entity(object):
     def __init__(self, definition, properties=None, components=None):
         
         def flatten_includes(definition, flattened=None):
-            if flattened == None:
+            if flattened is None:
                 flattened = []
             flattened.append(definition)
             def_map = game.get_game().resource_manager.get('definition', definition)
@@ -45,8 +45,8 @@ class Entity(object):
         
     def unregister_handler(self, event, handler):
         try:
-            del self.handlers[event][self.handlers[event].index(handler)]
-        except:
+            self.handlers[event].remove(handler)
+        except ValueError:
             pass
     
     def handle(self, event, *args):
