@@ -9,7 +9,7 @@ import sys
 
 import pygame
 
-from componentmanager import ComponentManager
+import componentmanager
 from entitymanager import EntityManager
 from resourcemanager import ResourceManager
 
@@ -25,8 +25,9 @@ class Game(object):
         pygame.init()
         
         self.clock = pygame.time.Clock()
+        self.screen = pygame.display.set_mode((500,500))
         
-        self.component_manager = ComponentManager()
+        self.component_manager = componentmanager.ComponentManager()
         self.entity_manager = EntityManager()
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
         
@@ -43,4 +44,7 @@ class Game(object):
 
 
 def get_game():
+    global _game
+    if not _game:
+        _game = Game()
     return _game

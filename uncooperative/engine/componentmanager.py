@@ -4,7 +4,7 @@ Created on May 3, 2013
 @author: jonathan
 '''
 
-from game import get_game
+import game
 
 
 class ComponentManager(object):
@@ -26,7 +26,7 @@ class ExampleComponent(object):
     
     def add(self, entity):
         entity.register_handler('update', self.handle_update)
-        get_game().register_for_updates(entity)
+        game.get_game().register_for_updates(entity)
     
     def remove(self, entity):
         entity.unregister_handler('update', self.handle_update)
