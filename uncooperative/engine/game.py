@@ -13,6 +13,7 @@ import componentmanager
 from entitymanager import EntityManager
 from camera import Camera
 from entity import Entity
+from component import MovementComponent
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
 from input import InputEvent, InputManager
@@ -32,7 +33,7 @@ class Game(object):
         self.screen = pygame.display.set_mode((500,500))
         
         self.component_manager = componentmanager.ComponentManager()
-        self.component_manager.register_component('MovementComponent',componentmanager.MovementComponent())
+        self.component_manager.register_component('MovementComponent', MovementComponent())
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -84,8 +85,12 @@ class Game(object):
                         e.type == pygame.KEYDOWN or \
                         e.type == pygame.KEYUP:
                     event = InputEvent(e)
-                    for entity in self.entities_to_input:
-                        entity.handle('input', event)
+                    
+                    for entity in self.entities_to_update:
+                        if e.type == pygame.JOYAXISMOTION:
+                            entity.handle('move', event)
+                        else:
+                            entity.handle('input', event)
 
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
@@ -101,6 +106,7 @@ class Game(object):
             rect.center = (self.camera4.props.x,self.camera4.props.y)
             self.screen.blit(self.world_surface,(250,250),rect)
             pygame.display.flip()
+
 
 
 def get_game():
