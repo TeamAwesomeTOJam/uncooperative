@@ -11,7 +11,7 @@ import pygame
 
 import componentmanager
 from entitymanager import EntityManager
-from resourcemanager import ResourceManager, LoadEntityDefinition
+from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
 from input import InputEvent, InputManager
 
@@ -31,6 +31,7 @@ class Game(object):
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
         self.resource_manager.register_loader('definition', LoadEntityDefinition)
+        self.resource_manager.register_loader('sprite', LoadImage)
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
