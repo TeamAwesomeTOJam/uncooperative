@@ -11,10 +11,10 @@ class CollisionGrid(object):
         self.map = {}
     
     def get_grid_squares(self, rect):
-        min_grid_x = rect[0] / self.grid_size
-        max_grid_x = (rect[0] + rect[2]) / self.grid_size
-        min_grid_y = rect[1] / self.grid_size
-        max_grid_y = (rect[1] + rect[2]) / self.grid_size
+        min_grid_x = int(rect[0] / self.grid_size)
+        max_grid_x = int((rect[0] + rect[2]) / self.grid_size + 1)
+        min_grid_y = int(rect[1] / self.grid_size)
+        max_grid_y = int((rect[1] + rect[2]) / self.grid_size + 1)
         return [(x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1)]
     
     def add_entity(self, entity):
