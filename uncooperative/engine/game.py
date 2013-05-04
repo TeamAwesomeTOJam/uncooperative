@@ -39,6 +39,9 @@ class Game(object):
     def register_for_updates(self, entity):
         self.entities_to_update.append(entity)
         
+    def register_for_input(self, entity):
+        self.entities_to_input.append(entities)
+        
     def run(self):
         while True:
             dt = self.clock.tick() / 1000.0
