@@ -2,8 +2,6 @@ import game
 import pygame
 import math
 
-
-
 class ExampleComponent(object):
     
     def add(self, entity):
@@ -26,25 +24,29 @@ class MovementComponent(object):
         entity.unregister_handler('update', self.handle_update)
     
     def handle_update(self, entity, dt):
+        entity.props.last_good_x = entity.props.x
+        entity.props.last_good_y = entity.props.y
         entity.props.x += entity.props.dx * dt
         entity.props.y += entity.props.dy * dt
         pygame.draw.rect(game.get_game().renderer.draw_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
+        collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
+        for collided_entity in collisions:
+            collided_entity.handle('collision', entity)
 
-        
 class InputMovementComponent(object):
     
     def add(self, entity):
         entity.register_handler('move', self.handle_update)
-        game.get_game().register_for_updates(entity)
+        game.get_game().register_for_input(entity)
     
     def remove(self, entity):
         entity.unregister_handler('move', self.handle_update)
     
     def handle_update(self, entity, event):
-        speed = 10
-        deadzone = 0.25
+        SPEED = 20
+        DEADZONE = 0.15
+        print event.value
         if entity.props.controller == event.joy:
-
             if event.axis == 0:
                 entity.props.x_input = event.value
             if event.axis == 1:
@@ -52,27 +54,27 @@ class InputMovementComponent(object):
                 
             magnitude = ((entity.props.x_input * entity.props.x_input) + (entity.props.y_input * entity.props.y_input)) ** 0.5
 
-            if magnitude < deadzone:
+            if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
             else:
-                entity.props.dx = event.value * speed
+                entity.props.dx = event.value * SPEED
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
-                entity.props.dx = x_norm * ((magnitude - deadzone) / (1 - deadzone)) * speed
-                entity.props.dy = y_norm * ((magnitude - deadzone) / (1 - deadzone)) * speed
+                entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
+                entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
 
 class TileDraw(object):
     
     def add(self, entity):
         entity.register_handler('draw-tiles', self.handle_update)
-        game.get_game().register_for_updates(entity)
     
     def remove(self, entity):
         entity.unregister_handler('draw-tiles', self.handle_update)
         
     def handle_update(self, entity, surface):
         surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image),(entity.props.x,entity.props.y))
+
 
 class ZombieAIComponent(object):
 

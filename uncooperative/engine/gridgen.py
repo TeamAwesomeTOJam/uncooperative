@@ -1,6 +1,8 @@
 from grid import Grid
 from grid import Vec2
 from random import randint
+
+
 class GridGenerator:
     def __init__(self, gsize = (128,128), blocksize=Vec2(7,7)):
         #print gsize
@@ -23,7 +25,6 @@ class GridGenerator:
                 except IndexError:
                     continue
         
-
     def randomDepthFirstSearch(self):
         path = [Vec2(0,0)]
         hasMoves = True

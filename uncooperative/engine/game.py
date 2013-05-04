@@ -67,15 +67,10 @@ class Game(object):
         self.entities_to_input.append(entity)
         
     def run(self):
-        
-        
-        #test_entity = Entity('test-include')
         character = Entity('character')
         self.characters = [character for m in xrange(4)]
         self.renderer = Render(self)
 
-        
-        
         self.current_camera = 0
         while True:
             dt = self.clock.tick() / 1000.0
@@ -100,7 +95,7 @@ class Game(object):
                         e.type == pygame.KEYUP:
                     event = InputEvent(e)
 
-                    for entity in self.entities_to_update:
+                    for entity in self.entities_to_input:
                         if e.type == pygame.JOYAXISMOTION:
                             entity.handle('move', event)
                         else:
