@@ -14,6 +14,8 @@ from entitymanager import EntityManager
 from resourcemanager import ResourceManager
 from camera import Camera
 
+from input import InputEvent, InputManager
+
 _game = None
 
 
@@ -33,6 +35,10 @@ class Game(object):
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
         
         self.entities_to_update = []
+        self.entities_to_input = []
+
+        InputManager.init_joysticks()
+
         
         self.camera1 = Camera(500,500)
         self.camera2 = Camera(500,500)
@@ -64,6 +70,17 @@ class Game(object):
                 elif e.type == pygame.KEYUP:
                     if e.key == pygame.K_a:
                         self.camera_dirs[self.current_camera] = 0
+                if e.type == pygame.JOYAXISMOTION or \
+                        e.type == pygame.JOYBALLMOTION or \
+                        e.type == pygame.JOYBUTTONDOWN or \
+                        e.type == pygame.JOYBUTTONUP or \
+                        e.type == pygame.JOYHATMOTION or \
+                        e.type == pygame.KEYDOWN or \
+                        e.type == pygame.KEYUP:
+                    event = InputEvent(e)
+                    for entity in self.entities_to_input:
+                        entity.handle('input', event)
+
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
             
