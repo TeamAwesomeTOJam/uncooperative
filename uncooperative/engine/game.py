@@ -13,6 +13,7 @@ import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
 from component import MovementComponent, ExampleComponent, InputMovementComponent, DrawComponent
+from animation import AnimationComponent
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 from collision import CollisionGrid
 
@@ -42,6 +43,7 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
+        self.component_manager.register_component('AnimationComponent', AnimationComponent())
         self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
 
