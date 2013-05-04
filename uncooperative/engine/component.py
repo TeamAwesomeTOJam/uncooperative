@@ -28,7 +28,7 @@ class MovementComponent(object):
     def handle_update(self, entity, dt):
         entity.props.x += entity.props.dx * dt
         entity.props.y += entity.props.dy * dt
-        pygame.draw.rect(game.get_game().world_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
+        pygame.draw.rect(game.get_game().renderer.draw_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
 
         
 class InputMovementComponent(object):

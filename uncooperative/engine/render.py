@@ -23,8 +23,9 @@ class Render:
 
         pygame.image.save(self.world_surface,"file.png")
 
-#        self.cameras = [Camera(p) for p in self.game.players]
-        self.cameras = [Camera(500,500) for m in xrange(4)]
+        self.cameras = [Camera(p) for p in self.game.characters]
+#        self.cameras = [Camera(500,500) for m in xrange(4)]
+        self.draw_surface = self.world_surface.copy()
 
 
     def setTile(self,x,y):
@@ -49,14 +50,16 @@ class Render:
         offy = int(self.screen_size[1] / 2)
         rect = pygame.Rect(0,0,offx,offy)
         rect.center = self.cameras[0].pos()
-        self.screen.blit(self.world_surface,(0,0),rect)
+        self.screen.blit(self.draw_surface,(0,0),rect)
         rect.center = self.cameras[1].pos()
-        self.screen.blit(self.world_surface,(offx,0),rect)
+        self.screen.blit(self.draw_surface,(offx,0),rect)
         rect.center = self.cameras[2].pos()
-        self.screen.blit(self.world_surface,(0,offy),rect)
+        self.screen.blit(self.draw_surface,(0,offy),rect)
         rect.center = self.cameras[3].pos()
-        self.screen.blit(self.world_surface,(offx,offy),rect)
+        self.screen.blit(self.draw_surface,(offx,offy),rect)
         pygame.display.flip()
+        pygame.image.save(self.draw_surface,"file.png")
+        self.draw_surface = self.world_surface.copy()
 
 
 

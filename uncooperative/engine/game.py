@@ -59,7 +59,6 @@ class Game(object):
         self.entities_to_input = []
         self.entities_to_draw_tiles = []
         
-        self.renderer = Render(self)
         
     def register_for_updates(self, entity):
         self.entities_to_update.append(entity)
@@ -75,6 +74,9 @@ class Game(object):
         
         #test_entity = Entity('test-include')
         character = Entity('character')
+        self.characters = [character for m in xrange(4)]
+        self.renderer = Render(self)
+
         
         
         self.current_camera = 0
@@ -87,11 +89,11 @@ class Game(object):
                         self.current_camera = (self.current_camera +1)%4
                     if e.key == pygame.K_a:
                         #self.cameras[self.current_camera].props.dx = 1
-                        self.renderer.cameras[self.current_camera].x_ += 1
+                        pass
                 elif e.type == pygame.KEYUP:
                     if e.key == pygame.K_a:
                         #self.cameras[self.current_camera].props.dx = 0
-                        self.renderer.cameras[self.current_camera].x_ += 1
+                        pass
                 if e.type == pygame.JOYAXISMOTION or \
                         e.type == pygame.JOYBALLMOTION or \
                         e.type == pygame.JOYBUTTONDOWN or \
@@ -109,10 +111,10 @@ class Game(object):
 
             for entity in self.entities_to_draw_tiles:
                 entity.handle('draw-tiles',self.world_surface)
-            self.renderer.render()
             
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
+            self.renderer.render()
 
 def get_game():
     global _game

@@ -1,19 +1,14 @@
 
 class Camera(object):
 
-    def __init__(self, x, y):
-    #def __init__(self, player):
-        #self.player = player
-        self.x_=x
-        self.y_=y
+    def __init__(self, player):
+        self.player = player
 
     def x(self):
-        #return self.player.props.x
-        return self.x_
+        return self.player.props.x
 
     def y(self):
-        #return self.player.props.y
-        return self.y_
+        return self.player.props.y
 
     def pos(self):
         return (self.x(),self.y())
