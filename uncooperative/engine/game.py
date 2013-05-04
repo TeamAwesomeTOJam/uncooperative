@@ -15,19 +15,27 @@ from entity import Entity
 from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
+from render import Render
 from input import InputEvent, InputManager
 
 from random import randint
 
 _game = None
+from gridgen import GridGenerator
+from grid import Grid,Vec2
 
 
 class Game(object):
     
     def __init__(self):
         self.screen_size = (500,500)
-        self.world_size = (1000,1000)
+        self.map_size = (128,128)
+        self.tile_size = (12,12)
+        self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
         
+        self.grid = Grid(self.world_size[0],self.world_size[1])
+        gg = GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
+        gg.genMap()
         pygame.init()
         
         self.clock = pygame.time.Clock()
@@ -52,10 +60,6 @@ class Game(object):
         self.entities_to_input = []
         self.entities_to_draw_tiles = []
         
-        self.world_surface = pygame.Surface(self.world_size)
-        for x in range(0,self.world_size[0],10):
-            for y in range(0,self.world_size[1],10):
-                pygame.draw.rect(self.world_surface,(255,0,0),(x,y,5,5))
         
     def register_for_updates(self, entity):
         self.entities_to_update.append(entity)
@@ -67,26 +71,15 @@ class Game(object):
         self.entities_to_draw_tiles.append(entity)
         
     def run(self):
-        self.world_surface = pygame.Surface(self.world_size)
-        for x in range(0,self.world_size[0],32):
-            for y in range(0,self.world_size[1],32):
-                passable = randint(0,1)
-                if passable:
-                    tile = Entity('testpassabletile',{'x':x,'y':y})
-                else:
-                    tile = Entity('testimpassabletile',{'x':x,'y':y})
-                self.register_for_draw_tiles(tile)
         
-        self.camera1 = Entity('camera')
-        self.camera2 = Entity('camera')
-        self.camera3 = Entity('camera')
-        self.camera4 = Entity('camera')
         
         #test_entity = Entity('test-include')
         character = Entity('character')
+        self.characters = [character for m in xrange(4)]
+        self.renderer = Render(self)
+
         
         
-        self.cameras = [self.camera1,self.camera2,self.camera3, self.camera4]
         self.current_camera = 0
         while True:
             dt = self.clock.tick() / 1000.0
@@ -96,10 +89,12 @@ class Game(object):
                     if e.key == pygame.K_TAB:
                         self.current_camera = (self.current_camera +1)%4
                     if e.key == pygame.K_a:
-                        self.cameras[self.current_camera].props.dx = 1
+                        #self.cameras[self.current_camera].props.dx = 1
+                        pass
                 elif e.type == pygame.KEYUP:
                     if e.key == pygame.K_a:
-                        self.cameras[self.current_camera].props.dx = 0
+                        #self.cameras[self.current_camera].props.dx = 0
+                        pass
                 if e.type == pygame.JOYAXISMOTION or \
                         e.type == pygame.JOYBALLMOTION or \
                         e.type == pygame.JOYBUTTONDOWN or \
@@ -115,24 +110,12 @@ class Game(object):
                         else:
                             entity.handle('input', event)
 
-            for entity in self.entities_to_update:
-                entity.handle('update', dt)
-            
             for entity in self.entities_to_draw_tiles:
                 entity.handle('draw-tiles',self.world_surface)
             
-            rect = pygame.Rect(0,0,250,250)
-            rect.center = (self.camera1.props.x,self.camera1.props.y)
-            self.screen.blit(self.world_surface,(0,0),rect)
-            rect.center = (self.camera2.props.x,self.camera2.props.y)
-            self.screen.blit(self.world_surface,(250,0),rect)
-            rect.center = (self.camera3.props.x,self.camera3.props.y)
-            self.screen.blit(self.world_surface,(0,250),rect)
-            rect.center = (self.camera4.props.x,self.camera4.props.y)
-            self.screen.blit(self.world_surface,(250,250),rect)
-            pygame.display.flip()
-
-
+            for entity in self.entities_to_update:
+                entity.handle('update', dt)
+            self.renderer.render()
 
 def get_game():
     global _game
