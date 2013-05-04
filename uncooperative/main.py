@@ -1,4 +1,4 @@
 import engine
 
-game = engine.game.get_game()
+game = engine.get_game()
 game.run()

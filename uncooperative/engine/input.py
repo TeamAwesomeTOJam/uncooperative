@@ -52,6 +52,3 @@ class InputManager:
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
-
-
-
