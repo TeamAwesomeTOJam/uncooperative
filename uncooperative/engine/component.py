@@ -37,7 +37,11 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_update)
     
     def handle_update(self, entity, event):
-        print 'You moved %s' % (event,)
+        if entity.props.controller == event.joy:
+            if event.axis == 0:
+                self.dx = event.value
+            if event.axis == 1:
+                self.dy = event.value
 
 class TileDraw(object):
     

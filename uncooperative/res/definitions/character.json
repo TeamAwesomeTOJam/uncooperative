@@ -1,0 +1,1 @@
+{"properties" : {"x" : 500, "y" : 500, "dx" : 0, "dy" : 0, "controller" : 0 }, "components" : ["MovementComponent", "InputMovementComponent"]}

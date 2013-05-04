@@ -11,9 +11,8 @@ import pygame
 
 import componentmanager
 from entitymanager import EntityManager
-from camera import Camera
 from entity import Entity
-from component import *
+from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 
 from input import InputEvent, InputManager
@@ -38,6 +37,8 @@ class Game(object):
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
         self.component_manager.register_component('TileDraw', TileDraw())
+        self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
+
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -81,8 +82,9 @@ class Game(object):
         self.camera3 = Entity('camera')
         self.camera4 = Entity('camera')
         
-        test_entity = Entity('test-include')
-        print test_entity.props.test
+        #test_entity = Entity('test-include')
+        character = Entity('character')
+        
         
         self.cameras = [self.camera1,self.camera2,self.camera3, self.camera4]
         self.current_camera = 0
@@ -106,7 +108,7 @@ class Game(object):
                         e.type == pygame.KEYDOWN or \
                         e.type == pygame.KEYUP:
                     event = InputEvent(e)
-                    
+
                     for entity in self.entities_to_update:
                         if e.type == pygame.JOYAXISMOTION:
                             entity.handle('move', event)
