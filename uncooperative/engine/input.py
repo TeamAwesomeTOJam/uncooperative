@@ -14,6 +14,10 @@ class InputEvent:
         input_map = game.get_game().resource_manager.get('inputmap', "input")
 
         self.event = event
+        self.event_source, self.joy, self.axis, self.value = None
+        self.ball, self.rel, self.button, self.button_down = None
+        self.hat = None
+
         if event.type == pygame.JOYAXISMOTION or \
                 event.type == pygame.JOYBALLMOTION or \
                 event.type == pygame.JOYBUTTONDOWN or \
