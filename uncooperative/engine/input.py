@@ -1,4 +1,4 @@
-import pygame
+import pygame, game
 
 def enum(**enums):
     return type("Enum", (), enums)
@@ -10,7 +10,13 @@ class InputEvent:
         """
         @type event: pygame.event.Event
         """
+        input_map = game.get_game().resource_manager.get('inputmap', "input")
+
         self.event = event
+        self.event_source, self.joy, self.axis, self.value = None
+        self.ball, self.rel, self.button, self.button_down = None
+        self.hat = None
+
         if event.type == pygame.JOYAXISMOTION or \
                 event.type == pygame.JOYBALLMOTION or \
                 event.type == pygame.JOYBUTTONDOWN or \
@@ -31,15 +37,57 @@ class InputEvent:
             self.rel = event.rel
         elif event.type == pygame.JOYBUTTONDOWN:
             self.button = event.button
+            self.button_down = True
         elif event.type == pygame.JOYBUTTONUP:
             self.button = event.button
+            self.button_down = False
         elif event.type == pygame.JOYHATMOTION:
             self.hat = event.hat
             self.value = event.value
         elif event.type == pygame.KEYDOWN:
             self.key = event.key
+            self.key_down = True
         elif event.type == pygame.KEYUP:
             self.key = event.key
+            self.key_down = False
+        
+        for player_number, player_mapping in input_map.iteritems():
+            if self.event_source == InputSource.KEYBOARD and self.key_down and player_mapping['input'] == "KEYBOARD":
+                if player_mapping[self.key]:
+                    self.action = player_mapping[self.key]
+                    if self.action == "UP" or self.action == "RIGHT":
+                        self.magnitude = 1
+                    else:
+                        self.magnitude = -1
+
+                    self.player = player_number
+                    return
+            elif self.event_source == InputSource.JOYSTICK and player_mapping['input'] == "JOYSTICK":
+                print "joy"
+                if player_mapping["joystick"] == self.joy:
+                    print "joy player"
+                    self.player = player_number
+                    if self.button_down and self.button == player_mapping[self.button]:
+                        self.action = player_mapping[self.button]
+                        return
+                    elif self.axis == 0 or self.hat == 0:
+                        if self.value > 0:
+                            self.action = "UP"
+                            self.magnitude = self.value
+                            return
+                        elif self.value < 0:
+                            self.action = "DOWN"
+                            self.magnitude = self.value
+                            return
+                    elif self.axis == 1 or self.hat == 1:
+                        if self.value > 0:
+                            self.action = "RIGHT"
+                            self.magnitude = self.value
+                            return
+                        elif self.value < 0:
+                            self.action = "LEFT"
+                            self.magnitude = self.value
+                            return
 
 
 class InputManager:

@@ -12,9 +12,14 @@ import pygame
 import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
-from component import MovementComponent, ExampleComponent, InputMovementComponent, DrawComponent
 from animation import AnimationComponent
-from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
+from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping
+from component import (MovementComponent,
+                       ExampleComponent, 
+                       InputMovementComponent, 
+                       DrawComponent, 
+                       PlayerCollisionComponent,)
+
 from collision import CollisionGrid
 
 from render import Render
@@ -46,12 +51,14 @@ class Game(object):
         self.component_manager.register_component('AnimationComponent', AnimationComponent())
         self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
+        self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
 
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
         self.resource_manager.register_loader('definition', LoadEntityDefinition)
         self.resource_manager.register_loader('sprite', LoadImage)
+        self.resource_manager.register_loader('inputmap', LoadInputMapping)
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()

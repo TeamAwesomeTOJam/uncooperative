@@ -14,6 +14,7 @@ class ExampleComponent(object):
     def handle_update(self, entity, dt):
         print '%f seconds have elapsed!' % (dt,)
 
+
 class MovementComponent(object):
     
     def add(self, entity):
@@ -34,20 +35,20 @@ class MovementComponent(object):
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
         for collided_entity in collisions:
             collided_entity.handle('collision', entity)
+            entity.handle('collision', collided_entity)
 
 class InputMovementComponent(object):
     
     def add(self, entity):
-        entity.register_handler('move', self.handle_update)
+        entity.register_handler('move', self.handle_move)
         game.get_game().register_for_input(entity)
     
     def remove(self, entity):
-        entity.unregister_handler('move', self.handle_update)
+        entity.unregister_handler('move', self.handle_move)
     
-    def handle_update(self, entity, event):
+    def handle_move(self, entity, event):
         SPEED = 20
         DEADZONE = 0.15
-        print event.value
         if entity.props.controller == event.joy:
             if event.axis == 0:
                 entity.props.x_input = event.value
@@ -148,3 +149,17 @@ class AttackComponent(object):
 
             entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(PLAYER_PUSHBACK_VELOCITY, 2))
             entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(PLAYER_PUSHBACK_VELOCITY, 2))
+
+
+class PlayerCollisionComponent(object):
+    def add(self, entity):
+        entity.register_handler('collision', self.handle_collision)
+
+    def remove(self, entity):
+        entity.unregister_handler('collision', self.handle_collision)
+
+    def handle_collision(self, entity, colliding_entity):
+        entity.props.x = entity.props.last_good_x
+        entity.props.y = entity.props.last_good_y
+        
+        
