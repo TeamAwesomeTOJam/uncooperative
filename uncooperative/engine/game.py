@@ -107,15 +107,12 @@ class Game(object):
                         else:
                             entity.handle('input', event)
 
-            for entity in self.entities_to_update:
-                entity.handle('update', dt)
-            
             for entity in self.entities_to_draw_tiles:
                 entity.handle('draw-tiles',self.world_surface)
             self.renderer.render()
             
-
-
+            for entity in self.entities_to_update:
+                entity.handle('update', dt)
 
 def get_game():
     global _game

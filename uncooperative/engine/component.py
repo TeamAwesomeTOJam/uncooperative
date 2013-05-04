@@ -28,7 +28,8 @@ class MovementComponent(object):
     def handle_update(self, entity, dt):
         entity.props.x += entity.props.dx * dt
         entity.props.y += entity.props.dy * dt
-        
+        pygame.draw.rect(game.get_game().world_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
+
         
 class InputMovementComponent(object):
     
@@ -40,11 +41,26 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_update)
     
     def handle_update(self, entity, event):
+        speed = 10
+        deadzone = 0.25
         if entity.props.controller == event.joy:
+
             if event.axis == 0:
-                self.dx = event.value
+                entity.props.x_input = event.value
             if event.axis == 1:
-                self.dy = event.value
+                entity.props.y_input = event.value
+                
+            magnitude = ((entity.props.x_input * entity.props.x_input) + (entity.props.y_input * entity.props.y_input)) ** 0.5
+
+            if magnitude < deadzone:
+                entity.props.dx = 0
+                entity.props.dy = 0
+            else:
+                entity.props.dx = event.value * speed
+                x_norm = entity.props.x_input / magnitude
+                y_norm = entity.props.y_input / magnitude
+                entity.props.dx = x_norm * ((magnitude - deadzone) / (1 - deadzone)) * speed
+                entity.props.dy = y_norm * ((magnitude - deadzone) / (1 - deadzone)) * speed
 
 class TileDraw(object):
     
