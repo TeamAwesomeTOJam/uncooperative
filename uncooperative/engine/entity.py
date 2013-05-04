@@ -10,7 +10,21 @@ class Entity(object):
     
     def __init__(self, definition, properties=None, components=None):
         
-        self.props = EntityProperties(definition)
+        def flatten_includes(definition, flattened=None):
+            if flattened == None:
+                flattened = []
+            flattened.append(definition)
+            def_map = get_game().resource_manager.get('definition', definition)
+            if 'includes' in def_map:
+                for include in def_map['includes']:
+                    flattened = flatten_includes(include, flattened=flattened)
+            
+            return flattened
+        
+        
+        definitions = flatten_includes(definition)
+        
+        self.props = EntityProperties(definitions)
         self.handlers = {}
         
         for component in get_game().resource_manager.get('definition', definition)['components']:
@@ -24,7 +38,7 @@ class Entity(object):
             for component in components:
                 get_game().component_manager.add(component, self)
                 
-    
+                    
     def register_handler(self, event, handler):
         self.handlers[event] = self.handlers.get(event, []).append(handler)
         
@@ -42,10 +56,11 @@ class Entity(object):
 class EntityProperties(object):
 
     def __init__(self, definition):
-        self._definition = definition
+        self._definitions = definitions
         
     def __getattr__(self, name):
-        try:
-            get_game().resource_manager.get('definition', self._definition)['properties'][name]
-        except KeyError, ke:
-            raise AttributeError(ke)
+        for definition in self._definitions:
+            props = get_game().resource_manager.get('definition', definition)['properties']
+            if name in props: 
+                return props[name]
+        raise AttributeError
