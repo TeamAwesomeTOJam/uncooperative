@@ -2,10 +2,11 @@ from grid import Grid
 from grid import Vec2
 from random import randint
 class GridGenerator:
-    def __init__(self, grid = Grid(128,128), blocksize=Vec2(7,7)):
-        self.grid = grid
-        self.ni = grid.ni
-        self.nj = grid.nj
+    def __init__(self, gsize = (128,128), blocksize=Vec2(7,7)):
+        #print gsize
+        self.grid = Grid(gsize[0],gsize[1])
+        self.ni = self.grid.ni
+        self.nj = self.grid.nj
         self.blocksize = blocksize
 
     def makeCircle(self,center,radius):#center: Vec2, radius: Vec2
@@ -109,6 +110,7 @@ class GridGenerator:
         for times in range(int(self.ni**.7)):
             self.makeSquare(Vec2(randint(0,self.ni),randint(0,self.ni)),\
                     Vec2(5*randint(0,int(self.ni/10)),5*randint(0,int(self.nj/10))))
+        return self.grid
 
 
 
