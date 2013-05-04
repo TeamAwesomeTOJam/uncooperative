@@ -12,8 +12,13 @@ import pygame
 import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
-from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping
+from component import (MovementComponent,
+                       ExampleComponent, 
+                       InputMovementComponent, 
+                       DrawComponent, 
+                       PlayerCollisionComponent,)
+
 from collision import CollisionGrid
 
 from render import Render
@@ -42,8 +47,9 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
-        self.component_manager.register_component('TileDraw', TileDraw())
+        self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
+        self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
 
         self.entity_manager = EntityManager()
         
@@ -71,6 +77,12 @@ class Game(object):
         character = Entity('character')
         self.characters = [character for m in xrange(4)]
         self.renderer = Render(self)
+        for c in self.characters:
+            self.collision_grid.add_entity(c)
+
+        for tile in self.renderer.tiles:
+            if not tile.props.passable:
+                self.collision_grid.add_entity(tile)
 
         self.current_camera = 0
         while True:

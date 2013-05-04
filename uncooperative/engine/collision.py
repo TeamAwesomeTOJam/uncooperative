@@ -17,6 +17,9 @@ class CollisionGrid(object):
         max_grid_y = int((rect[1] + rect[2]) / self.grid_size + 1)
         return [(x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1)]
     
+    def get_grid_squares_for_entity(self, entity):
+        return self.get_grid_squares((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+    
     def add_entity(self, entity):
         for square in self.get_grid_squares_for_entity(entity):
             self.map.setdefault(square, set()).add(entity)
