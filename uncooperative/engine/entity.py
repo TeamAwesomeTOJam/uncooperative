@@ -57,8 +57,9 @@ class Entity(object):
 
 class EntityProperties(object):
 
-    def __init__(self, definition):
-        self._definitions = definition
+
+    def __init__(self, definitions):
+        self._definitions = definitions
         
     def __getattr__(self, name):
         for definition in self._definitions:
