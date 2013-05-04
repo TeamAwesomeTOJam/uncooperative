@@ -33,3 +33,16 @@ class ExampleComponent(object):
     
     def handle_update(self, entity, dt):
         print '%f seconds have elapsed!' % (dt,)
+
+class MovementComponent(object):
+    
+    def add(self, entity):
+        entity.register_handler('update', self.handle_update)
+        game.get_game().register_for_updates(entity)
+    
+    def remove(self, entity):
+        entity.unregister_handler('update', self.handle_update)
+    
+    def handle_update(self, entity, dt):
+        entity.props.x += entity.props.dx
+        entity.props.y += entity.props.dy

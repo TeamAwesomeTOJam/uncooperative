@@ -13,6 +13,7 @@ import componentmanager
 from entitymanager import EntityManager
 from resourcemanager import ResourceManager
 from camera import Camera
+from entity import Entity
 
 from input import InputEvent, InputManager
 
@@ -39,13 +40,14 @@ class Game(object):
         self.entities_to_update = []
         self.entities_to_input = []
         
-        self.camera1 = Camera(500,500)
-        self.camera2 = Camera(500,500)
-        self.camera3 = Camera(500,500)
-        self.camera4 = Camera(500,500)
+        self.camera_entity = Entity('camera')
+        
+        self.camera1 = Entity('camera')
+        self.camera2 = Entity('camera')
+        self.camera3 = Entity('camera')
+        self.camera4 = Entity('camera')
         
         self.cameras = [self.camera1,self.camera2,self.camera3, self.camera4]
-        self.camera_dirs = [0,0,0,0]
         self.current_camera = 0
         
         self.world_surface = pygame.Surface(self.world_size)
@@ -68,10 +70,10 @@ class Game(object):
                     if e.key == pygame.K_TAB:
                         self.current_camera = (self.current_camera +1)%4
                     if e.key == pygame.K_a:
-                        self.camera_dirs[self.current_camera] = 1
+                        self.cameras[self.current_camera].props.dx = 1
                 elif e.type == pygame.KEYUP:
                     if e.key == pygame.K_a:
-                        self.camera_dirs[self.current_camera] = 0
+                        self.cameras[self.current_camera].props.dx = 1
                 if e.type == pygame.JOYAXISMOTION or \
                         e.type == pygame.JOYBALLMOTION or \
                         e.type == pygame.JOYBUTTONDOWN or \
@@ -90,13 +92,13 @@ class Game(object):
                 if self.camera_dirs[i]:
                     self.cameras[i].x += 1
             rect = pygame.Rect(0,0,250,250)
-            rect.center = (self.camera1.x,self.camera1.y)
+            rect.center = (self.camera1.props.x,self.camera1.props.y)
             self.screen.blit(self.world_surface,(0,0),rect)
-            rect.center = (self.camera2.x,self.camera2.y)
+            rect.center = (self.camera2.props.x,self.camera2.props.y)
             self.screen.blit(self.world_surface,(250,0),rect)
-            rect.center = (self.camera3.x,self.camera3.y)
+            rect.center = (self.camera3.props.x,self.camera3.props.y)
             self.screen.blit(self.world_surface,(0,250),rect)
-            rect.center = (self.camera4.x,self.camera4.y)
+            rect.center = (self.camera4.props.x,self.camera4.props.y)
             self.screen.blit(self.world_surface,(250,250),rect)
             pygame.display.flip()
 

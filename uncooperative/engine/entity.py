@@ -3,7 +3,7 @@ Created on May 2, 2013
 
 @author: jonathan
 '''
-from game import get_game
+import game
 
 
 class Entity(object):
@@ -14,7 +14,7 @@ class Entity(object):
             if flattened == None:
                 flattened = []
             flattened.append(definition)
-            def_map = get_game().resource_manager.get('definition', definition)
+            def_map = game.get_game().resource_manager.get('definition', definition)
             if 'includes' in def_map:
                 for include in def_map['includes']:
                     flattened = flatten_includes(include, flattened=flattened)
@@ -27,8 +27,8 @@ class Entity(object):
         self.props = EntityProperties(definitions)
         self.handlers = {}
         
-        for component in get_game().resource_manager.get('definition', definition)['components']:
-            get_game().component_manager.add(component, self)
+        for component in game.get_game().resource_manager.get('definition', definition)['components']:
+            game.get_game().component_manager.add(component, self)
         
         if properties:
             for key, value in properties.items():
@@ -36,7 +36,7 @@ class Entity(object):
                 
         if components:
             for component in components:
-                get_game().component_manager.add(component, self)
+                game.get_game().component_manager.add(component, self)
                 
                     
     def register_handler(self, event, handler):
