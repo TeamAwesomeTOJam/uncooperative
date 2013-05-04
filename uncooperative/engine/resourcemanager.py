@@ -41,6 +41,6 @@ def LoadEntityDefinition(prefix, key):
     
     
 def LoadImage(prefix, key):
-    image_surface = pygame.image.load(os.path.join('data', 'bla.png'))
+    image_surface = pygame.image.load(os.path.join(prefix, 'sprites', key))
     image_surface.convert()
     return image_surface
