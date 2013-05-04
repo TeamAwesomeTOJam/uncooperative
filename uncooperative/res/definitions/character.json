@@ -4,5 +4,5 @@
 					"controller" : 0, 
 					"x_input" : 0 , "y_input" : 0, 
 					"width" : 20, "height" : 20 },
-	"components" : ["MovementComponent", "InputMovementComponent"]
+	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent"]
 }

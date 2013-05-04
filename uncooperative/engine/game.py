@@ -12,7 +12,12 @@ import pygame
 import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
-from component import MovementComponent, ExampleComponent, InputMovementComponent, DrawComponent
+from component import (MovementComponent, 
+                       ExampleComponent, 
+                       InputMovementComponent, 
+                       DrawComponent, 
+                       PlayerCollisionComponent)
+
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
 from collision import CollisionGrid
 
@@ -44,6 +49,7 @@ class Game(object):
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
         self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
+        self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
 
         self.entity_manager = EntityManager()
         
