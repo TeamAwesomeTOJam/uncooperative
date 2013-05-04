@@ -33,12 +33,12 @@ class ResourceManager(object):
         
         
 def LoadEntityDefinition(prefix, key):
-    with open(os.path.join(prefix, 'defintions', key + '.json')) as in_file:
+    with open(os.path.join(prefix, 'definitions', key + '.json')) as in_file:
         definition = json.load(in_file)
     for required_key in ['properties', 'components']:
         if required_key not in definition:
             raise KeyError("Definitions must have a '%s' property, but this one doesn't" % (required_key,))
-    
+    return definition
     
 def LoadImage(prefix, key):
     image_surface = pygame.image.load(os.path.join('data', 'bla.png'))
