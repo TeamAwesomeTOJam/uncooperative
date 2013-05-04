@@ -70,6 +70,12 @@ class Game(object):
         character = Entity('character')
         self.characters = [character for m in xrange(4)]
         self.renderer = Render(self)
+        for c in self.characters:
+            self.collision_grid.add_entity(c)
+
+        for tile in self.renderer.tiles:
+            if not tile.props.passable:
+                self.collision_grid.add_entity(tile)
 
         self.current_camera = 0
         while True:

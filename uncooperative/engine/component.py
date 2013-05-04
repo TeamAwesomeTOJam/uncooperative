@@ -26,8 +26,10 @@ class MovementComponent(object):
     def handle_update(self, entity, dt):
         entity.props.last_good_x = entity.props.x
         entity.props.last_good_y = entity.props.y
+        game.get_game().collision_grid.remove_entity(entity)
         entity.props.x += entity.props.dx * dt
         entity.props.y += entity.props.dy * dt
+        game.get_game().collision_grid.add_entity(entity)
         pygame.draw.rect(game.get_game().renderer.draw_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
         for collided_entity in collisions:
