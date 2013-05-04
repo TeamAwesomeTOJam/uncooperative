@@ -30,11 +30,12 @@ class Game(object):
     def __init__(self):
         self.screen_size = (500,500)
         self.map_size = (128,128)
-        self.tile_size = (5,5)
+        self.tile_size = (12,12)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
         
         self.grid = Grid(self.world_size[0],self.world_size[1])
-        GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
+        gg = GridGenerator(self.grid,Vec2(self.tile_size[0],self.tile_size[1]))
+        gg.genMap()
         pygame.init()
         
         self.clock = pygame.time.Clock()

@@ -16,6 +16,7 @@ class Render:
         self.world_size = game.world_size
         print(self.world_size)
         self.world_surface = pygame.Surface(self.world_size)
+        print(self.game.grid)
         for x in range(self.map_size[0]):
             for y in range(self.map_size[1]):
                 self.setTile(x,y)
@@ -30,7 +31,7 @@ class Render:
 
     def setTile(self,x,y):
         value = randint(0,1)#self.game.map[x][y]
-        #value = self.game.grid[x][y]
+        value = self.game.grid[x][y]
         print value,
         if value == 0:
             pygame.draw.rect(\
