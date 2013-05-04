@@ -7,6 +7,8 @@ Created on May 2, 2013
 import os
 import sys
 
+import pygame
+
 from componentmanager import ComponentManager
 from entitymanager import EntityManager
 from resourcemanager import ResourceManager
@@ -20,6 +22,10 @@ class Game(object):
         global _game 
         _game = self
 
+        pygame.init()
+        
+        self.clock = pygame.time.Clock()
+        
         self.component_manager = ComponentManager()
         self.entity_manager = EntityManager()
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -31,8 +37,9 @@ class Game(object):
         
     def run(self):
         while True:
+            dt = self.clock.tick() / 1000.0
             for entity in self.entities_to_update:
-                entity.handle('update', 1)
+                entity.handle('update', dt)
 
 
 def get_game():
