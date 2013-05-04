@@ -19,9 +19,6 @@ _game = None
 class Game(object):
     
     def __init__(self):
-        global _game 
-        _game = self
-
         pygame.init()
         
         self.clock = pygame.time.Clock()
