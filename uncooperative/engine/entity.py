@@ -27,8 +27,9 @@ class Entity(object):
         self.props = EntityProperties(definitions)
         self.handlers = {}
         
-        for component in game.get_game().resource_manager.get('definition', definition)['components']:
-            game.get_game().component_manager.add(component, self)
+        for defn in definitions:
+            for component in game.get_game().resource_manager.get('definition', defn)['components']:  
+                game.get_game().component_manager.add(component, self)
         
         if properties:
             for key, value in properties.items():
