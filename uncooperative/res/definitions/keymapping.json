@@ -1,0 +1,29 @@
+{   "input": {
+        "1": {
+            "input": "KEYBOARD",
+            "K_w": "UP",
+            "K_s": "DOWN",
+            "K_a": "LEFT",
+            "K_d": "RIGHT",
+            "K_e": "USE"
+        },
+        "2": {
+            "input": "KEYBOARD",
+            "K_UP": "UP",
+            "K_DOWN": "DOWN",
+            "K_LEFT": "LEFT",
+            "K_RIGHT": "RIGHT",
+            "K_SPACE": "USE"
+       },
+       "3": {
+            "input": "JOYSTICK",
+            "joystick": 1,
+            "USE": "1"
+        },
+        "4": {
+            "input": "JOYSTICK",
+            "joystick": 2,
+            "USE": "1"
+        }
+    }
+}
