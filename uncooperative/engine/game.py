@@ -56,15 +56,15 @@ class Game(object):
 
         self.collision_grid = CollisionGrid(64)
 
-        self.entities_to_update = []
-        self.entities_to_input = []
+        self.entities_to_update = set()
+        self.entities_to_input = set()
         
         
     def register_for_updates(self, entity):
-        self.entities_to_update.append(entity)
+        self.entities_to_update.add(entity)
         
     def register_for_input(self, entity):
-        self.entities_to_input.append(entity)
+        self.entities_to_input.add(entity)
         
     def run(self):
         character = Entity('character')
