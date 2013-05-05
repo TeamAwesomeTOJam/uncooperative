@@ -1,0 +1,20 @@
+{
+    "properties": {
+        "x": 500,
+        "y": 500,
+        "needed_item_types": ["tire1", "tire2", "tire3", "tire4", "engine", "wheel"],
+        "item_types": [],
+        "items": [],
+        "driver": null,
+        "passengers": [],
+        "animations" : {
+						"default" : {
+							"duration" : 1.0,
+							"frames" : ["impassableCR.png"]
+						}
+					}
+    },
+    "components": [
+        "CarComponent"
+    ]
+}

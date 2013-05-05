@@ -188,3 +188,31 @@ class ItemComponent(object):
     def handle_move(self, entity):
         if entity.props.pickup and entity.props.carrying_player is not None:
             entity.props.x, entity.props.y = entity.props.carrying_player.props.x, entity.props.carrying_player.props.y
+
+
+class CarComponent(object):
+    def add(self, entity):
+        entity.register_handler('use', self.handle_use)
+
+    def remove(self, entity):
+        entity.unregister_handler('use', self.handle_use)
+
+    def handle_use(self, entity, item, player):
+        CAR_USE_DISTANCE = 10
+
+        if abs(entity.props.x - player.props.x) <= CAR_USE_DISTANCE and \
+            abs(entity.props.y - player.props.y) <= CAR_USE_DISTANCE:
+            if item:
+                if item.type not in entity.item_types:
+                    item.props.pickup = False
+                    item.props.carrying_player = None
+                    item.props.display = False
+                    entity.items.append(item)
+                else:
+                    item.props.pickup = False
+                    item.props.carrying_player = None
+            elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
+                if entity.props.driver is None:
+                    entity.props.driver = player
+                    player.props.draw = False
+                    player.props.x, player.props.y = entity.props.x, entity.props.y
