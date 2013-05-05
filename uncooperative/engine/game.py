@@ -26,7 +26,8 @@ from component import (MovementComponent,
                        AttackComponent,
                        ItemComponent,
                        StaticCollisionComponent,
-                       InputActionComponent)
+                       InputActionComponent,
+                       DeadComponent)
 
 from collision import CollisionGrid
 
@@ -70,6 +71,7 @@ class Game(object):
         self.component_manager.register_component('ItemComponent', ItemComponent())
         self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
         self.component_manager.register_component('InputActionComponent', InputActionComponent())
+        self.component_manager.register_component('DeadComponent', DeadComponent())
 
         self.entity_manager = EntityManager()
         
@@ -97,6 +99,17 @@ class Game(object):
         
     def register_for_drawing(self, entity):
         self.entities_to_draw.add(entity)
+
+    def unregister_for_updates(self, entity):
+        self.entities_to_update.remove(entity)
+
+    def unregister_for_input(self, entity):
+        self.entities_to_input.remove(entity)
+
+    def unregister_for_drawing(self, entity):
+        self.entities_to_draw.remove(entity)
+
+
         
     def run(self):
         self.car = Entity('car')

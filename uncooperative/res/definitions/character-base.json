@@ -53,5 +53,6 @@
 					"DrawComponent", 
 					"RegisterForDrawComponent",
 					"AttackComponent",
-                    "InputActionComponent"]
+                    "InputActionComponent",
+                    "DeadComponent"]
 }
