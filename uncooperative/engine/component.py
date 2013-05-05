@@ -54,7 +54,7 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_move)
     
     def handle_move(self, entity, event):
-        SPEED = 20 
+        SPEED = 100
         DEADZONE = 0.15
         if entity.props.player == event.player:
             if event.axis == 0:
@@ -108,9 +108,19 @@ class ZombieAIComponent(object):
 
     def handle_update(self, entity, dt):
         ZOMBIE_DISTANCE = 200
-        ZOMBIE_SPEED = 50
+        ZOMBIE_SPEED = 40
         ZOMBIE_ATTACK_DISTANCE = 10
         ZOMBIE_ATTACK_STRENGTH = 1
+        ZOMBIE_ATTACK_TIME = 200
+
+        if entity.props.attacking:
+            entity.props.attack_time += dt
+            if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
+                entity.props.attacking = False
+                entity.props.attack_time = 0
+            else:
+                return
+
         mypos = Vec2d(entity.props.x,entity.props.y)
         in_range_player = None
         in_range_player_attack = []
@@ -153,6 +163,7 @@ class ZombieAIComponent(object):
             entity.props.dy = 0
 
             entity.props.attacking = True
+            entity.props.attack_time = 0
 
             for player in in_range_player_attack:
                 player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
@@ -173,6 +184,8 @@ class AttackComponent(object):
             entity.props.health = 0
             entity.handle('dead')
         else:
+            print entity.props.x, entity.props.y, zombie.props.x, zombie.props.y
+
             entity.props.health -= attack_strength
 
             x = entity.props.x - zombie.props.x
@@ -213,6 +226,7 @@ class PlayerCollisionComponent(object):
             dy = None
 
         if dx or dy:
+            print entity.props.x, entity.props.y, colliding_entity.props.x, colliding_entity.props.y
             game.get_game().collision_grid.remove_entity(entity)
             entity.props.x = good_x
             entity.props.y = good_y

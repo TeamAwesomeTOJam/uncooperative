@@ -37,7 +37,7 @@ from grid import Grid,Vec2
 class Game(object):
     
     def __init__(self):
-        self.screen_size = (500,500)
+        self.screen_size = (1000,600)
         self.map_size = (128,128)
         self.tile_size = (32,32)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
@@ -45,7 +45,7 @@ class Game(object):
         pygame.init()
         
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((500,500))
+        self.screen = pygame.display.set_mode((1000,600))
         
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
