@@ -177,7 +177,7 @@ class AttackComponent(object):
     def handle_attack(self, entity, attack_strength, zombie):
         PLAYER_PUSHBACK_VELOCITY = 20
 
-        if (entity.props.health - attack_strength <= 0):
+        if entity.props.health - attack_strength <= 0:
             entity.props.health = 0
             entity.handle('dead')
         else:
