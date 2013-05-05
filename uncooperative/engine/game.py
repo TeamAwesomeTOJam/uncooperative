@@ -91,8 +91,7 @@ class Game(object):
         for tile in self.renderer.tiles:
             if not tile.props.passable:
                 self.collision_grid.add_entity(tile)
-
-        self.current_camera = 0
+                pass
         while True:
             dt = self.clock.tick() / 1000.0
             for e in pygame.event.get():
