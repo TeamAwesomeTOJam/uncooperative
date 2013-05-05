@@ -4,21 +4,25 @@
 #assumes the thing extracted is a "Team Awesome..." dir
 sprites_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd $sprites_dir
-unzip Team_* -d $sprites_dir
+unzip $1 -d $sprites_dir
 mv Team\ */* .
 rmdir Team\ *
 mkdir tiles
 mv BG\ Tiles bg_tiles
 mv Items items
 mkdir -p chars
-mv "Good Guys/Doda" chars/good_guys
+rm -rf chars/*
+mv "Good Guys" chars/good_guys
+ls chars/good_guys
+read -p "press enter"
 mv "Bad Guys" chars/bad_guys
 
 
-for m in chars/good_guys chars/bad_guys
+for m in chars/good_guys/*  chars/bad_guys
 do 
     pushd "$m"
     echo "Moving into $m"
+    read -p "pause"
     pwd
     mv *Up* up
     mv *Down* down
@@ -32,11 +36,12 @@ do
 
             for file in *
             do 
-                newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//' | sed 's/0*//')
+                newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//'| sed 's/-*//')
+                echo $file " -> "  ${newfile}.png
                 mv $file ${newfile}.png
             done
+            popd
         fi 
-        popd
     done
     popd
 done

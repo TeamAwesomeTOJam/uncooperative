@@ -17,10 +17,12 @@ class AnimationComponent(object):
         entity.props.current_animation = 'default'
         entity.props.animation_pos = 0
         entity.props.animation_should_loop = True
+        print entity.props.animations.keys()
         entity.props.image = entity.props.animations[entity.props.current_animation]['frames'][0]
         
     def remove(self, entity):
-        entity.remove_handler('update', self.handle_update)
+        entity.unregister_handler('update', self.on_update)
+        entity.unregister_handler('play-animation', self.on_play_animation)
         
     def on_update(self, entity, dt):
         entity.props.animation_pos += dt

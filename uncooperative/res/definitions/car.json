@@ -10,7 +10,8 @@
         "items": [],
         "driver": null,
         "passengers": [],
-        "image" : "items/car/Car-empty.png"
+        "image" : "items/car/Car-empty.png",
+        "car": true
     },
     "components": [
         "CarComponent",

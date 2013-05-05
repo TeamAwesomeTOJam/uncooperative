@@ -4,7 +4,7 @@
 					,"width" : 32, "height" : 32,
         "attack_time": 0,
         "attacking": false,
-        "attack_strength" : 40,
+        "attack_strength" : 200,
         "speed" : 40,
         "attack_distance" : 40,
         "total_attack_time" : 1,
@@ -12,6 +12,7 @@
         "pushback_velocity" : 100,
         "image_x" : -31,
         "image_y" : -50,
+        "name" : "zombie",
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
@@ -30,6 +31,26 @@
 							"frame-dir" : "chars/bad_guys/right/"
 						},
 						"walk-left" : {
+							"duration" : 1.0,
+							"frame-dir" : "chars/bad_guys/left/"
+						},
+						"zombiedefault" : {
+							"duration" : 1.0,
+							"frames" : ["chars/bad_guys/down/12.png"]
+						},
+						"zombiewalk-up" : {
+							"duration" : 1.0,
+							"frame-dir" : "chars/bad_guys/up/"
+						},
+						"zombiewalk-down" : {
+							"duration" : 1.0,
+							"frame-dir" : "chars/bad_guys/down/"
+						},
+						"zombiewalk-right" : {
+							"duration" : 1.0,
+							"frame-dir" : "chars/bad_guys/right/"
+						},
+						"zombiewalk-left" : {
 							"duration" : 1.0,
 							"frame-dir" : "chars/bad_guys/left/"
 						}

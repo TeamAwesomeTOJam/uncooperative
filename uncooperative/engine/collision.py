@@ -29,7 +29,7 @@ class CollisionGrid(object):
     def remove_entity(self, entity):
         for square in self.get_grid_squares_for_entity(entity):
             self.map.setdefault(square, set()).remove(entity)
-    
+
     def get_possible_collisions(self, rect):
         possible_collisions = set()
         for square in self.get_grid_squares(rect):
