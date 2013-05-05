@@ -148,6 +148,16 @@ class Render:
             
             pygame.draw.circle(self.screen,(255,0,0),minimap_offset+player_minimap_pos,1)
             
+            health_pos = Vec2d(15,15)
+            
+            health_bar_rect = pygame.Rect(offset+health_pos,(200,20))
+            health_rect = pygame.Rect((0,0),(2*self.game.characters[player].props.health,20))
+            health_rect.inflate_ip(-2,-2)
+            health_rect.midleft = health_bar_rect.midleft + Vec2d(2,0)
+            
+            pygame.draw.rect(self.screen,(0,0,0),health_bar_rect)
+            pygame.draw.rect(self.screen,(255,0,0),health_rect)
+            
             
             
         

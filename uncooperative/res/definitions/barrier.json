@@ -4,14 +4,9 @@
         "y": 500,
 		"width" : 64,
 		"height": 64,
-        "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["impassableCR.png"]
-						}
-					}
+        "animations" : "barrier.png
     },
     "components": [
-        
+        "DrawComponent"
     ]
 }
