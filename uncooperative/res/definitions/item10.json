@@ -1,12 +1,7 @@
 {
 	"properties" : {"x" : 2200, "y" : 1950,
 					"item-type": "tire",
-                    "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["items/tire.png"]
-						}
-					}
+                    "image" : "items/tire.png"
     },
 	"components" : [],
 	"includes" : ["item-base"]

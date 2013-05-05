@@ -1,12 +1,7 @@
 {
 	"properties" : {"x" : 2100, "y" : 2050,
 					"item-type": "radiator",
-                    "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["items/radiator.png"]
-						}
-					}
+                    "image" : "items/radiator.png"
     },
 	"components" : [],
 	"includes" : ["item-base"]

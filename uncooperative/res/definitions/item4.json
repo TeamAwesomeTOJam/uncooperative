@@ -1,12 +1,7 @@
 {
 	"properties" : {"x" : 2050, "y" : 2100,
 					"item-type": "wheel",
-                    "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["items/steeringWheel01.png"]
-						}
-					}
+                    "image" : "items/steeringWheel01.png"
     },
 	"components" : [],
 	"includes" : ["item-base"]

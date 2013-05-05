@@ -14,7 +14,6 @@
     "components": [
         "CarComponent",
         "DrawComponent",
-        "DrawHitBoxComponent",
         "RegisterForDrawComponent"
     ]
 }

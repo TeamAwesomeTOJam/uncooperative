@@ -1,12 +1,7 @@
 {
 	"properties" : {"x" : 2100, "y" : 2100,
 					"item-type": "gas-can",
-                    "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["items/gasCan.png"]
-						}
-					}
+                    "image" : "items/gasCan.png"
     },
 	"components" : [],
 	"includes" : ["item-base"]

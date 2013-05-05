@@ -5,7 +5,6 @@
 
 		},
 	"components" : ["PlayerCollisionComponent",
-					"AnimationComponent",
 					"DrawComponent",
 					"RegisterForDrawComponent",
 					"ItemComponent"]
