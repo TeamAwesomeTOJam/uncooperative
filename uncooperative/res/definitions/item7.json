@@ -1,8 +1,0 @@
-{
-	"properties" : {"x" : 2200, "y" : 1800,
-					"item-type": "tire",
-                    "image" : "items/tire.png"
-    },
-	"components" : [],
-	"includes" : ["item-base"]
-}

@@ -96,9 +96,8 @@ class Game(object):
         self.car = Entity('car')
         self.collision_grid.add_entity(self.car)
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
-        self.items = [Entity('item1'), Entity('item2'), Entity('item3'), Entity('item4'), Entity('item5'), \
-                      Entity('item6'), Entity('item7'), Entity('item8'), Entity('item9'), Entity('item10'), \
-                      Entity('item11')]
+        self.items = [Entity('engine'), Entity('gas-can'), Entity('radiator'), Entity('steering-wheel-2'), Entity('tire'),
+                      Entity('toolbox')]
         self.renderer = Render(self)
 
 
@@ -129,13 +128,13 @@ class Game(object):
             dt = self.clock.tick() / 1000.0
             for e in pygame.event.get():
                 if e.type == pygame.QUIT: sys.exit()
-                if e.type == pygame.JOYAXISMOTION or \
-                        e.type == pygame.JOYBALLMOTION or \
-                        e.type == pygame.JOYBUTTONDOWN or \
-                        e.type == pygame.JOYBUTTONUP or \
-                        e.type == pygame.JOYHATMOTION or \
-                        e.type == pygame.KEYDOWN or \
-                        e.type == pygame.KEYUP:
+                if (e.type == pygame.JOYAXISMOTION or
+                        e.type == pygame.JOYBALLMOTION or
+                        e.type == pygame.JOYBUTTONDOWN or
+                        e.type == pygame.JOYBUTTONUP or
+                        e.type == pygame.JOYHATMOTION or
+                        e.type == pygame.KEYDOWN or
+                        e.type == pygame.KEYUP):
                     
                     events = create_input_events(e)
                     for entity in self.entities_to_input:
