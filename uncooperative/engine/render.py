@@ -16,6 +16,7 @@ class Render:
         self.screen_size = game.screen_size
         self.world_size = game.world_size
         self.world_surface = pygame.Surface(self.world_size)
+        self.world_surface.convert()
         self.grid = GridGenerator(self.map_size).genMap()
         
         self.tiles = []

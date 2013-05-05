@@ -42,8 +42,10 @@ def LoadEntityDefinition(prefix, key):
     
 def LoadImage(prefix, key):
     image_surface = pygame.image.load(os.path.join(prefix, 'sprites', key))
+    image_surface.set_alpha(None)
     image_surface.convert()
-    #image_surface.set_colorkey((255, 0, 255))
+    if 'chars' in key:
+        image_surface.set_colorkey((255, 0, 255))
     return image_surface
 
 def LoadInputMapping(prefix, key):
