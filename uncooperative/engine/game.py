@@ -104,8 +104,8 @@ class Game(object):
 
         self.zombies = []
         for m in range(20):
-            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(1, self.world_rooms[0])) + self.world_size[0]/self.world_rooms[0]/2
-            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(1, self.world_rooms[1])) + self.world_size[1]/self.world_rooms[1]/2
+            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
+            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
             self.zombies.append(Entity("zombie", properties={
                 "x": x_pos,
                 "y": y_pos

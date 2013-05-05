@@ -86,7 +86,11 @@ class Render:
         pygame.image.save(self.world_surface,"file.png")
         self.minimap_scale = 0.025
         self.minimap_size = Vec2d(int(self.minimap_scale*self.world_size[0]),int(self.minimap_scale*self.world_size[1]))
-        self.minimap = pygame.transform.scale(self.world_surface,self.minimap_size)
+        
+        try:
+            self.minimap = pygame.transform.smoothscale(self.world_surface,self.minimap_size)
+        except:
+            self.minimap = pygame.transform.scale(self.world_surface,self.minimap_size)
 
         self.cameras = [Camera(p) for p in self.game.characters]
 #        self.cameras = [Camera(500,500) for m in xrange(4)]
