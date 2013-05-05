@@ -148,6 +148,11 @@ class Render:
             
             pygame.draw.circle(self.screen,(255,0,0),minimap_offset+player_minimap_pos,1)
             
+            for z in self.game.zombies:
+                zombie_minimap_pos = self.minimap_scale*Vec2d(z.props.x,z.props.y)
+                zombie_minimap_pos = Vec2d(int(zombie_minimap_pos[0]),int(zombie_minimap_pos[1]))
+                pygame.draw.circle(self.screen,(0,255,0),minimap_offset+zombie_minimap_pos,1)
+            
             health_pos = Vec2d(15,15)
             
             health_bar_rect = pygame.Rect(offset+health_pos,(200,20))
