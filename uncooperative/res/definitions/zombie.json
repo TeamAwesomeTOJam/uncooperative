@@ -3,6 +3,11 @@
         "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
 					,"width" : 32, "height" : 32,
         "attack_time": 0, "attacking": false,
+        "attack_strength" : 1,
+        "speed" : 40,
+        "attack_distance" : 100,
+        "total_attack_time" : 200,
+        "sight_distance" : 200,
         "pushback_velocity" : 20,
         "image_x" : -31,
         "image_y" : -60,
@@ -27,7 +32,6 @@
 							"duration" : 1.0,
 							"frame-dir" : "chars/bad_guys/left/"
 						}
-						
 					}
     },
     "components" : ["MovementComponent", 
