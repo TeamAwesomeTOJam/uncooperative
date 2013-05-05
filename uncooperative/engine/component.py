@@ -31,7 +31,7 @@ class MovementComponent(object):
         entity.props.x += entity.props.dx * dt
         entity.props.y += entity.props.dy * dt
         game.get_game().collision_grid.add_entity(entity)
-        pygame.draw.rect(game.get_game().renderer.draw_surface, (255,255,255), (entity.props.x,entity.props.y,20,20))
+        entity.handle('draw', game.get_game().renderer.draw_surface)
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
         for collided_entity in collisions:
             collided_entity.handle('collision', entity)
@@ -71,13 +71,13 @@ class InputMovementComponent(object):
 class DrawComponent(object):
     
     def add(self, entity):
-        entity.register_handler('draw', self.handle_update)
+        entity.register_handler('draw', self.handle_draw)
     
     def remove(self, entity):
-        entity.unregister_handler('draw', self.handle_update)
+        entity.unregister_handler('draw', self.handle_draw)
         
-    def handle_update(self, entity, surface):
-        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x,entity.props.y))
+    def handle_draw(self, entity, surface):
+        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
 
 
 class ZombieAIComponent(object):
