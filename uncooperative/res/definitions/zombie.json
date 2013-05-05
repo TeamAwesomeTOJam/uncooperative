@@ -1,7 +1,13 @@
 {
 	"properties" : {
         "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
-					,"width" : 20, "height" : 20
+					,"width" : 20, "height" : 20,
+        "animations" : {
+						"default" : {
+							"duration" : 1.0,
+							"frames" : ["impassableCR.png"]
+						}
+					}
     },
     "components" : ["MovementComponent", "ZombieAIComponent","PlayerCollisionComponent"]
 }
