@@ -1,6 +1,7 @@
 {
 	"properties" : {"x" : 1950, "y" : 1950, 
-					"player" : "1"
+					"player" : "1",
+                        "name" : "Doda"
 					},
 	"components" : [],
 	"includes" : ["character-base"]

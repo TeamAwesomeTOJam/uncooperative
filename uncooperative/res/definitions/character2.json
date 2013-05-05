@@ -1,6 +1,8 @@
 {
 	"properties" : {"x" : 2000, "y" : 1950, 
-					"player" : "2"
+					"player" : "2",
+                    "name": "Nish"
+
 					},
 	"components" : [],
 	"includes" : ["character-base"]
