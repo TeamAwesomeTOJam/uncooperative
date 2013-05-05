@@ -38,6 +38,16 @@ def LoadEntityDefinition(prefix, key):
     for required_key in ['properties', 'components']:
         if required_key not in definition:
             raise KeyError("Definitions must have a '%s' property, but this one doesn't" % (required_key,))
+    
+    if 'animations' in definition['properties']:
+        for animation in definition['properties']['animations'].values():
+            if 'frame-dir' in animation:
+                frame_dir = os.path.join(prefix, 'sprites', animation['frame-dir'])
+                frames = sorted(os.listdir(frame_dir))
+                animation['frames'] = []
+                for frame in frames:
+                    animation['frames'].append(os.path.join(frame_dir, frame))
+    
     return definition
     
 def LoadImage(prefix, key):

@@ -4,60 +4,40 @@
 					"width" : 20, "height" : 20,
 					"animations" : {
 						"default" : {
-							"duration" : 1.0,
+							"duration" : 0.5,
 							"frames" : ["chars/good_guys/down/108.png"]
 						},
 						"idle-up" : {
-							"duration" : 1.0,
+							"duration" : 0.5,
 							"frames" : ["chars/good_guys/up/108.png"]
 						},
 						"idle-down" : {
-							"duration" : 1.0,
+							"duration" : 0.5,
 							"frames" : ["chars/good_guys/down/108.png"]
 						},
 						"idle-right" : {
-							"duration" : 1.0,
+							"duration" : 0.5,
 							"frames" : ["chars/good_guys/right/108.png"]
 						},
 						"idle-left" : {
-							"duration" : 1.0,
+							"duration" : 0.5,
 							"frames" : ["chars/good_guys/left/108.png"]
 						},
 						"walk-up" : {
-							"duration" : 1.0,
-							"frames" : ["chars/good_guys/up/100.png",
-										"chars/good_guys/up/104.png",
-										"chars/good_guys/up/108.png",
-										"chars/good_guys/up/112.png",
-										"chars/good_guys/up/116.png",
-										"chars/good_guys/up/120.png"]
+							"duration" : 0.5,
+							"frame-dir" : "chars/good_guys/up/"
 						},
 						"walk-down" : {
-							"duration" : 1.0,
-							"frames" : ["chars/good_guys/down/100.png",
-										"chars/good_guys/down/104.png",
-										"chars/good_guys/down/108.png",
-										"chars/good_guys/down/112.png",
-										"chars/good_guys/down/116.png",
-										"chars/good_guys/down/120.png"]
+							"duration" : 0.5,
+							"frame-dir" : "chars/good_guys/down/"
 						},
 						"walk-right" : {
-							"duration" : 1.0,
-							"frames" : ["chars/good_guys/right/100.png",
-										"chars/good_guys/right/104.png",
-										"chars/good_guys/right/108.png",
-										"chars/good_guys/right/112.png",
-										"chars/good_guys/right/116.png",
-										"chars/good_guys/right/120.png"]
+							"duration" : 0.5,
+							"frame-dir" : "chars/good_guys/right/"
 						},
 						"walk-left" : {
-							"duration" : 1.0,
-							"frames" : ["chars/good_guys/left/100.png",
-										"chars/good_guys/left/104.png",
-										"chars/good_guys/left/108.png",
-										"chars/good_guys/left/112.png",
-										"chars/good_guys/left/116.png",
-										"chars/good_guys/left/120.png"]
+							"duration" : 0.5,
+							"frame-dir" : "chars/good_guys/left/"
 						}
 					}
 					
