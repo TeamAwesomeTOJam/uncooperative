@@ -84,7 +84,7 @@ class InputMovementComponent(object):
                 
                 dir = Vec2d(entity.props.dx, entity.props.dy)
                 entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
-                entity.handle('play-animation', '%swalk-%s' % (entity.props.name,FACING[entity.props.facing],), True)
+                entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
 
 
 class DrawComponent(object):
