@@ -95,6 +95,18 @@ class DrawComponent(object):
         surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
 
 
+class DrawHitBoxComponent(object):
+    
+    def add(self, entity):
+        entity.register_handler('draw', self.handle_draw)
+    
+    def remove(self, entity):
+        entity.unregister_handler('draw', self.handle_draw)
+        
+    def handle_draw(self, entity, surface):
+        pygame.draw.rect(surface, (255, 0, 255), (entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        
+
 class RegisterForDrawComponent(object):
     
     def add(self, entity):

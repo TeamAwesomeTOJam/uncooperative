@@ -27,5 +27,11 @@
 						
 					}
     },
-    "components" : ["MovementComponent", "ZombieAIComponent","PlayerCollisionComponent", "AnimationComponent", "DrawComponent", "RegisterForDrawComponent"]
+    "components" : ["MovementComponent", 
+    				"ZombieAIComponent",
+    				"PlayerCollisionComponent", 
+    				"AnimationComponent", 
+    				"DrawComponent", 
+    				"DrawHitBoxComponent",
+    				"RegisterForDrawComponent"]
 }

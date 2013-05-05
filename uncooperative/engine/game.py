@@ -20,7 +20,9 @@ from component import (MovementComponent,
                        DrawComponent, 
                        PlayerCollisionComponent,
                        RegisterForDrawComponent,
-                       ZombieAIComponent)
+                       ZombieAIComponent,
+                       CarComponent,
+                       DrawHitBoxComponent)
 
 from collision import CollisionGrid
 
@@ -58,6 +60,8 @@ class Game(object):
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
         self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
+        self.component_manager.register_component('CarComponent', CarComponent())
+        self.component_manager.register_component('DrawHitBoxComponent', DrawHitBoxComponent())
 
         self.entity_manager = EntityManager()
         
@@ -85,7 +89,8 @@ class Game(object):
         self.entities_to_draw.add(entity)
         
     def run(self):
-        #chars = Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')
+        self.car = Entity('car')
+        self.collision_grid.add_entity(self.car)
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.renderer = Render(self)
 
