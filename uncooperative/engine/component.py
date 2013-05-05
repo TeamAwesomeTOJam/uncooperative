@@ -49,7 +49,7 @@ class InputMovementComponent(object):
     def handle_move(self, entity, event):
         SPEED = 20
         DEADZONE = 0.15
-        print event.__dict__
+
         if entity.props.player == event.player:
             if event.axis == 0:
                 entity.props.x_input = event.magnitude
