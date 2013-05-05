@@ -20,12 +20,13 @@ from component import (MovementComponent,
                        DrawComponent, 
                        PlayerCollisionComponent,
                        RegisterForDrawComponent,
-                       ZombieAIComponent)
+                       ZombieAIComponent,
+                       AttackComponent)
 
 from collision import CollisionGrid
 
 from render import Render
-from input import InputEvent, InputManager
+from input import InputEvent, InputManager, create_input_events
 
 from random import randint
 
@@ -56,8 +57,8 @@ class Game(object):
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
-        self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())
-        self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
+        self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())     
+        self.component_manager.register_component('AttackComponent', AttackComponent())
 
         self.entity_manager = EntityManager()
         
@@ -114,7 +115,6 @@ class Game(object):
             dt = self.clock.tick() / 1000.0
             for e in pygame.event.get():
                 if e.type == pygame.QUIT: sys.exit()
-                
                 if e.type == pygame.JOYAXISMOTION or \
                         e.type == pygame.JOYBALLMOTION or \
                         e.type == pygame.JOYBUTTONDOWN or \
@@ -122,13 +122,14 @@ class Game(object):
                         e.type == pygame.JOYHATMOTION or \
                         e.type == pygame.KEYDOWN or \
                         e.type == pygame.KEYUP:
-                    event = InputEvent(e)
-
+                    
+                    events = create_input_events(e)
                     for entity in self.entities_to_input:
-                        if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
-                            entity.handle('move', event)
-                        else:
-                            entity.handle('input', event)
+                        for event in events:
+                            if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
+                                entity.handle('move', event)
+                            else:
+                                entity.handle('input', event)
 
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
