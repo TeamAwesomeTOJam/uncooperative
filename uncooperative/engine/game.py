@@ -23,7 +23,8 @@ from component import (MovementComponent,
                        ZombieAIComponent,
                        CarComponent,
                        DrawHitBoxComponent,
-                       AttackComponent)
+                       AttackComponent,
+                       ItemComponent)
 
 from collision import CollisionGrid
 
@@ -64,6 +65,7 @@ class Game(object):
         self.component_manager.register_component('CarComponent', CarComponent())
         self.component_manager.register_component('DrawHitBoxComponent', DrawHitBoxComponent()) 
         self.component_manager.register_component('AttackComponent', AttackComponent())
+        self.component_manager.register_component('ItemComponent', ItemComponent())
 
         self.entity_manager = EntityManager()
         
@@ -94,6 +96,9 @@ class Game(object):
         self.car = Entity('car')
         self.collision_grid.add_entity(self.car)
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
+        self.items = [Entity('item1'), Entity('item2'), Entity('item3'), Entity('item4'), Entity('item5'), \
+                      Entity('item6'), Entity('item7'), Entity('item8'), Entity('item9'), Entity('item10'), \
+                      Entity('item11')]
         self.renderer = Render(self)
 
 
@@ -112,6 +117,9 @@ class Game(object):
 
         for c in self.characters:
             self.collision_grid.add_entity(c)
+
+        for i in self.items:
+            self.collision_grid.add_entity(i)
 
         for tile in self.renderer.tiles:
             if not tile.props.passable:
