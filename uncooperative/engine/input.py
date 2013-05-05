@@ -16,6 +16,7 @@ class InputEvent:
         self.event_source, self.joy, self.axis, self.value = None, None, None, None
         self.ball, self.rel, self.button, self.button_down = None, None, None, None
         self.hat, self.action, self.magnitude = None, None, None
+        self.key_up, self.key_down = None, None
 
         if event.type == pygame.JOYAXISMOTION or \
                 event.type == pygame.JOYBALLMOTION or \
@@ -83,6 +84,10 @@ class InputEvent:
                             if self.axis == 1:
                                 self.value = -1 * self.value
                     
+                    action = player_mapping.get(self.button)
+                    if action:
+                        self.action = action
+
                     if self.axis == 0:
                         if self.value >= 0:
                             self.action = "UP"

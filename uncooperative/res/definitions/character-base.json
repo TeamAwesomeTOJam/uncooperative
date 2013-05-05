@@ -431,11 +431,12 @@
         }
 
     },
-    "components" : ["MovementComponent", 
-    "InputMovementComponent", 
-    "PlayerCollisionComponent", 
-    "AnimationComponent", 
-    "DrawComponent", 
-    "RegisterForDrawComponent",
-    "AttackComponent"]
+	"components" : ["MovementComponent", 
+					"InputMovementComponent", 
+					"PlayerCollisionComponent", 
+					"AnimationComponent", 
+					"DrawComponent", 
+					"RegisterForDrawComponent",
+					"AttackComponent",
+                    "InputActionComponent"]
 }

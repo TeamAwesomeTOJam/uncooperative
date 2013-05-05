@@ -2,8 +2,9 @@
 	"properties" : {
         "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
 					,"width" : 32, "height" : 32,
-        "attack_time": 0, "attacking": false,
-        "attack_strength" : 20,
+        "attack_time": 0,
+        "attacking": false,
+        "attack_strength" : 40,
         "speed" : 40,
         "attack_distance" : 40,
         "total_attack_time" : 1,
@@ -36,7 +37,7 @@
     },
     "components" : ["MovementComponent", 
     				"ZombieAIComponent",
-    				"PlayerCollisionComponent", 
+    				"ZombieCollisionComponent", 
     				"AnimationComponent", 
     				"DrawComponent", 
     				"RegisterForDrawComponent"]

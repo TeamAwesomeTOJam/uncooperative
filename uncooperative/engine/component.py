@@ -45,10 +45,10 @@ class MovementComponent(object):
             entity.props.y += entity.props.dy * dt
             game.get_game().collision_grid.add_entity(entity)
             
-        collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
-        for collided_entity in collisions:
-            collided_entity.handle('collision', entity)
-            entity.handle('collision', collided_entity)
+            collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
+            for collided_entity in collisions:
+                collided_entity.handle('collision', entity)
+                entity.handle('collision', collided_entity)
 
 
 class InputMovementComponent(object):
@@ -85,6 +85,7 @@ class InputMovementComponent(object):
                 dir = Vec2d(entity.props.dx, entity.props.dy)
                 entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
                 entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
+
 
 class DrawComponent(object):
     
@@ -150,22 +151,23 @@ class ZombieAIComponent(object):
             if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
                 entity.props.attacking = False
                 entity.props.attack_time = 0
-        else:
-            return
+            else:
+                return
 
         mypos = entity.props.get_midpoint()
         in_range_player = None
         in_range_player_attack = []
         mindist = ZOMBIE_DISTANCE
         for player in game.get_game().characters:
-            theirpos = player.props.get_midpoint()
-            dist = (mypos-theirpos).length
-            if dist <= ZOMBIE_DISTANCE :
-                if mindist > dist:
-                    in_range_player = player
+            if player.props.health > 0:
+                theirpos = player.props.get_midpoint()
+                dist = (mypos-theirpos).length
+                if dist <= ZOMBIE_DISTANCE :
+                    if mindist > dist:
+                        in_range_player = player
 
-                if dist <= ZOMBIE_ATTACK_DISTANCE:
-                    in_range_player_attack.append(player)
+                    if dist <= ZOMBIE_ATTACK_DISTANCE:
+                        in_range_player_attack.append(player)
 
         if in_range_player is not None:
             theirpos = in_range_player.props.get_midpoint()
@@ -216,12 +218,13 @@ class AttackComponent(object):
         else:
             entity.props.health -= (attacker.props.attack_strength * dt)
 
-            entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
-            point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
-            print entity_vec, point_vec
+            #entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
+            #point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
+            #print entity_vec, point_vec
 
-            entity.props.dx += point_vec.x
-            entity.props.dy += point_vec.y
+            #entity.props.dx += point_vec.x
+            #entity.props.dy += point_vec.y
+
 
 class PlayerCollisionComponent(object):
     def add(self, entity):
@@ -237,19 +240,6 @@ class PlayerCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
-        vec_entity = Vec2d(entity.props.x, entity.props.y)
-        vec_colliding = Vec2d(colliding_entity.props.x, colliding_entity.props.y)
-        direc = vec_colliding - vec_entity
-        player = None
-        try:
-            player = entity.props.player
-        except:
-            pass
-                    
-        quadrant = int(((direc.get_angle() + 45) % 360) / 90)
-        if player == "1":
-
-            print quadrant
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -259,10 +249,19 @@ class PlayerCollisionComponent(object):
 
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            if quadrant == 0 or quadrant == 2:
-                entity.props.x = entity.props.last_good_x
-            elif quadrant == 1 or quadrant == 3:
-                entity.props.y = entity.props.last_good_y
+            
+            keep_y = game.get_game().collision_grid.get_collisions((entity.props.last_good_x, entity.props.y, entity.props.width, entity.props.height))
+            keep_x = game.get_game().collision_grid.get_collisions((entity.props.x, entity.props.last_good_y, entity.props.width, entity.props.height))
+            
+            if len(keep_x) > 0 or len(keep_y) > 0:
+                if len(keep_x) == 0:
+                    entity.props.y = entity.props.last_good_y
+                elif len(keep_y) == 0 :
+                    entity.props.x = entity.props.last_good_x
+                else:
+                    entity.props.x = entity.props.last_good_x
+                    entity.props.y = entity.props.last_good_y
+            
             game.get_game().collision_grid.add_entity(entity)
             
         
@@ -274,32 +273,68 @@ class StaticCollisionComponent(object):
     def remove(self, entity):
         game.get_game().collision_grid.remove_entity(entity)
         
-    
+        
+class ZombieCollisionComponent(object):
+    def add(self, entity):
+        entity.register_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.add_entity(entity)
+        if entity.props.last_good_x is None:
+            entity.props.last_good_x = entity.props.x
+        if entity.props.last_good_y is None:
+            entity.props.last_good_y = entity.props.y
+
+    def remove(self, entity):
+        entity.unregister_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.remove_entity(entity)
+
+    def handle_collision(self, entity, colliding_entity):
+        try:
+            dx = entity.props.dx
+            dy = entity.props.dy
+        except AttributeError:
+            dx = None
+            dy = None
+
+        if dx or dy:
+            game.get_game().collision_grid.remove_entity(entity)
+            
+            entity.props.x = entity.props.last_good_x
+            entity.props.y = entity.props.last_good_y
+            
+            game.get_game().collision_grid.add_entity(entity)
+            
+            
 class ItemComponent(object):
     def add(self, entity):
         entity.register_handler('pickup', self.handle_pickup)
-        entity.register_handler('move', self.handle_move)
+        entity.register_handler('update', self.handle_update)
         entity.register_handler('drop', self.handle_drop)
+        game.get_game().register_for_updates(entity)
 
     def remove(self, entity):
         entity.unregister_handler('pickup', self.handle_pickup)
-        entity.unregister_handler('move', self.handle_move)
+        entity.unregister_handler('update', self.handle_update)
         entity.unregister_handler('drop', self.handle_drop)
 
     def handle_pickup(self, entity, player):
-        PICKUP_DISTANCE = 10
-        if abs(entity.props.x - player.props.x) <= PICKUP_DISTANCE and \
-            abs(entity.props.y - player.props.y) <= PICKUP_DISTANCE:
-            entity.props.pickup = True
-            entity.props.carrying_player = player
+        print "Pickup", entity
+        entity.props.pickup = True
+        entity.props.carrying_player = player
+        player.props.carrying_item = entity
+        game.get_game().component_manager.remove("StaticCollisionComponent", entity)
 
     def handle_drop(self, entity, player):
         entity.props.pickup = False
         entity.props.carrying_player = None
+        player.props.carrying_item = None
+        game.get_game().component_manager.add("StaticCollisionComponent", entity)
 
-    def handle_move(self, entity):
+
+    def handle_update(self, entity, dt):
         if entity.props.pickup and entity.props.carrying_player is not None:
-            entity.props.x, entity.props.y = entity.props.carrying_player.props.x, entity.props.carrying_player.props.y
+            box_in_front = entity.props.carrying_player.get_box_in_front(entity.props.width, entity.props.height)
+
+            entity.props.x, entity.props.y = box_in_front[0], box_in_front[1]
 
 
 class CarComponent(object):
@@ -328,3 +363,41 @@ class CarComponent(object):
                     entity.props.driver = player
                     player.props.draw = False
                     player.props.x, player.props.y = entity.props.x, entity.props.y
+
+
+class InputActionComponent(object):
+    def add(self, entity):
+        entity.register_handler('input', self.handle_input)
+
+    def remove(self, entity):
+        entity.unregister_handler('input', self.handle_input)
+
+    def handle_input(self, entity, event):
+        if hasattr(event, "player") and entity.props.player and entity.props.player == event.player and \
+                (event.button_down or event.key_down) and event.action == "PICKUP":
+            if not entity.props.carrying_item:
+                entities_in_front = entity.get_entities_in_front()
+
+                print entities_in_front
+                for i in entities_in_front:
+                    if i.props.item:
+                        i.handle('pickup', entity)
+                        return
+            else:
+                entity.props.carrying_item.handle('drop', entity)
+
+
+class DeadComponent(object):
+    def add(self, entity):
+        entity.register_handler('dead', self.handle_dead)
+
+    def remove(self, entity):
+        entity.unregister_handler('dead', self.handle_dead)
+
+    def handle_dead(self, entity):
+        entity.props.dead = True
+        entity.props.dead_time = 0
+        game.get_game().component_manager('draw', entity)
+        game.get_game().component_manager('update', entity)
+        game.get_game().component_manager('input', entity)
+        game.get_game().component_manager('move', entity)

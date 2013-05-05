@@ -6,7 +6,6 @@ Created on May 2, 2013
 
 import os
 import sys
-
 import pygame
 
 import componentmanager
@@ -25,7 +24,9 @@ from component import (MovementComponent,
                        DrawHitBoxComponent,
                        AttackComponent,
                        ItemComponent,
-                       StaticCollisionComponent)
+                       StaticCollisionComponent,
+                       InputActionComponent,
+                       ZombieCollisionComponent)
 
 from collision import CollisionGrid
 
@@ -42,7 +43,8 @@ from grid import Grid,Vec2
 class Game(object):
     
     def __init__(self):
-        self.screen_size = (1000,600)
+        #self.screen_size = (500,300)
+        self.screen_size = (1280,720)
         self.map_size = (128,128)
         self.tile_size = (32,32)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
@@ -51,7 +53,7 @@ class Game(object):
         pygame.init()
         
         self.clock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((1000,600))
+        self.screen = pygame.display.set_mode(self.screen_size)
         
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
@@ -68,7 +70,9 @@ class Game(object):
         self.component_manager.register_component('AttackComponent', AttackComponent())
         self.component_manager.register_component('ItemComponent', ItemComponent())
         self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
-
+        self.component_manager.register_component('InputActionComponent', InputActionComponent())
+        self.component_manager.register_component('ZombieCollisionComponent', ZombieCollisionComponent())
+        
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -85,6 +89,8 @@ class Game(object):
         self.entities_to_input = set()
         self.entities_to_draw = set()
         
+        self.mode = 'splash'
+        
     def register_for_updates(self, entity):
         self.entities_to_update.add(entity)
         
@@ -97,8 +103,17 @@ class Game(object):
     def run(self):
         self.car = Entity('car')
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
-        self.items = [Entity('engine'), Entity('gas-can'), Entity('radiator'), Entity('steering-wheel-2'), Entity('tire'),
-                      Entity('toolbox')]
+        self.item_names = ["engine", "gas-can", "radiator", "steering-wheel-2", "tire", "steering-wheel", "toolbox", "tire", "tire", "tire"]
+
+        self.items = []
+        for i in self.item_names:
+            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
+            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
+            self.items.append(Entity(i, properties={
+                "x": x_pos,
+                "y": y_pos
+            }))
+
         self.renderer = Render(self)
 
 
@@ -110,34 +125,47 @@ class Game(object):
                 "x": x_pos,
                 "y": y_pos
             }))
+        
+        self.splash_screen = Entity('splashscreen')
 
         while True:
-            dt = self.clock.tick() / 1000.0
-            for e in pygame.event.get():
-                if e.type == pygame.QUIT: sys.exit()
-                if (e.type == pygame.JOYAXISMOTION or
-                        e.type == pygame.JOYBALLMOTION or
-                        e.type == pygame.JOYBUTTONDOWN or
-                        e.type == pygame.JOYBUTTONUP or
-                        e.type == pygame.JOYHATMOTION or
-                        e.type == pygame.KEYDOWN or
-                        e.type == pygame.KEYUP):
-                    
-                    events = create_input_events(e)
-                    for entity in self.entities_to_input:
-                        for event in events:
-                            if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
-                                entity.handle('move', event)
-                            else:
-                                entity.handle('input', event)
+            dt = self.clock.tick(60) / 1000.0
 
-            for entity in self.entities_to_update:
-                entity.handle('update', dt)
+            if self.mode=='game':
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT: sys.exit()
+                    if (e.type == pygame.JOYAXISMOTION or
+                            e.type == pygame.JOYBALLMOTION or
+                            e.type == pygame.JOYBUTTONDOWN or
+                            e.type == pygame.JOYBUTTONUP or
+                            e.type == pygame.JOYHATMOTION or
+                            e.type == pygame.KEYDOWN or
+                            e.type == pygame.KEYUP):
+                        events = create_input_events(e)
+                        for entity in self.entities_to_input:
+                            for event in events:
+                                if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
+                                    entity.handle('move', event)
+                                else:
+                                    entity.handle('input', event)
+                for entity in self.entities_to_update:
+                    entity.handle('update', dt)
+
+                self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
+                for entity in self.entities_to_draw:
+                    entity.handle('draw', self.renderer.draw_surface)
+
+                self.renderer.render()
                 
-            for entity in self.entities_to_draw:
-                entity.handle('draw', self.renderer.draw_surface)
+            elif self.mode == 'splash':
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT: sys.exit()
+                    if e.type == pygame.KEYDOWN:
+                        self.mode = 'game'
+                self.splash_screen.handle('update',dt)
+                self.screen.blit(self.resource_manager.get('sprite',self.splash_screen.props.image),(0,0))
+                pygame.display.flip()
                 
-            self.renderer.render()
             pygame.display.set_caption('fps: ' + str(self.clock.get_fps()))
 
 
