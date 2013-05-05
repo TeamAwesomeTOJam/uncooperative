@@ -1,0 +1,7 @@
+{
+	"properties" : {"x" : 350, "y" : 350, 
+					"player" : "1"
+					},
+	"components" : [],
+	"includes" : ["character-base"]
+}
