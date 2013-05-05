@@ -1,0 +1,11 @@
+{
+	"properties" : {"animations" : {
+						"default" : {
+							"duration" : 4,
+							"frame-dir" : "Screens/Title Screen/"
+						}
+					}
+					
+		},
+	"components" : ["AnimationComponent"]
+}

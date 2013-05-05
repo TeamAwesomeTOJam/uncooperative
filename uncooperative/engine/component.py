@@ -151,8 +151,8 @@ class ZombieAIComponent(object):
             if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
                 entity.props.attacking = False
                 entity.props.attack_time = 0
-        else:
-            return
+            else:
+                return
 
         mypos = entity.props.get_midpoint()
         in_range_player = None
@@ -217,12 +217,12 @@ class AttackComponent(object):
         else:
             entity.props.health -= (attacker.props.attack_strength * dt)
 
-            entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
-            point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
+            #entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
+            #point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
             #print entity_vec, point_vec
 
-            entity.props.dx += point_vec.x
-            entity.props.dy += point_vec.y
+            #entity.props.dx += point_vec.x
+            #entity.props.dy += point_vec.y
 
 class PlayerCollisionComponent(object):
     def add(self, entity):
@@ -345,7 +345,7 @@ class InputActionComponent(object):
         entity.unregister_handler('input', self.handle_input)
 
     def handle_input(self, entity, event):
-        if entity.props.player and entity.props.player == event.player and \
+        if hasattr(event, "player") and entity.props.player and entity.props.player == event.player and \
                 (event.button_down or event.key_down) and event.action == "PICKUP":
             if not entity.props.carrying_item:
                 entities_in_front = entity.get_entities_in_front()
