@@ -31,11 +31,11 @@ class Entity(object):
             for component in game.get_game().resource_manager.get('definition', defn)['components']:  
                 game.get_game().component_manager.add(component, self)
         
-        if properties:
+        if properties is not None:
             for key, value in properties.items():
                 setattr(self.props, key, value)
                 
-        if components:
+        if components is not None:
             for component in components:
                 game.get_game().component_manager.add(component, self)
                 
@@ -64,4 +64,4 @@ class EntityProperties(object):
             props = game.get_game().resource_manager.get('definition', definition)['properties']
             if name in props: 
                 return props[name]
-        raise AttributeError
+        return None

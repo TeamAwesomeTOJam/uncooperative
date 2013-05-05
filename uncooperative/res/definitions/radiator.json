@@ -1,0 +1,8 @@
+{
+	"properties" : {"x" : 2100, "y" : 2050,
+					"item-type": "radiator",
+                    "image" : "items/radiator.png"
+    },
+	"components" : [],
+	"includes" : ["item-base"]
+}
