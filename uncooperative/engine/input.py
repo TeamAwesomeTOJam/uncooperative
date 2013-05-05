@@ -6,7 +6,7 @@ def enum(**enums):
 InputSource = enum(JOYSTICK=1, KEYBOARD=2)
 
 class InputEvent:
-    def __init__(self, event):
+    def __init__(self, event, **kwargs):
         """
         @type event: pygame.event.Event
         """
@@ -76,7 +76,14 @@ class InputEvent:
             elif self.event_source == InputSource.JOYSTICK and player_mapping['input'] == "JOYSTICK":
                 if player_mapping.get("joystick") == self.joy:
                     self.player = player_number
-                    if self.axis == 0 or self.hat == 0:
+                    if self.hat == player_mapping['hat']:
+                        if kwargs["axis"] is not None:
+                            self.axis = kwargs["axis"]
+                            self.value = event.value[kwargs["axis"]]
+                            if self.axis == 1:
+                                self.value = -1 * self.value
+                    
+                    if self.axis == 0:
                         if self.value >= 0:
                             self.action = "UP"
                             self.magnitude = self.value
@@ -85,7 +92,7 @@ class InputEvent:
                             self.action = "DOWN"
                             self.magnitude = self.value
                             return
-                    elif self.axis == 1 or self.hat == 1:
+                    elif self.axis == 1:
                         if self.value >= 0:
                             self.action = "RIGHT"
                             self.magnitude = self.value
@@ -99,6 +106,15 @@ class InputEvent:
                         self.action = player_mapping[self.button]
                         return
 
+def create_input_events(event):
+    events = []
+    if event.type == pygame.JOYHATMOTION:
+        events.append(InputEvent(event, axis=0))
+        events.append(InputEvent(event, axis=1))
+    else:
+        events.append(InputEvent(event))
+    
+    return events
 
 class InputManager:
     def __init__(self):

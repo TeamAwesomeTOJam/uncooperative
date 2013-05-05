@@ -10,12 +10,12 @@ rmdir Team\ *
 mkdir tiles
 mv BG\ Tiles bg_tiles
 mv Items items
-mkdir -p chars/bad_guys/
-mv "Good Guys" chars/good_guys
-mv "Bad Guys" chars/bad_guys/type1
+mkdir -p chars
+mv "Good Guys/Doda" chars/good_guys
+mv "Bad Guys" chars/bad_guys
 
 
-for m in chars/good_guys/* chars/bad_guys/*
+for m in chars/good_guys chars/bad_guys
 do 
     pushd "$m"
     echo "Moving into $m"
@@ -26,12 +26,16 @@ do
     mv *Right* right
     for dir in *
     do 
-        pushd $dir 
-        for file in *
-        do 
-            newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//' | sed 's/0*//')
-            mv $file ${newfile}.png
-        done
+        if [ -d $dir ]
+        then 
+            pushd $dir 
+
+            for file in *
+            do 
+                newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//' | sed 's/0*//')
+                mv $file ${newfile}.png
+            done
+        fi 
         popd
     done
     popd
