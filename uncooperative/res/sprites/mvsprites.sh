@@ -10,12 +10,12 @@ rmdir Team\ *
 mkdir tiles
 mv BG\ Tiles bg_tiles
 mv Items items
-mkdir -p chars/bad_guys/
-mv "Good Guys" chars/good_guys
-mv "Bad Guys" chars/bad_guys/type1
+mkdir -p chars
+mv "Good Guys/Doda" chars/good_guys
+mv "Bad Guys" chars/bad_guys
 
 
-for m in chars/good_guys/* chars/bad_guys/*
+for m in chars/good_guys chars/bad_guys
 do 
     pushd "$m"
     echo "Moving into $m"
