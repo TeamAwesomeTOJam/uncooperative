@@ -194,7 +194,7 @@ class Render:
         
         for c in range(4):
             r = pygame.Rect((0,0),self.screen_size)
-            r.center = self.cameras[0].pos()
+            r.center = self.cameras[c].pos()
         
             self.draw_surface.blit(self.world_surface,r,r)
             
