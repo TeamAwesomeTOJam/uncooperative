@@ -22,7 +22,7 @@ from component import (MovementComponent,
                        RegisterForDrawComponent,
                        ZombieAIComponent,
                        CarComponent,
-                       DrawHitBoxComponent)
+                       DrawHitBoxComponent,
                        AttackComponent)
 
 from collision import CollisionGrid

@@ -50,6 +50,6 @@
 					"AnimationComponent", 
 					"DrawComponent", 
 					"DrawHitBoxComponent",
-					"RegisterForDrawComponent"]
+					"RegisterForDrawComponent",
 					"AttackComponent"]
 }
