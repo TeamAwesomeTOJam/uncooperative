@@ -203,6 +203,7 @@ class PlayerCollisionComponent(object):
         entity.props.y = good_y
         game.get_game().collision_grid.add_entity(entity)
         
+
 class ItemComponent(object):
     def add(self, entity):
         entity.register_handler('pickup', self.handle_pickup)

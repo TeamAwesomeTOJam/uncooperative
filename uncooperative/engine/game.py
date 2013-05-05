@@ -87,10 +87,12 @@ class Game(object):
         #chars = Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.renderer = Render(self)
+
         self.zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])}) for m in range(20)]
         #self.zombies = [Entity("zombie")]
         for z in self.zombies:
             self.collision_grid.add_entity(z)
+
         for c in self.characters:
             self.collision_grid.add_entity(c)
 
