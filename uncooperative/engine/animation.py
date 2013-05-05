@@ -14,7 +14,7 @@ class AnimationComponent(object):
         entity.register_handler('play-animation', self.on_play_animation)
         game.get_game().register_for_updates(entity)
         
-        entity.props.current_animation = 'default'
+        entity.props.current_animation = entity.props.name+'default'
         entity.props.animation_pos = 0
         entity.props.animation_should_loop = True
         print entity.props.animations.keys()
@@ -31,7 +31,7 @@ class AnimationComponent(object):
                 entity.props.animation_pos = entity.props.animation_pos % entity.props.animations[entity.props.current_animation]['duration']
             else:
                 entity.handle('animation-finished', entity.props.current_animation)
-                entity.props.current_animation = 'default'
+                entity.props.current_animation = entity.props.name+'default'
                 entity.props.animation_pos = 0
                 entity.props.animation_should_loop = True
         frame_number = int(entity.props.animation_pos / entity.props.animations[entity.props.current_animation]['duration'] * len(entity.props.animations[entity.props.current_animation]['frames']))

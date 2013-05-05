@@ -83,7 +83,6 @@ class Render:
         for t in self.tiles:
             t.handle('draw', self.world_surface)
 
-        pygame.image.save(self.world_surface,"file.png")
         self.minimap_scale = 0.025
         self.minimap_size = Vec2d(int(self.minimap_scale*self.world_size[0]),int(self.minimap_scale*self.world_size[1]))
         
