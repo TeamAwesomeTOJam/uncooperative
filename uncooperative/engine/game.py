@@ -12,6 +12,7 @@ import pygame
 import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
+from animation import AnimationComponent
 from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping
 from component import (MovementComponent,
                        ExampleComponent, 
@@ -47,6 +48,7 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
+        self.component_manager.register_component('AnimationComponent', AnimationComponent())
         self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
@@ -109,7 +111,8 @@ class Game(object):
                     event = InputEvent(e)
 
                     for entity in self.entities_to_input:
-                        if e.type == pygame.JOYAXISMOTION:
+                        
+                        if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
                             entity.handle('move', event)
                         else:
                             entity.handle('input', event)
