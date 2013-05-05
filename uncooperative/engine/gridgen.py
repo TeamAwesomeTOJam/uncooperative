@@ -1,6 +1,7 @@
 from grid import Grid
 from grid import Vec2
-from random import randint, gauss
+from random import randint, gauss, shuffle
+from vec2d import Vec2d
 
 
 class GridGenerator:
@@ -10,6 +11,7 @@ class GridGenerator:
         self.ni = self.grid.ni
         self.nj = self.grid.nj
         self.blocksize = blocksize
+        self.roomgridnumtiles = 16
 
     def makeCircle(self,center,radius):#center: Vec2, radius: Vec2
         for m in range(self.ni):
@@ -105,18 +107,51 @@ class GridGenerator:
             
 
 
+    def recurse(self,currentpos):
+        centervec = Vec2d(currentpos.x*self.roomgridnumtiles+self.roomgridnumtiles/2,currentpos.y*self.roomgridnumtiles+self.roomgridnumtiles/2)
+        
+        self.makeSquare(centervec, Vec2d(6,6))
+        
+        dirs = [Vec2d(1,0),Vec2d(0,1),Vec2d(-1,0),Vec2d(0,-1)]
+        shuffle(dirs)
+        for d in dirs:
+            check = currentpos + d
+            #print check.x,check.y
+            if check.x < 0 or check.x >= self.roomgridx or check.y < 0 or check.y >= self.roomgridy:
+                pass
+            elif self.visitedGrid[check.x][check.y]:
+                self.visitedGrid[check.x][check.y] = 0
+                self.makeSquare(centervec+((self.roomgridnumtiles/2)*d),Vec2d(2,2))
+                self.recurse(check)
+        
 
     def genMap(self):
-        self.randomDepthFirstSearch()
+        
+        self.roomgridx = self.ni/self.roomgridnumtiles
+        self.roomgridy = self.nj/self.roomgridnumtiles
+        self.visitedGrid = Grid(self.roomgridx,self.roomgridy)
+        currentroomx = self.roomgridx/2
+        currentroomy = self.roomgridy/2
+        self.recurse(Vec2d(currentroomx,currentroomy))
+        
+        
+        
+        
+        
+        #self.randomDepthFirstSearch()
 #         self.makeSquare(Vec2(7,7), Vec2(5,5))
-        for bigx in range(1,self.ni/self.blocksize.x,2):
-            for bigy in range(1,self.nj/self.blocksize.y,2):
-                if randint(0,1):
-                    sizex = max(int(4-gauss(0,1)),0)
-                    sizey = max(int(4-gauss(0,1)),0)
-                    shiftx = randint(-1,1)
-                    shifty = randint(-1,1)
-                    self.makeSquare(Vec2(7*bigx + shiftx,7*bigy+shifty), Vec2(sizex,sizey))
+#         roomgridsize = 15
+#         roomsizex = 14
+#         roomsizey = 14
+#         for bigx in range(self.ni/roomgridsize):
+#             for bigy in range(self.nj/roomgridsize):
+#                 center = Vec2(bigx*roomgridsize+roomgridsize/2,bigy*roomgridsize+roomgridsize/2)
+#                 if randint(0,1):
+#                     sizex = max(int(7-gauss(0,1)),0)
+#                     sizey = max(int(7-gauss(0,1)),0)
+#                     shiftx = randint(-1,1)
+#                     shifty = randint(-1,1)
+#                     self.makeSquare(center, Vec2(roomsizex/2,roomsizey/2))
                 #print bigx*self.blocksize.x+self.blocksize.x/2,bigy*self.blocksize.y+self.blocksize.y/2
                 #self.makeSquare(Vec2(bigx*self.blocksize.x+self.blocksize.x/2,bigy*self.blocksize.y+self.blocksize.y/2), Vec2(self.blocksize.x-2,self.blocksize.y-2))
 #         for times in range(int(self.ni**.7)):
