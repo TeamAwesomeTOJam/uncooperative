@@ -4,8 +4,7 @@
 					"width" : 20, "height" : 20
 
 		},
-	"components" : ["PlayerCollisionComponent",
-					"DrawComponent",
+	"components" : ["DrawComponent",
 					"RegisterForDrawComponent",
 					"ItemComponent"]
 }
