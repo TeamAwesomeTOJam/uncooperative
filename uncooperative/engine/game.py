@@ -101,8 +101,17 @@ class Game(object):
     def run(self):
         self.car = Entity('car')
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
-        self.items = [Entity('engine'), Entity('gas-can'), Entity('radiator'), Entity('steering-wheel-2'), Entity('tire'),
-                      Entity('toolbox')]
+        self.item_names = ["engine", "gas-can", "radiator", "steering-wheel-2", "tire", "steering-wheel", "toolbox", "tire", "tire", "tire"]
+
+        self.items = []
+        for i in self.item_names:
+            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
+            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
+            self.items.append(Entity(i, properties={
+                "x": x_pos,
+                "y": y_pos
+            }))
+
         self.renderer = Render(self)
 
 

@@ -159,14 +159,15 @@ class ZombieAIComponent(object):
         in_range_player_attack = []
         mindist = ZOMBIE_DISTANCE
         for player in game.get_game().characters:
-            theirpos = player.props.get_midpoint()
-            dist = (mypos-theirpos).length
-            if dist <= ZOMBIE_DISTANCE :
-                if mindist > dist:
-                    in_range_player = player
+            if player.props.health > 0:
+                theirpos = player.props.get_midpoint()
+                dist = (mypos-theirpos).length
+                if dist <= ZOMBIE_DISTANCE :
+                    if mindist > dist:
+                        in_range_player = player
 
-                if dist <= ZOMBIE_ATTACK_DISTANCE:
-                    in_range_player_attack.append(player)
+                    if dist <= ZOMBIE_ATTACK_DISTANCE:
+                        in_range_player_attack.append(player)
 
         if in_range_player is not None:
             theirpos = in_range_player.props.get_midpoint()
