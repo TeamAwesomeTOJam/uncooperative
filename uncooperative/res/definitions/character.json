@@ -1,8 +1,16 @@
 {
 	"properties" : {"x" : 320, "y" : 320, 
 					"dx" : 0, "dy" : 0, 
-					"controller" : 0, 
+					"player" : "1", 
 					"x_input" : 0 , "y_input" : 0, 
-					"width" : 20, "height" : 20 },
-	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent"]
+					"width" : 20, "height" : 20,
+					"animations" : {
+						"default" : {
+							"duration" : 1.0,
+							"frames" : ["impassableCR.png"]
+						}
+					}
+					
+					},
+	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent", "AnimationComponent", "DrawComponent"]
 }
