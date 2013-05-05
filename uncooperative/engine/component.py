@@ -243,7 +243,7 @@ class PlayerCollisionComponent(object):
 
     def handle_collision(self, entity, colliding_entity):
         if colliding_entity.props.car and entity.props.carrying_item:
-            colliding_entity.handle('use', entity.props.carring_item, entity)
+            colliding_entity.handle('use', entity.props.carrying_item, entity)
             return
 
         try:
@@ -352,11 +352,11 @@ class CarComponent(object):
 
     def handle_use(self, entity, item, player):
         if item:
-            if item.type not in entity.item_types:
+            if item.props.type not in entity.props.item_types:
                 item.handle('drop', player)
 
-                entity.items.append(item)
-                entity.item_types.append(item.type)
+                entity.props.items.append(item)
+                entity.props.item_types.append(item.props.item_type)
         elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
             if entity.props.driver is None:
                 entity.props.driver = player
