@@ -163,3 +163,28 @@ class PlayerCollisionComponent(object):
         entity.props.y = entity.props.last_good_y
         
         
+class ItemComponent(object):
+    def add(self, entity):
+        entity.register_handler('pickup', self.handle_pickup)
+        entity.register_handler('move', self.handle_move)
+        entity.register_handler('drop', self.handle_drop)
+
+    def remove(self, entity):
+        entity.unregister_handler('pickup', self.handle_pickup)
+        entity.unregister_handler('move', self.handle_move)
+        entity.unregister_handler('drop', self.handle_drop)
+
+    def handle_pickup(self, entity, player):
+        PICKUP_DISTANCE = 10
+        if abs(entity.props.x - player.props.x) <= PICKUP_DISTANCE and \
+            abs(entity.props.y - player.props.y) <= PICKUP_DISTANCE:
+            entity.props.pickup = True
+            entity.props.carrying_player = player
+
+    def handle_drop(self, entity, player):
+        entity.props.pickup = False
+        entity.props.carrying_player = None
+
+    def handle_move(self, entity):
+        if entity.props.pickup and entity.props.carrying_player is not None:
+            entity.props.x, entity.props.y = entity.props.carrying_player.props.x, entity.props.carrying_player.props.y
