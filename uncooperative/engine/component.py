@@ -1,6 +1,7 @@
 import game
 import pygame
 import math
+import random
 from math import *
 
 from vec2d import Vec2d
@@ -101,7 +102,7 @@ class ZombieAIComponent(object):
         mypos = Vec2d(entity.props.x,entity.props.y)
         in_range_player = None
         in_range_player_attack = []
-        for player in game.get_game().player_list:
+        for player in game.get_game().characters:
             theirpos = Vec2d(player.props.x,player.props.y)
             dist = mypos.dot(theirpos)**.5
             if dist <= ZOMBIE_DISTANCE:

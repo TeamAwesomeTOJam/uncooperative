@@ -81,7 +81,10 @@ class Game(object):
         character = Entity('character')
         self.characters = [character for m in xrange(4)]
         self.renderer = Render(self)
-        zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])})]
+        zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])}) for m in range(20)]
+        self.zombies = [Entity("zombie")]
+        for z in self.zombies:
+            self.collision_grid.add_entity(z)
         for c in self.characters:
             self.collision_grid.add_entity(c)
 
