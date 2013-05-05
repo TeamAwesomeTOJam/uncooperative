@@ -49,11 +49,12 @@ class InputMovementComponent(object):
     def handle_move(self, entity, event):
         SPEED = 20
         DEADZONE = 0.15
-        if entity.props.controller == event.joy:
+        print event.__dict__
+        if entity.props.player == event.player:
             if event.axis == 0:
-                entity.props.x_input = event.value
+                entity.props.x_input = event.magnitude
             if event.axis == 1:
-                entity.props.y_input = event.value
+                entity.props.y_input = event.magnitude
                 
             magnitude = ((entity.props.x_input * entity.props.x_input) + (entity.props.y_input * entity.props.y_input)) ** 0.5
 
@@ -61,7 +62,6 @@ class InputMovementComponent(object):
                 entity.props.dx = 0
                 entity.props.dy = 0
             else:
-                entity.props.dx = event.value * SPEED
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED

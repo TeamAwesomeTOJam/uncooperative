@@ -54,30 +54,29 @@ class InputEvent:
         for player_number, player_mapping in input_map.iteritems():
             if self.event_source == InputSource.KEYBOARD and player_mapping['input'] == "KEYBOARD":
                 string_key = pygame.key.name(self.key)
-                if player_mapping[string_key]:
+                if player_mapping.get(string_key):
                     self.action = player_mapping[string_key]
-                    if self.action == "UP" or self.action == "RIGHT":
-                        if self.button_down:
+                    if self.action == "DOWN" or self.action == "RIGHT":
+                        if self.key_down:
                             self.magnitude = 1
                         else:
                             self.magnitude = 0
                     else:
-                        if self.button_down:
+                        if self.key_down:
                             self.magnitude = -1
                         else:
                             self.magnitude = 0
+                    if self.action == "UP" or self.action == "DOWN":
+                        self.axis = 1
+                    else:
+                        self.axis = 0
 
                     self.player = player_number
                     return
             elif self.event_source == InputSource.JOYSTICK and player_mapping['input'] == "JOYSTICK":
-                print "joy"
-                if player_mapping["joystick"] == self.joy:
-                    print "joy player"
+                if player_mapping.get("joystick") == self.joy:
                     self.player = player_number
-                    if self.button == player_mapping[self.button]:
-                        self.action = player_mapping[self.button]
-                        return
-                    elif self.axis == 0 or self.hat == 0:
+                    if self.axis == 0 or self.hat == 0:
                         if self.value > 0:
                             self.action = "UP"
                             self.magnitude = self.value
@@ -95,6 +94,10 @@ class InputEvent:
                             self.action = "LEFT"
                             self.magnitude = self.value
                             return
+                    
+                    if self.button is not None and self.button == player_mapping.get(self.button):
+                        self.action = player_mapping[self.button]
+                        return
 
 
 class InputManager:
