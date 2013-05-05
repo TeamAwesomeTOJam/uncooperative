@@ -2,6 +2,7 @@
 	"properties" : {
         "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
 					,"width" : 20, "height" : 20,
+        "attack_time": 0, "attacking": false,
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
