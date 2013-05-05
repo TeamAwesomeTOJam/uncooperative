@@ -54,7 +54,7 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_move)
     
     def handle_move(self, entity, event):
-        SPEED = 20 * 8
+        SPEED = 20 
         DEADZONE = 0.15
         if entity.props.player == event.player:
             if event.axis == 0:
@@ -194,13 +194,21 @@ class PlayerCollisionComponent(object):
             good_x = entity.props.last_good_x
             good_y = entity.props.last_good_y
         except AttributeError:
-            good_x = entity.props.x - 20
-            good_y  = entity.props.y - 20
+            good_x = entity.props.x 
+            good_y = entity.props.y
         
-        game.get_game().collision_grid.remove_entity(entity)
-        entity.props.x = good_x
-        entity.props.y = good_y
-        game.get_game().collision_grid.add_entity(entity)
+        try:
+            dx = entity.props.dx
+            dy = entity.props.dy
+        except:
+            dx = None
+            dy = None
+
+        if dx or dy:
+            game.get_game().collision_grid.remove_entity(entity)
+            entity.props.x = good_x
+            entity.props.y = good_y
+            game.get_game().collision_grid.add_entity(entity)
         
 
 class ItemComponent(object):
