@@ -159,14 +159,15 @@ class ZombieAIComponent(object):
         in_range_player_attack = []
         mindist = ZOMBIE_DISTANCE
         for player in game.get_game().characters:
-            theirpos = player.props.get_midpoint()
-            dist = (mypos-theirpos).length
-            if dist <= ZOMBIE_DISTANCE :
-                if mindist > dist:
-                    in_range_player = player
+            if player.props.health > 0:
+                theirpos = player.props.get_midpoint()
+                dist = (mypos-theirpos).length
+                if dist <= ZOMBIE_DISTANCE :
+                    if mindist > dist:
+                        in_range_player = player
 
-                if dist <= ZOMBIE_ATTACK_DISTANCE:
-                    in_range_player_attack.append(player)
+                    if dist <= ZOMBIE_ATTACK_DISTANCE:
+                        in_range_player_attack.append(player)
 
         if in_range_player is not None:
             theirpos = in_range_player.props.get_midpoint()
@@ -355,3 +356,18 @@ class InputActionComponent(object):
             else:
                 entity.props.carrying_item.handle('drop', entity)
 
+
+class DeadComponent(object):
+    def add(self, entity):
+        entity.register_handler('dead', self.handle_dead)
+
+    def remove(self, entity):
+        entity.unregister_handler('dead', self.handle_dead)
+
+    def handle_dead(self, entity):
+        entity.props.dead = True
+        entity.props.dead_time = 0
+        game.get_game().component_manager('draw', entity)
+        game.get_game().component_manager('update', entity)
+        game.get_game().component_manager('input', entity)
+        game.get_game().component_manager('move', entity)

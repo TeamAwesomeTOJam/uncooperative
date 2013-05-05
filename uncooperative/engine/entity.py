@@ -65,7 +65,7 @@ class Entity(object):
         midpoint = self.props.get_midpoint()
         player_dimensions = Vec2d(self.props.width, self.props.height)
         if self.props.facing == 0: #right
-            collision_box = (midpoint.x + player_dimensions.x/2, midpoint.y + BOX_HEIGHT/2, BOX_WIDTH, BOX_HEIGHT)
+            collision_box = (midpoint.x + player_dimensions.x/2, midpoint.y - BOX_HEIGHT/2, BOX_WIDTH, BOX_HEIGHT)
         elif self.props.facing == 1: #down
             collision_box = (midpoint.x - BOX_WIDTH/2, midpoint.y + player_dimensions.y/2, BOX_WIDTH, BOX_HEIGHT)
         elif self.props.facing == 2: #left
