@@ -349,12 +349,9 @@ class CarComponent(object):
         entity.unregister_handler('use', self.handle_use)
 
     def handle_use(self, entity, item, player):
-        print entity, item, player
         if item:
             if item.type not in entity.item_types:
-                item.props.pickup = False
-                item.props.carrying_player = None
-                player.props.carrying_item = None
+                item.handle('drop', player)
 
                 entity.items.append(item)
                 entity.item_types.append(item.type)
