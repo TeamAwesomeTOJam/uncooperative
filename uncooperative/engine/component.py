@@ -45,10 +45,10 @@ class MovementComponent(object):
             entity.props.y += entity.props.dy * dt
             game.get_game().collision_grid.add_entity(entity)
             
-        collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
-        for collided_entity in collisions:
-            collided_entity.handle('collision', entity)
-            entity.handle('collision', collided_entity)
+            collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
+            for collided_entity in collisions:
+                collided_entity.handle('collision', entity)
+                entity.handle('collision', collided_entity)
 
 
 class InputMovementComponent(object):
@@ -273,7 +273,37 @@ class StaticCollisionComponent(object):
     def remove(self, entity):
         game.get_game().collision_grid.remove_entity(entity)
         
-    
+        
+class ZombieCollisionComponent(object):
+    def add(self, entity):
+        entity.register_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.add_entity(entity)
+        if entity.props.last_good_x is None:
+            entity.props.last_good_x = entity.props.x
+        if entity.props.last_good_y is None:
+            entity.props.last_good_y = entity.props.y
+
+    def remove(self, entity):
+        entity.unregister_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.remove_entity(entity)
+
+    def handle_collision(self, entity, colliding_entity):
+        try:
+            dx = entity.props.dx
+            dy = entity.props.dy
+        except AttributeError:
+            dx = None
+            dy = None
+
+        if dx or dy:
+            game.get_game().collision_grid.remove_entity(entity)
+            
+            entity.props.x = entity.props.last_good_x
+            entity.props.y = entity.props.last_good_y
+            
+            game.get_game().collision_grid.add_entity(entity)
+            
+            
 class ItemComponent(object):
     def add(self, entity):
         entity.register_handler('pickup', self.handle_pickup)
