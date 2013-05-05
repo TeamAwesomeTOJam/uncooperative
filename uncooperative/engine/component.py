@@ -7,6 +7,9 @@ from math import *
 from vec2d import Vec2d
 
 
+FACING = ['right', 'down', 'left', 'up']
+
+
 class ExampleComponent(object):
     
     def add(self, entity):
@@ -49,6 +52,7 @@ class InputMovementComponent(object):
     def add(self, entity):
         entity.register_handler('move', self.handle_move)
         game.get_game().register_for_input(entity)
+        entity.props.facing = 1
     
     def remove(self, entity):
         entity.unregister_handler('move', self.handle_move)
@@ -67,27 +71,16 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
-                if 'right' in entity.props.current_animation:
-                    entity.handle('play-animation', 'idle-right', True)
-                if 'left' in entity.props.current_animation:
-                    entity.handle('play-animation', 'idle-left', True)
-                if 'down' in entity.props.current_animation:
-                    entity.handle('play-animation', 'idle-down', True)
-                if 'up' in entity.props.current_animation:
-                    entity.handle('play-animation', 'idle-up', True)
+                entity.handle('play-animation', 'idle-%s' % (FACING[entity.props.facing],), True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
-                if entity.props.dx > 0:
-                    entity.handle('play-animation', 'walk-right', True)
-                elif entity.props.dx < 0:
-                    entity.handle('play-animation', 'walk-left', True)
-                if entity.props.dy > 0:
-                    entity.handle('play-animation', 'walk-down', True)
-                elif entity.props.dy < 0:
-                    entity.handle('play-animation', 'walk-up', True)
+                
+                dir = Vec2d(entity.props.dx, entity.props.dy)
+                entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
+                entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
 
 
 class DrawComponent(object):
@@ -177,15 +170,9 @@ class ZombieAIComponent(object):
 
             for player in in_range_player_attack:
                 player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
-                
-        if entity.props.dx > 0:
-            entity.handle('play-animation', 'walk-right', True)
-        elif entity.props.dx < 0:
-            entity.handle('play-animation', 'walk-left', True)
-        if entity.props.dy > 0:
-            entity.handle('play-animation', 'walk-down', True)
-        elif entity.props.dy < 0:
-            entity.handle('play-animation', 'walk-up', True)
+        
+        entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
+        entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
 
 
 class AttackComponent(object):
