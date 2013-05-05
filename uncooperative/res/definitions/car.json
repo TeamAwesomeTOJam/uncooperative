@@ -5,7 +5,7 @@
         "width" : 128,
         "height" : 64,
         "image_y" : -32,
-        "needed_item_types": ["tire1", "tire2", "tire3", "tire4", "engine", "wheel"],
+        "needed_item_types": ["tire", "engine", "wheel", "gas-can", "radiator", "toolbox"],
         "item_types": [],
         "items": [],
         "driver": null,
