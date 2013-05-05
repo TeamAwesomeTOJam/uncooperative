@@ -5,8 +5,7 @@
 					"image_x" : -7, "image_y" : -10
 
 		},
-	"components" : ["PlayerCollisionComponent",
-					"DrawComponent",
+	"components" : ["DrawComponent",
 					"RegisterForDrawComponent",
 					"ItemComponent"]
 }

@@ -24,7 +24,8 @@ from component import (MovementComponent,
                        CarComponent,
                        DrawHitBoxComponent,
                        AttackComponent,
-                       ItemComponent)
+                       ItemComponent,
+                       StaticCollisionComponent)
 
 from collision import CollisionGrid
 
@@ -66,6 +67,7 @@ class Game(object):
         self.component_manager.register_component('DrawHitBoxComponent', DrawHitBoxComponent()) 
         self.component_manager.register_component('AttackComponent', AttackComponent())
         self.component_manager.register_component('ItemComponent', ItemComponent())
+        self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
 
         self.entity_manager = EntityManager()
         
@@ -94,7 +96,6 @@ class Game(object):
         
     def run(self):
         self.car = Entity('car')
-        self.collision_grid.add_entity(self.car)
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.items = [Entity('engine'), Entity('gas-can'), Entity('radiator'), Entity('steering-wheel-2'), Entity('tire'),
                       Entity('toolbox')]
@@ -110,20 +111,6 @@ class Game(object):
                 "y": y_pos
             }))
 
-        #self.zombies = [Entity("zombie")]
-        for z in self.zombies:
-            self.collision_grid.add_entity(z)
-
-        for c in self.characters:
-            self.collision_grid.add_entity(c)
-
-        for i in self.items:
-            self.collision_grid.add_entity(i)
-
-        for tile in self.renderer.tiles:
-            if not tile.props.passable:
-                self.collision_grid.add_entity(tile)
-                pass
         while True:
             dt = self.clock.tick() / 1000.0
             for e in pygame.event.get():
