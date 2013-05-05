@@ -28,6 +28,10 @@ class MovementComponent(object):
     def add(self, entity):
         entity.register_handler('update', self.handle_update)
         game.get_game().register_for_updates(entity)
+        if entity.props.last_good_x is None:
+            entity.props.last_good_x = entity.props.x
+        if entity.props.last_good_y is None:
+            entity.props.last_good_y = entity.props.y
     
     def remove(self, entity):
         entity.unregister_handler('update', self.handle_update)
@@ -91,7 +95,17 @@ class DrawComponent(object):
         entity.unregister_handler('draw', self.handle_draw)
         
     def handle_draw(self, entity, surface):
-        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
+        if entity.props.image_x is None:
+            image_x = 0
+        else:
+            image_x = entity.props.image_x
+            
+        if entity.props.image_y is None:
+            image_y = 0
+        else:
+            image_y = entity.props.image_y
+        surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), 
+                     (entity.props.x + image_x, entity.props.y + image_y))
 
 
 class DrawHitBoxComponent(object):
@@ -212,6 +226,10 @@ class AttackComponent(object):
 class PlayerCollisionComponent(object):
     def add(self, entity):
         entity.register_handler('collision', self.handle_collision)
+        if entity.props.last_good_x is None:
+            entity.props.last_good_x = entity.props.x
+        if entity.props.last_good_y is None:
+            entity.props.last_good_y = entity.props.y
 
     def remove(self, entity):
         entity.unregister_handler('collision', self.handle_collision)
@@ -236,15 +254,6 @@ class PlayerCollisionComponent(object):
         elif entity_rect_y > colliding_entity_rect_y + colliding_entity_rect_h or colliding_entity_rect_y > entity_rect_y + entity_rect_h:
             ycol = False
 
-        good_y = 0
-        good_x = 0
-        try:
-            good_x = entity.props.last_good_x
-            good_y = entity.props.last_good_y
-        except AttributeError:
-            good_x = entity.props.x 
-            good_y = entity.props.y
-
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -265,9 +274,9 @@ class PlayerCollisionComponent(object):
             #xcol = True
             #ycol = True
             if xcol:
-                entity.props.x = good_x
+                entity.props.x = entity.props.last_good_x
             if ycol:
-                entity.props.y = good_y
+                entity.props.y = entity.props.last_good_y
             game.get_game().collision_grid.add_entity(entity)
         
 

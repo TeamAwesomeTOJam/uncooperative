@@ -1,9 +1,11 @@
 {
 	"properties" : {
         "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
-					,"width" : 20, "height" : 20,
+					,"width" : 32, "height" : 32,
         "attack_time": 0, "attacking": false,
         "pushback_velocity" : 20,
+        "image_x" : -31,
+        "image_y" : -60,
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
