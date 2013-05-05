@@ -122,6 +122,7 @@ class GridGenerator:
 #         for times in range(int(self.ni**.7)):
 #             self.makeSquare(Vec2(randint(0,self.ni),randint(0,self.ni)),\
 #                     Vec2(5*randint(0,int(self.ni/10)),5*randint(0,int(self.nj/10))))
+        self.makeSquare(Vec2(self.ni/2,self.nj/2),Vec2(7,7))
         return self.grid
 
 
