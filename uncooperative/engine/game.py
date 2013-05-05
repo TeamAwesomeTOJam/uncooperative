@@ -56,6 +56,7 @@ class Game(object):
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
         self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())
+        self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
 
         self.entity_manager = EntityManager()
         

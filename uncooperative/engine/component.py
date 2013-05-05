@@ -149,7 +149,6 @@ class ZombieAIComponent(object):
             entity.props.dy = dir.y
 
 
-
         if len(in_range_player_attack) > 0:
             entity.props.dx = 0
             entity.props.dy = 0
