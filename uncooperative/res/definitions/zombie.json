@@ -8,7 +8,7 @@
         "speed" : 40,
         "attack_distance" : 40,
         "total_attack_time" : 1,
-        "sight_distance" : 200,
+        "sight_distance" : 500,
         "pushback_velocity" : 100,
         "image_x" : -31,
         "image_y" : -50,
