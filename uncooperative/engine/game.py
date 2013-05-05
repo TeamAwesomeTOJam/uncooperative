@@ -113,7 +113,10 @@ class Game(object):
                 "x": x_pos,
                 "y": y_pos
             }))
-
+        
+        self.splash_screen = Entity('splashscreen')
+        self.screen.blit(self.resource_manager.get('sprite',self.splash_screen.props.image),(0,0))
+        pygame.display.flip()
         self.renderer = Render(self)
 
 
@@ -125,8 +128,6 @@ class Game(object):
                 "x": x_pos,
                 "y": y_pos
             }))
-        
-        self.splash_screen = Entity('splashscreen')
 
         while True:
             dt = self.clock.tick(60) / 1000.0
