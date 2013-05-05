@@ -84,7 +84,7 @@ class InputEvent:
                             if self.axis == 1:
                                 self.value = -1 * self.value
                     
-                    action = player_mapping.get(self.button)
+                    action = player_mapping.get(str(self.button))
                     if action:
                         self.action = action
 
