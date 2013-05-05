@@ -1,6 +1,6 @@
 from grid import Grid
 from grid import Vec2
-from random import randint, gauss, shuffle
+from random import randint, gauss, shuffle, random
 from vec2d import Vec2d
 
 
@@ -116,13 +116,18 @@ class GridGenerator:
         shuffle(dirs)
         for d in dirs:
             check = currentpos + d
-            #print check.x,check.y
+            door = False
             if check.x < 0 or check.x >= self.roomgridx or check.y < 0 or check.y >= self.roomgridy:
                 pass
             elif self.visitedGrid[check.x][check.y]:
                 self.visitedGrid[check.x][check.y] = 0
-                self.makeSquare(centervec+((self.roomgridnumtiles/2)*d),Vec2d(2,2))
+                door = True
                 self.recurse(check)
+            else:
+                if random() <= 0.05:
+                    door = True
+            if door:
+                self.makeSquare(centervec+((self.roomgridnumtiles/2)*d),Vec2d(1,1)+abs(d))
         
 
     def genMap(self):

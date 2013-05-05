@@ -68,4 +68,3 @@ class CollisionGrid(object):
             return False
         else:
             return True
-        
