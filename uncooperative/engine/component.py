@@ -135,15 +135,12 @@ class ZombieAIComponent(object):
                     in_range_player_attack.append(player)
 
         if in_range_player is not None:
-            if in_range_player.props.x >= entity.props.x:
-                entity.props.dx = ZOMBIE_SPEED
-            else:
-                entity.props.dx = -ZOMBIE_SPEED
+            theirpos = Vec2d(in_range_player.props.x,in_range_player.props.y)
+            dir = ZOMBIE_SPEED * (theirpos-mypos).normalized()
+            print "Following: ", dir.x,dir.y,in_range_player.props.player
+            entity.props.dx = dir.x
+            entity.props.dy = dir.y
 
-            if in_range_player.props.dy >= entity.props.y:
-                entity.props.dy = ZOMBIE_SPEED
-            else:
-                entity.props.dy = -ZOMBIE_SPEED
         else:
             dir = Vec2d(entity.props.dx,entity.props.dy)
             if dir.length < 1:
@@ -152,7 +149,7 @@ class ZombieAIComponent(object):
                 dir = ZOMBIE_SPEED * Vec2d(cos(ang),sin(ang))
             else:
                 ang = atan(dir.y/dir.x)
-                ang += random.gauss(0,1)
+                ang += random.gauss(0,0.1)
                 dir = dir.length * Vec2d(cos(ang),sin(ang))
             entity.props.dx = dir.x
             entity.props.dy = dir.y
@@ -184,7 +181,7 @@ class AttackComponent(object):
             entity.props.health = 0
             entity.handle('dead')
         else:
-            print entity.props.x, entity.props.y, zombie.props.x, zombie.props.y
+            #print entity.props.x, entity.props.y, zombie.props.x, zombie.props.y
 
             entity.props.health -= attack_strength
 
@@ -205,9 +202,9 @@ class PlayerCollisionComponent(object):
     def handle_collision(self, entity, colliding_entity):
         try:
             player = entity.props.player
-            if player != "4":
-                print entity.props.__dict__
-                print colliding_entity.props.__dict__
+            #if player != "4":
+                #print entity.props.__dict__
+                #print colliding_entity.props.__dict__
         except:
             pass
         
@@ -226,7 +223,7 @@ class PlayerCollisionComponent(object):
             dy = None
 
         if dx or dy:
-            print entity.props.x, entity.props.y, colliding_entity.props.x, colliding_entity.props.y
+            #print entity.props.x, entity.props.y, colliding_entity.props.x, colliding_entity.props.y
             game.get_game().collision_grid.remove_entity(entity)
             entity.props.x = good_x
             entity.props.y = good_y
