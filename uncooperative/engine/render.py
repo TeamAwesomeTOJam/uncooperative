@@ -27,7 +27,7 @@ class Render:
                     down = self.grid[x][(y+1) % self.map_size[1]]
                     left = self.grid[(x-1)% self.map_size[0]][y]
                     right = self.grid[(x+1)% self.map_size[0]][y]
-                    type = 'impassabletile'
+                    type = 'impassabletileA'
                     if up and down and left and right:
                         upleft = self.grid[(x-1)% self.map_size[0]][(y-1)% self.map_size[1]]
                         upright = self.grid[(x+1)% self.map_size[0]][(y-1)% self.map_size[1]]
@@ -42,7 +42,7 @@ class Render:
                         elif not downright:
                             type = 'impassabletileTL'
                         else:
-                            type = 'impassabletile'
+                            type = 'impassabletileA'
                     elif up and down and left and not right:
                         type = 'impassabletileL'
                     elif up and down and not left and right:
