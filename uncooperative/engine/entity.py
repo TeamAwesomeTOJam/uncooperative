@@ -4,6 +4,7 @@ Created on May 2, 2013
 @author: jonathan
 '''
 import game
+from vec2d import Vec2d
 
 
 class Entity(object):
@@ -65,3 +66,6 @@ class EntityProperties(object):
             if name in props: 
                 return props[name]
         return None
+
+    def get_midpoint(self):
+        return Vec2d(self.x + (self.width/2), self.y + (self.height/2))

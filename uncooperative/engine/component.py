@@ -15,7 +15,7 @@ class ExampleComponent(object):
     def add(self, entity):
         entity.register_handler('update', self.handle_update)
         game.get_game().register_for_updates(entity)
-    
+
     def remove(self, entity):
         entity.unregister_handler('update', self.handle_update)
     
@@ -152,11 +152,11 @@ class ZombieAIComponent(object):
                 entity.props.attack_time = 0
 
 
-        mypos = Vec2d(entity.props.x,entity.props.y)
+        mypos = entity.props.get_midpoint()
         in_range_player = None
         in_range_player_attack = []
         for player in game.get_game().characters:
-            theirpos = Vec2d(player.props.x,player.props.y)
+            theirpos = player.props.get_midpoint()
             dist = (mypos-theirpos).length
             if dist <= ZOMBIE_DISTANCE:
                 if in_range_player is None:
@@ -166,7 +166,7 @@ class ZombieAIComponent(object):
                     in_range_player_attack.append(player)
 
         if in_range_player is not None:
-            theirpos = Vec2d(in_range_player.props.x,in_range_player.props.y)
+            theirpos = in_range_player.props.get_midpoint()
             dir = ZOMBIE_SPEED * (theirpos-mypos).normalized()
             entity.props.dx = dir.x
             entity.props.dy = dir.y
@@ -214,12 +214,12 @@ class AttackComponent(object):
         else:
             entity.props.health -= (attacker.props.attack_strength * dt)
 
-            x = entity.props.x - attacker.props.x
-            y = entity.props.y - attacker.props.y
+            entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
+            point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
+            print entity_vec, point_vec
 
-            #entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(attacker.props.pushback_velocity, 2))
-            #entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(attacker.props.pushback_velocity, 2))
-
+            entity.props.dx += point_vec.x
+            entity.props.dy += point_vec.y
 
 class PlayerCollisionComponent(object):
     def add(self, entity):
