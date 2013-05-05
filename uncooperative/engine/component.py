@@ -230,14 +230,14 @@ class PlayerCollisionComponent(object):
         
         entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
         colliding_entity_rect = (colliding_entity.props.x, colliding_entity.props.y, colliding_entity.props.width, colliding_entity.props.height)
-        xcol = False
-        ycol = False
+        xcol = True
+        ycol = True
         entity_rect_x, entity_rect_y, entity_rect_w, entity_rect_h = entity_rect
         colliding_entity_rect_x, colliding_entity_rect_y, colliding_entity_rect_w, colliding_entity_rect_h = colliding_entity_rect
         if  entity_rect_x > colliding_entity_rect_x + colliding_entity_rect_w  or colliding_entity_rect_x > entity_rect_x + entity_rect_w:
-            xcol = True
+            xcol = False
         elif entity_rect_y > colliding_entity_rect_y + colliding_entity_rect_h or colliding_entity_rect_y > entity_rect_y + entity_rect_h:
-            ycol = True
+            ycol = False
 
         good_y = 0
         good_x = 0
@@ -265,8 +265,8 @@ class PlayerCollisionComponent(object):
             pass
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            xcol = True
-            ycol = True
+            #xcol = True
+            #ycol = True
             if xcol:
                 entity.props.x = good_x
             if ycol:
