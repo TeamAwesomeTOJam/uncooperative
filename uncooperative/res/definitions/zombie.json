@@ -6,7 +6,7 @@
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
-							"frames" : ["impassableCTL.png"]
+							"frames" : ["testimpassable.png"]
 						}
 					}
     },
