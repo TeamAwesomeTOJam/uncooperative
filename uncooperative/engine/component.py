@@ -149,7 +149,7 @@ class ZombieAIComponent(object):
                 dir = ZOMBIE_SPEED * Vec2d(cos(ang),sin(ang))
             else:
                 ang = atan(dir.y/dir.x)
-                ang += random.gauss(0,1)
+                ang += random.gauss(0,0.1)
                 dir = dir.length * Vec2d(cos(ang),sin(ang))
             entity.props.dx = dir.x
             entity.props.dy = dir.y
