@@ -292,20 +292,22 @@ class ZombieCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
-        try:
-            dx = entity.props.dx
-            dy = entity.props.dy
-        except AttributeError:
-            dx = None
-            dy = None
-
-        if dx or dy:
-            game.get_game().collision_grid.remove_entity(entity)
-            
-            entity.props.x = entity.props.last_good_x
-            entity.props.y = entity.props.last_good_y
-            
-            game.get_game().collision_grid.add_entity(entity)
+        # zombies can't collide with other zombies
+        if colliding_entity.props.name != "zombie":
+            try:
+                dx = entity.props.dx
+                dy = entity.props.dy
+            except AttributeError:
+                dx = None
+                dy = None
+    
+            if dx or dy:
+                game.get_game().collision_grid.remove_entity(entity)
+                
+                entity.props.x = entity.props.last_good_x
+                entity.props.y = entity.props.last_good_y
+                
+                game.get_game().collision_grid.add_entity(entity)
             
             
 class ItemComponent(object):
