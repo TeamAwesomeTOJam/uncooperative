@@ -49,6 +49,7 @@
 					"PlayerCollisionComponent", 
 					"AnimationComponent", 
 					"DrawComponent", 
+					"DrawHitBoxComponent",
 					"RegisterForDrawComponent",
 					"AttackComponent"]
 }
