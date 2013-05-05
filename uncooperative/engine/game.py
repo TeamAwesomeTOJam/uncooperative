@@ -144,6 +144,7 @@ class Game(object):
                 entity.handle('draw', self.renderer.draw_surface)
                 
             self.renderer.render()
+            pygame.display.set_caption('fps: ' + str(self.clock.get_fps()))
 
 
 def get_game():
