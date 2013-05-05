@@ -192,8 +192,9 @@ class PlayerCollisionComponent(object):
     def handle_collision(self, entity, colliding_entity):
         try:
             player = entity.props.player
-            if player != 4:
+            if player != "4":
                 print entity.props.__dict__
+                print colliding_entity.props.__dict__
         except:
             pass
         
