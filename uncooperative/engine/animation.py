@@ -17,6 +17,7 @@ class AnimationComponent(object):
         entity.props.current_animation = 'default'
         entity.props.animation_pos = 0
         entity.props.animation_should_loop = True
+        print entity.props.animations.keys()
         entity.props.image = entity.props.animations[entity.props.current_animation]['frames'][0]
         
     def remove(self, entity):
