@@ -125,13 +125,16 @@ class Render:
             player_pos = Vec2d(self.game.characters[player].props.x,self.game.characters[player].props.y)
             car_pos = Vec2d(self.world_size[0]/2,self.world_size[1]/2)
             dir = car_pos - player_pos
-            dir.length = 10
+            
+            compass_surface = pygame.transform.rotate(self.game.resource_manager.get('sprite','compass.png'),-1*dir.angle - 90)
+            compass_rect = compass_surface.get_rect()
             
             
             radar_offset = offset + Vec2d(width - 30,30)
-            pygame.draw.circle(self.screen,(0,0,0),radar_offset,25)
-            points = [radar_offset + 2*dir,radar_offset + 0.5*dir.rotated(90),radar_offset + 0.5*dir.rotated(-90)]
-            pygame.draw.polygon(self.screen,(0,255,0),points)
+            compass_rect.center = radar_offset
+            
+            pygame.draw.circle(self.screen,(0,0,0),radar_offset,20)
+            self.screen.blit(compass_surface,compass_rect)
             
             
         
