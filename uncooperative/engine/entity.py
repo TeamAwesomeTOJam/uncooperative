@@ -84,8 +84,10 @@ class EntityProperties(object):
     def __getattr__(self, name):
         for definition in self._definitions:
             props = game.get_game().resource_manager.get('definition', definition)['properties']
-            if name in props: 
+            if name in props:
+                setattr(self, name, props[name])
                 return props[name]
+        setattr(self, name, None)        
         return None
 
     def get_midpoint(self):
