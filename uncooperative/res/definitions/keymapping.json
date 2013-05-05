@@ -1,31 +1,36 @@
-{   "input": {
+{
+    "input": {
         "1": {
-            "input": "KEYBOARD",
-            "w": "UP",
-            "s": "DOWN",
-            "a": "LEFT",
-            "d": "RIGHT",
-            "e": "USE"
-        },
-        "2": {
-            "input": "KEYBOARD",
-            "up": "UP",
-            "down": "DOWN",
-            "left": "LEFT",
-            "right": "RIGHT",
-            "space": "USE"
+           "input": "KEYBOARD",
+           "w": "UP",
+           "s": "DOWN",
+           "a": "LEFT",
+           "d": "RIGHT",
+           "e": "USE",
+           "q": "PICKUP"
+       },
+       "2": {
+           "input": "KEYBOARD",
+           "up": "UP",
+           "down": "DOWN",
+           "left": "LEFT",
+           "right": "RIGHT",
+           "space": "USE",
+           "/": "PICKUP"
        },
        "3": {
-            "input": "JOYSTICK",
-            "joystick": 0,
-            "hat" : 0,
-            "1": "USE"
-        },
+           "input": "JOYSTICK",
+           "joystick": 0,
+           "hat" : 0,
+           "1": "USE",
+            "2": "PICKUP"
+       },
         "4": {
             "input": "JOYSTICK",
             "joystick": 1,
             "hat" : 0,
-            "1": "USE"
+            "1": "USE",
+            "2": "PICKUP"
         }
     }
 }

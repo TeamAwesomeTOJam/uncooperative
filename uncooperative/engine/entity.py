@@ -52,7 +52,29 @@ class Entity(object):
     def handle(self, event, *args):
         for handler in self.handlers.get(event, []):
             handler(self, *args)
-            
+
+
+    def get_entities_in_front(self):
+        COLLIDE_BOX_WIDTH = 100
+        COLLIDE_BOX_HEIGHT = 100
+        collision_box = self.get_box_in_front(COLLIDE_BOX_WIDTH, COLLIDE_BOX_HEIGHT)
+
+        return game.get_game().collision_grid.get_collisions(collision_box)
+
+    def get_box_in_front(self, BOX_WIDTH, BOX_HEIGHT):
+        midpoint = self.props.get_midpoint()
+        player_dimensions = Vec2d(self.props.width, self.props.height)
+        if self.props.facing == 0: #right
+            collision_box = (midpoint.x + player_dimensions.x/2, midpoint.y + BOX_HEIGHT/2, BOX_WIDTH, BOX_HEIGHT)
+        elif self.props.facing == 1: #down
+            collision_box = (midpoint.x - BOX_WIDTH/2, midpoint.y + player_dimensions.y/2, BOX_WIDTH, BOX_HEIGHT)
+        elif self.props.facing == 2: #left
+            collision_box = (midpoint.x - player_dimensions.x/2 - BOX_WIDTH, midpoint.y - BOX_HEIGHT/2, BOX_WIDTH, BOX_HEIGHT)
+        elif self.props.facing == 3: #up
+            collision_box = (midpoint.x - BOX_WIDTH/2, midpoint.y - player_dimensions.y/2 - BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT)
+
+        return collision_box
+
 
 class EntityProperties(object):
 

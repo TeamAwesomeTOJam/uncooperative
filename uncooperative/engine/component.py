@@ -86,6 +86,7 @@ class InputMovementComponent(object):
                 entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
                 entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
 
+
 class DrawComponent(object):
     
     def add(self, entity):
@@ -218,7 +219,7 @@ class AttackComponent(object):
 
             entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
             point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
-            print entity_vec, point_vec
+            #print entity_vec, point_vec
 
             entity.props.dx += point_vec.x
             entity.props.dy += point_vec.y
@@ -248,8 +249,8 @@ class PlayerCollisionComponent(object):
                     
         quadrant = int(((direc.get_angle() + 45) % 360) / 90)
         if player == "1":
-
-            print quadrant
+            pass
+            #print quadrant
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -278,28 +279,34 @@ class StaticCollisionComponent(object):
 class ItemComponent(object):
     def add(self, entity):
         entity.register_handler('pickup', self.handle_pickup)
-        entity.register_handler('move', self.handle_move)
+        entity.register_handler('update', self.handle_update)
         entity.register_handler('drop', self.handle_drop)
+        game.get_game().register_for_updates(entity)
 
     def remove(self, entity):
         entity.unregister_handler('pickup', self.handle_pickup)
-        entity.unregister_handler('move', self.handle_move)
+        entity.unregister_handler('update', self.handle_update)
         entity.unregister_handler('drop', self.handle_drop)
 
     def handle_pickup(self, entity, player):
-        PICKUP_DISTANCE = 10
-        if abs(entity.props.x - player.props.x) <= PICKUP_DISTANCE and \
-            abs(entity.props.y - player.props.y) <= PICKUP_DISTANCE:
-            entity.props.pickup = True
-            entity.props.carrying_player = player
+        print "Pickup", entity
+        entity.props.pickup = True
+        entity.props.carrying_player = player
+        player.props.carrying_item = entity
+        game.get_game().component_manager.remove("StaticCollisionComponent", entity)
 
     def handle_drop(self, entity, player):
         entity.props.pickup = False
         entity.props.carrying_player = None
+        player.props.carrying_item = None
+        game.get_game().component_manager.add("StaticCollisionComponent", entity)
 
-    def handle_move(self, entity):
+
+    def handle_update(self, entity, dt):
         if entity.props.pickup and entity.props.carrying_player is not None:
-            entity.props.x, entity.props.y = entity.props.carrying_player.props.x, entity.props.carrying_player.props.y
+            box_in_front = entity.props.carrying_player.get_box_in_front(entity.props.width, entity.props.height)
+
+            entity.props.x, entity.props.y = box_in_front[0], box_in_front[1]
 
 
 class CarComponent(object):
@@ -328,3 +335,26 @@ class CarComponent(object):
                     entity.props.driver = player
                     player.props.draw = False
                     player.props.x, player.props.y = entity.props.x, entity.props.y
+
+
+class InputActionComponent(object):
+    def add(self, entity):
+        entity.register_handler('input', self.handle_input)
+
+    def remove(self, entity):
+        entity.unregister_handler('input', self.handle_input)
+
+    def handle_input(self, entity, event):
+        if entity.props.player and entity.props.player == event.player and \
+                (event.button_down or event.key_down) and event.action == "PICKUP":
+            if not entity.props.carrying_item:
+                entities_in_front = entity.get_entities_in_front()
+
+                print entities_in_front
+                for i in entities_in_front:
+                    if i.props.item:
+                        i.handle('pickup', entity)
+                        return
+            else:
+                entity.props.carrying_item.handle('drop', entity)
+

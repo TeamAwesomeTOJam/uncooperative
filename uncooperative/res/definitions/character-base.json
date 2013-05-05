@@ -2,7 +2,7 @@
 	"properties" : {"dx" : 0, "dy" : 0,  
 					"x_input" : 0 , "y_input" : 0, 
 					"width" : 32, "height" : 32,
-					"speed" : 80,
+					"speed" : 240,
 					"health" : 100,
 					"image_x" : -31,
                     "image_y" : -45,
@@ -52,5 +52,6 @@
 					"AnimationComponent", 
 					"DrawComponent", 
 					"RegisterForDrawComponent",
-					"AttackComponent"]
+					"AttackComponent",
+                    "InputActionComponent"]
 }

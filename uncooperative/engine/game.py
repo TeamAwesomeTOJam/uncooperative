@@ -25,7 +25,8 @@ from component import (MovementComponent,
                        DrawHitBoxComponent,
                        AttackComponent,
                        ItemComponent,
-                       StaticCollisionComponent)
+                       StaticCollisionComponent,
+                       InputActionComponent)
 
 from collision import CollisionGrid
 
@@ -68,6 +69,7 @@ class Game(object):
         self.component_manager.register_component('AttackComponent', AttackComponent())
         self.component_manager.register_component('ItemComponent', ItemComponent())
         self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
+        self.component_manager.register_component('InputActionComponent', InputActionComponent())
 
         self.entity_manager = EntityManager()
         
