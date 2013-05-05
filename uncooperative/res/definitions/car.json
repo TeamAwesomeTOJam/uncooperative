@@ -17,6 +17,7 @@
         "CarComponent",
         "StaticCollisionComponent",
         "DrawComponent",
-        "RegisterForDrawComponent"
+        "RegisterForDrawComponent",
+        "MovementComponent"
     ]
 }
