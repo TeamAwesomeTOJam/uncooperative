@@ -67,13 +67,28 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
-                entity.handle('play-animation', 'default', True)
+                print entity.props.current_animation
+                if 'right' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-right', True)
+                if 'left' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-left', True)
+                if 'down' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-down', True)
+                if 'up' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-up', True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
-                entity.handle('play-animation', 'walk', True)
+                if entity.props.dx > 0:
+                    entity.handle('play-animation', 'walk-right', True)
+                elif entity.props.dx < 0:
+                    entity.handle('play-animation', 'walk-left', True)
+                if entity.props.dy > 0:
+                    entity.handle('play-animation', 'walk-down', True)
+                elif entity.props.dy < 0:
+                    entity.handle('play-animation', 'walk-up', True)
 
 
 class DrawComponent(object):
@@ -164,6 +179,15 @@ class ZombieAIComponent(object):
 
             for player in in_range_player_attack:
                 player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
+                
+        if entity.props.dx > 0:
+            entity.handle('play-animation', 'walk-right', True)
+        elif entity.props.dx < 0:
+            entity.handle('play-animation', 'walk-left', True)
+        if entity.props.dy > 0:
+            entity.handle('play-animation', 'walk-down', True)
+        elif entity.props.dy < 0:
+            entity.handle('play-animation', 'walk-up', True)
 
 
 class AttackComponent(object):

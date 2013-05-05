@@ -5,14 +5,67 @@
 					"animations" : {
 						"default" : {
 							"duration" : 1.0,
-							"frames" : ["impassableCR.png"]
+							"frames" : ["chars/good_guys/down/108.png"]
 						},
-						"walk" : {
+						"idle-up" : {
 							"duration" : 1.0,
-							"frames" : ["impassableCR.png"]
+							"frames" : ["chars/good_guys/up/108.png"]
+						},
+						"idle-down" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/down/108.png"]
+						},
+						"idle-right" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/right/108.png"]
+						},
+						"idle-left" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/left/108.png"]
+						},
+						"walk-up" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/up/100.png",
+										"chars/good_guys/up/104.png",
+										"chars/good_guys/up/108.png",
+										"chars/good_guys/up/112.png",
+										"chars/good_guys/up/116.png",
+										"chars/good_guys/up/120.png"]
+						},
+						"walk-down" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/down/100.png",
+										"chars/good_guys/down/104.png",
+										"chars/good_guys/down/108.png",
+										"chars/good_guys/down/112.png",
+										"chars/good_guys/down/116.png",
+										"chars/good_guys/down/120.png"]
+						},
+						"walk-right" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/right/100.png",
+										"chars/good_guys/right/104.png",
+										"chars/good_guys/right/108.png",
+										"chars/good_guys/right/112.png",
+										"chars/good_guys/right/116.png",
+										"chars/good_guys/right/120.png"]
+						},
+						"walk-left" : {
+							"duration" : 1.0,
+							"frames" : ["chars/good_guys/left/100.png",
+										"chars/good_guys/left/104.png",
+										"chars/good_guys/left/108.png",
+										"chars/good_guys/left/112.png",
+										"chars/good_guys/left/116.png",
+										"chars/good_guys/left/120.png"]
 						}
 					}
 					
-					},
-	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent", "AnimationComponent", "DrawComponent", "RegisterForDrawComponent"]
+		},
+	"components" : ["MovementComponent", 
+					"InputMovementComponent", 
+					"PlayerCollisionComponent", 
+					"AnimationComponent", 
+					"DrawComponent", 
+					"RegisterForDrawComponent"]
 }
