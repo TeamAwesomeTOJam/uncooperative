@@ -33,7 +33,6 @@ class AnimationComponent(object):
                 entity.props.animation_pos = 0
                 entity.props.animation_should_loop = True
         frame_number = int(entity.props.animation_pos / entity.props.animations[entity.props.current_animation]['duration'] * len(entity.props.animations[entity.props.current_animation]['frames']))
-        print frame_number, entity.props.animation_pos, entity.props.animations[entity.props.current_animation]['duration']
         entity.props.image = entity.props.animations[entity.props.current_animation]['frames'][frame_number]
         
     def on_play_animation(self, entity, animation, loop=False):

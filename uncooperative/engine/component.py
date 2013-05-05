@@ -30,17 +30,20 @@ class MovementComponent(object):
         entity.unregister_handler('update', self.handle_update)
     
     def handle_update(self, entity, dt):
-        entity.props.last_good_x = entity.props.x
-        entity.props.last_good_y = entity.props.y
-        game.get_game().collision_grid.remove_entity(entity)
-        entity.props.x += entity.props.dx * dt * 8
-        entity.props.y += entity.props.dy * dt * 8
-        game.get_game().collision_grid.add_entity(entity)
+        if entity.props.dx or entity.props.dy:
+            entity.props.last_good_x = entity.props.x
+            entity.props.last_good_y = entity.props.y
+            game.get_game().collision_grid.remove_entity(entity)
+            entity.props.x += entity.props.dx * dt
+            entity.props.y += entity.props.dy * dt
+            game.get_game().collision_grid.add_entity(entity)
+            
         entity.handle('draw', game.get_game().renderer.draw_surface)
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
         for collided_entity in collisions:
             collided_entity.handle('collision', entity)
             entity.handle('collision', collided_entity)
+
 
 class InputMovementComponent(object):
     
@@ -52,9 +55,8 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_move)
     
     def handle_move(self, entity, event):
-        SPEED = 20
+        SPEED = 20 * 8
         DEADZONE = 0.15
-
         if entity.props.player == event.player:
             if event.axis == 0:
                 entity.props.x_input = event.magnitude
@@ -66,11 +68,13 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
+                entity.handle('play-animation', 'default', True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
+                entity.handle('play-animation', 'walk', True)
 
 
 class DrawComponent(object):
@@ -84,6 +88,15 @@ class DrawComponent(object):
     def handle_draw(self, entity, surface):
         surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
 
+
+class RegisterForDrawComponent(object):
+    
+    def add(self, entity):
+        game.get_game().register_for_drawing(entity)
+        
+    def remove(self, entity):
+        pass
+    
 
 class ZombieAIComponent(object):
 
@@ -104,7 +117,7 @@ class ZombieAIComponent(object):
         in_range_player_attack = []
         for player in game.get_game().characters:
             theirpos = Vec2d(player.props.x,player.props.y)
-            dist = mypos.dot(theirpos)**.5
+            dist = (mypos-theirpos).length
             if dist <= ZOMBIE_DISTANCE:
                 if in_range_player is None:
                     in_range_player = player
@@ -134,7 +147,6 @@ class ZombieAIComponent(object):
                 dir = dir.length * Vec2d(cos(ang),sin(ang))
             entity.props.dx = dir.x
             entity.props.dy = dir.y
-
 
 
         if len(in_range_player_attack) > 0:
@@ -179,9 +191,17 @@ class PlayerCollisionComponent(object):
         entity.unregister_handler('collision', self.handle_collision)
 
     def handle_collision(self, entity, colliding_entity):
-        entity.props.x = entity.props.last_good_x
-        entity.props.y = entity.props.last_good_y
+        try:
+            good_x = entity.props.last_good_x
+            good_y = entity.props.last_good_y
+        except AttributeError:
+            good_x = entity.props.x - 20
+            good_y  = entity.props.y - 20
         
+        game.get_game().collision_grid.remove_entity(entity)
+        entity.props.x = good_x
+        entity.props.y = good_y
+        game.get_game().collision_grid.add_entity(entity)
         
 class ItemComponent(object):
     def add(self, entity):
