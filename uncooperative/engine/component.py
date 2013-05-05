@@ -239,7 +239,7 @@ class PlayerCollisionComponent(object):
         try:
             dx = entity.props.dx
             dy = entity.props.dy
-        except:
+        except AttributeError:
             dx = None
             dy = None
 
