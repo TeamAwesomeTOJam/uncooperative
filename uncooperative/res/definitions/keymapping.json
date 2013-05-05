@@ -18,11 +18,13 @@
        "3": {
             "input": "JOYSTICK",
             "joystick": 0,
+            "hat" : 0,
             "1": "USE"
         },
         "4": {
             "input": "JOYSTICK",
             "joystick": 1,
+            "hat" : 0,
             "1": "USE"
         }
     }
