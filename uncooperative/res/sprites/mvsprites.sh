@@ -26,12 +26,16 @@ do
     mv *Right* right
     for dir in *
     do 
-        pushd $dir 
-        for file in *
-        do 
-            newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//' | sed 's/0*//')
-            mv $file ${newfile}.png
-        done
+        if [ -d $dir ]
+        then 
+            pushd $dir 
+
+            for file in *
+            do 
+                newfile=$(echo ${file%%.png} | sed 's/[a-z]//g' | sed 's/[A-Z]//g' | sed 's/_*//' | sed 's/0*//')
+                mv $file ${newfile}.png
+            done
+        fi 
         popd
     done
     popd
