@@ -140,19 +140,17 @@ class ZombieAIComponent(object):
         entity.unregister_handler('update', self.handle_update)
 
     def handle_update(self, entity, dt):
-        ZOMBIE_DISTANCE = 200
-        ZOMBIE_SPEED = 40
-        ZOMBIE_ATTACK_DISTANCE = 10
-        ZOMBIE_ATTACK_STRENGTH = 1
-        ZOMBIE_ATTACK_TIME = 200
+        ZOMBIE_DISTANCE = entity.props.sight_distance
+        ZOMBIE_SPEED = entity.props.speed
+        ZOMBIE_ATTACK_DISTANCE = entity.props.attack_distance
+        ZOMBIE_ATTACK_TIME = entity.props.total_attack_time
 
         if entity.props.attacking:
             entity.props.attack_time += dt
             if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
                 entity.props.attacking = False
                 entity.props.attack_time = 0
-            else:
-                return
+
 
         mypos = Vec2d(entity.props.x,entity.props.y)
         in_range_player = None
@@ -192,10 +190,10 @@ class ZombieAIComponent(object):
             entity.props.dy = 0
 
             entity.props.attacking = True
-            entity.props.attack_time = 0
+            #entity.props.attack_time = 0
 
             for player in in_range_player_attack:
-                player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
+                player.handle('attack', entity, dt)
         
         entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
         entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
@@ -209,18 +207,18 @@ class AttackComponent(object):
     def remove(self, entity):
         entity.unregister_handler('attack', self.handle_attack)
 
-    def handle_attack(self, entity, attacker):
+    def handle_attack(self, entity, attacker, dt):
         if entity.props.health - attacker.props.attack_strength <= 0:
             entity.props.health = 0
             entity.handle('dead')
         else:
-            entity.props.health -= attacker.props.attack_strength
+            entity.props.health -= (attacker.props.attack_strength * dt)
 
             x = entity.props.x - attacker.props.x
             y = entity.props.y - attacker.props.y
 
-            entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(attacker.props.pushback_velocity, 2))
-            entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(attacker.props.pushback_velocity, 2))
+            #entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(attacker.props.pushback_velocity, 2))
+            #entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(attacker.props.pushback_velocity, 2))
 
 
 class PlayerCollisionComponent(object):

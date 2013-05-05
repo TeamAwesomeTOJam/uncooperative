@@ -159,13 +159,14 @@ class Render:
             
             health_pos = Vec2d(15,15)
             
-            health_bar_rect = pygame.Rect(offset+health_pos,(200,20))
-            health_rect = pygame.Rect((0,0),(2*self.game.characters[player].props.health,20))
+            health_bar_rect = pygame.Rect(offset+health_pos,(100,10))
+            health_rect = pygame.Rect((0,0),(self.game.characters[player].props.health,10))
             health_rect.inflate_ip(-2,-2)
             health_rect.midleft = health_bar_rect.midleft + Vec2d(2,0)
             
             pygame.draw.rect(self.screen,(0,0,0),health_bar_rect)
-            pygame.draw.rect(self.screen,(255,0,0),health_rect)
+            if self.game.characters[player].props.health > 0:
+                pygame.draw.rect(self.screen,(255,0,0),health_rect)
             
             
             
