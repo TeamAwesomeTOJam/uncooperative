@@ -216,12 +216,12 @@ class AttackComponent(object):
         else:
             entity.props.health -= (attacker.props.attack_strength * dt)
 
-            entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
-            point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
-            print entity_vec, point_vec
+            #entity_vec = entity.props.get_midpoint() - attacker.props.get_midpoint()
+            #point_vec = entity_vec.normalized() * attacker.props.pushback_velocity
+            #print entity_vec, point_vec
 
-            entity.props.dx += point_vec.x
-            entity.props.dy += point_vec.y
+            #entity.props.dx += point_vec.x
+            #entity.props.dy += point_vec.y
 
 class PlayerCollisionComponent(object):
     def add(self, entity):
