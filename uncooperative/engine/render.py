@@ -188,6 +188,12 @@ class Render:
                 text_rect.center = offset + Vec2d(width/2,height/2)
                 
                 self.screen.blit(text_surface,text_rect)
+            elif self.game.characters[player].props.win:
+                text_surface = self.game.resource_manager.get('sprite','Text/YouWin.png')
+                text_rect = text_surface.get_rect()
+                text_rect.center = offset + Vec2d(width/2,height/2)
+
+                self.screen.blit(text_surface,text_rect)
             
         pygame.display.flip()
         

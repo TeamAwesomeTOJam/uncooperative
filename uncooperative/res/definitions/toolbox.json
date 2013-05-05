@@ -1,6 +1,6 @@
 {
 	"properties" : {"x" : 2200, "y" : 2000,
-					"item-type": "toolbox",
+					"item_type": "toolbox",
                     "image" : "items/toolbox.png"
     },
 	"components" : [],
