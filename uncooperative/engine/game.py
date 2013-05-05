@@ -19,7 +19,8 @@ from component import (MovementComponent,
                        InputMovementComponent, 
                        DrawComponent, 
                        PlayerCollisionComponent,
-                       ZombieAIComponent,)
+                       RegisterForDrawComponent,
+                       ZombieAIComponent)
 
 from collision import CollisionGrid
 
@@ -54,6 +55,7 @@ class Game(object):
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
+        self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())
 
         self.entity_manager = EntityManager()
         
@@ -69,13 +71,16 @@ class Game(object):
 
         self.entities_to_update = set()
         self.entities_to_input = set()
-        
+        self.entities_to_draw = set()
         
     def register_for_updates(self, entity):
         self.entities_to_update.add(entity)
         
     def register_for_input(self, entity):
         self.entities_to_input.add(entity)
+        
+    def register_for_drawing(self, entity):
+        self.entities_to_draw.add(entity)
         
     def run(self):
         #chars = Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')
@@ -112,10 +117,14 @@ class Game(object):
                         else:
                             entity.handle('input', event)
 
-            
             for entity in self.entities_to_update:
                 entity.handle('update', dt)
+                
+            for entity in self.entities_to_draw:
+                entity.handle('draw', self.renderer.draw_surface)
+                
             self.renderer.render()
+
 
 def get_game():
     global _game

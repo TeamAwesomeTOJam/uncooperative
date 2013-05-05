@@ -30,7 +30,6 @@ class MovementComponent(object):
         entity.unregister_handler('update', self.handle_update)
     
     def handle_update(self, entity, dt):
-        
         if entity.props.dx or entity.props.dy:
             entity.props.last_good_x = entity.props.x
             entity.props.last_good_y = entity.props.y
@@ -45,6 +44,7 @@ class MovementComponent(object):
             collided_entity.handle('collision', entity)
             entity.handle('collision', collided_entity)
 
+
 class InputMovementComponent(object):
     
     def add(self, entity):
@@ -57,7 +57,6 @@ class InputMovementComponent(object):
     def handle_move(self, entity, event):
         SPEED = 20 * 8
         DEADZONE = 0.15
-
         if entity.props.player == event.player:
             if event.axis == 0:
                 entity.props.x_input = event.magnitude
@@ -69,11 +68,13 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
+                entity.handle('play-animation', 'default', True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
+                entity.handle('play-animation', 'walk', True)
 
 
 class DrawComponent(object):
@@ -87,6 +88,15 @@ class DrawComponent(object):
     def handle_draw(self, entity, surface):
         surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
 
+
+class RegisterForDrawComponent(object):
+    
+    def add(self, entity):
+        game.get_game().register_for_drawing(entity)
+        
+    def remove(self, entity):
+        pass
+    
 
 class ZombieAIComponent(object):
 
