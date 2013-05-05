@@ -184,8 +184,6 @@ class AttackComponent(object):
             entity.props.health = 0
             entity.handle('dead')
         else:
-            print entity.props.x, entity.props.y, zombie.props.x, zombie.props.y
-
             entity.props.health -= attack_strength
 
             x = entity.props.x - zombie.props.x
@@ -226,7 +224,6 @@ class PlayerCollisionComponent(object):
             dy = None
 
         if dx or dy:
-            print entity.props.x, entity.props.y, colliding_entity.props.x, colliding_entity.props.y
             game.get_game().collision_grid.remove_entity(entity)
             entity.props.x = good_x
             entity.props.y = good_y

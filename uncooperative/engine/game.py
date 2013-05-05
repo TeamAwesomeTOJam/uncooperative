@@ -41,7 +41,8 @@ class Game(object):
         self.map_size = (128,128)
         self.tile_size = (32,32)
         self.world_size = (self.tile_size[0] * self.map_size[0], self.tile_size[1] * self.map_size[1])
-        
+        self.world_rooms = (8,8)
+
         pygame.init()
         
         self.clock = pygame.time.Clock()
@@ -88,7 +89,17 @@ class Game(object):
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.renderer = Render(self)
 
-        self.zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])}) for m in range(20)]
+
+        self.zombies = []
+        for m in range(20):
+            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(1, self.world_rooms[0])) + self.world_size[0]/self.world_rooms[0]/2
+            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(1, self.world_rooms[1])) + self.world_size[1]/self.world_rooms[1]/2
+            print m, x_pos, y_pos
+            self.zombies.append(Entity("zombie", properties={
+                "x": x_pos,
+                "y": y_pos
+            }))
+
         #self.zombies = [Entity("zombie")]
         for z in self.zombies:
             self.collision_grid.add_entity(z)
