@@ -191,6 +191,13 @@ class PlayerCollisionComponent(object):
 
     def handle_collision(self, entity, colliding_entity):
         try:
+            player = entity.props.player
+            if player != 4:
+                print entity.props.__dict__
+        except:
+            pass
+        
+        try:
             good_x = entity.props.last_good_x
             good_y = entity.props.last_good_y
         except AttributeError:
