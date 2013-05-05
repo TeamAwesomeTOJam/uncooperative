@@ -17,35 +17,42 @@ class CollisionGrid(object):
         max_grid_y = int((rect[1] + rect[2]) / self.grid_size + 1)
         return [(x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1)]
     
+    def get_grid_squares_for_entity(self, entity):
+        return self.get_grid_squares((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+    
     def add_entity(self, entity):
         for square in self.get_grid_squares_for_entity(entity):
-            self.map.setdefault(square, []).append(entity)
+            self.map.setdefault(square, set()).add(entity)
                 
     def remove_entity(self, entity):
         for square in self.get_grid_squares_for_entity(entity):
-            self.map.setdefault(square, []).remove(entity)
+            self.map.setdefault(square, set()).remove(entity)
     
     def get_possible_collisions(self, rect):
-        possible_collisions = []
+        possible_collisions = set()
         for square in self.get_grid_squares(rect):
             if square in self.map:
-                possible_collisions += self.map[square]
+                possible_collisions.update(self.map[square])
         return possible_collisions
     
     def get_possible_collisions_for_entity(self, entity):
-        return self.get_possible_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        possible_collisions = self.get_possible_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        possible_collisions.discard(entity)
+        return possible_collisions
     
     def get_collisions(self, rect):
         possible_collisions = self.get_possible_collisions(rect)
-        collisions = []
+        collisions = set()
         for entity in possible_collisions:
             entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
             if self.rects_collide(rect, entity_rect):
-                collisions.append(entity)
+                collisions.add(entity)
         return collisions
              
     def get_collisions_for_entity(self, entity):
-        return self.get_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        collisions = self.get_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        collisions.discard(entity)
+        return collisions
     
     def rects_collide(self, a, b):
         a_x, a_y, a_w, a_h = a

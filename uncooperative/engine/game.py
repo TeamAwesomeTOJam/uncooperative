@@ -12,8 +12,14 @@ import pygame
 import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
-from component import MovementComponent, ExampleComponent, InputMovementComponent, TileDraw
-from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage
+from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping
+from component import (MovementComponent,
+                       ExampleComponent, 
+                       InputMovementComponent, 
+                       DrawComponent, 
+                       PlayerCollisionComponent,
+                       ZombieAIComponent,)
+
 from collision import CollisionGrid
 
 from render import Render
@@ -42,40 +48,45 @@ class Game(object):
         self.component_manager = componentmanager.ComponentManager()
         self.component_manager.register_component('MovementComponent', MovementComponent())
         self.component_manager.register_component('ExampleComponent', ExampleComponent())
-        self.component_manager.register_component('TileDraw', TileDraw())
+        self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
+        self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
+        self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
 
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
         self.resource_manager.register_loader('definition', LoadEntityDefinition)
         self.resource_manager.register_loader('sprite', LoadImage)
+        self.resource_manager.register_loader('inputmap', LoadInputMapping)
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
 
         self.collision_grid = CollisionGrid(64)
 
-        self.entities_to_update = []
-        self.entities_to_input = []
+        self.entities_to_update = set()
+        self.entities_to_input = set()
         
         
     def register_for_updates(self, entity):
-        self.entities_to_update.append(entity)
+        self.entities_to_update.add(entity)
         
     def register_for_input(self, entity):
-        self.entities_to_input.append(entity)
+        self.entities_to_input.add(entity)
         
     def run(self):
-        
-        
-        #test_entity = Entity('test-include')
         character = Entity('character')
         self.characters = [character for m in xrange(4)]
         self.renderer = Render(self)
+        zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])})]
+        for c in self.characters:
+            self.collision_grid.add_entity(c)
 
-        
-        
+        for tile in self.renderer.tiles:
+            if not tile.props.passable:
+                self.collision_grid.add_entity(tile)
+
         self.current_camera = 0
         while True:
             dt = self.clock.tick() / 1000.0
@@ -100,7 +111,7 @@ class Game(object):
                         e.type == pygame.KEYUP:
                     event = InputEvent(e)
 
-                    for entity in self.entities_to_update:
+                    for entity in self.entities_to_input:
                         if e.type == pygame.JOYAXISMOTION:
                             entity.handle('move', event)
                         else:

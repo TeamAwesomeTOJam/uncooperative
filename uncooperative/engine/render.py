@@ -80,7 +80,7 @@ class Render:
                 self.tiles.append(tile)
         
         for t in self.tiles:
-            t.handle('draw-tiles',self.world_surface)
+            t.handle('draw', self.world_surface)
 
         pygame.image.save(self.world_surface,"file.png")
 
