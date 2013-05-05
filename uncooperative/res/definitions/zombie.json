@@ -10,7 +10,7 @@
         "sight_distance" : 200,
         "pushback_velocity" : 100,
         "image_x" : -31,
-        "image_y" : -60,
+        "image_y" : -50,
         "animations" : {
 						"default" : {
 							"duration" : 1.0,

@@ -155,11 +155,12 @@ class ZombieAIComponent(object):
         mypos = entity.props.get_midpoint()
         in_range_player = None
         in_range_player_attack = []
+        mindist = ZOMBIE_DISTANCE
         for player in game.get_game().characters:
             theirpos = player.props.get_midpoint()
             dist = (mypos-theirpos).length
-            if dist <= ZOMBIE_DISTANCE:
-                if in_range_player is None:
+            if dist <= ZOMBIE_DISTANCE :
+                if mindist > dist:
                     in_range_player = player
 
                 if dist <= ZOMBIE_ATTACK_DISTANCE:
@@ -224,6 +225,7 @@ class AttackComponent(object):
 class PlayerCollisionComponent(object):
     def add(self, entity):
         entity.register_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.add_entity(entity)
         if entity.props.last_good_x is None:
             entity.props.last_good_x = entity.props.x
         if entity.props.last_good_y is None:
@@ -231,6 +233,7 @@ class PlayerCollisionComponent(object):
 
     def remove(self, entity):
         entity.unregister_handler('collision', self.handle_collision)
+        game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
         try:
@@ -276,8 +279,17 @@ class PlayerCollisionComponent(object):
             if ycol:
                 entity.props.y = entity.props.last_good_y
             game.get_game().collision_grid.add_entity(entity)
+            
         
-
+class StaticCollisionComponent(object):
+    
+    def add(self, entity):
+        game.get_game().collision_grid.add_entity(entity)
+        
+    def remove(self, entity):
+        game.get_game().collision_grid.remove_entity(entity)
+        
+    
 class ItemComponent(object):
     def add(self, entity):
         entity.register_handler('pickup', self.handle_pickup)

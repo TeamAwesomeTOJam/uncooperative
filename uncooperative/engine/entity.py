@@ -22,20 +22,19 @@ class Entity(object):
             
             return flattened
         
+        self.handlers = {}
         
         definitions = flatten_includes(definition)
-        
         self.props = EntityProperties(definitions)
-        self.handlers = {}
+
+        if properties is not None:
+            for key, value in properties.items():
+                setattr(self.props, key, value)        
         
         for defn in definitions:
             for component in game.get_game().resource_manager.get('definition', defn)['components']:  
                 game.get_game().component_manager.add(component, self)
         
-        if properties is not None:
-            for key, value in properties.items():
-                setattr(self.props, key, value)
-                
         if components is not None:
             for component in components:
                 game.get_game().component_manager.add(component, self)
