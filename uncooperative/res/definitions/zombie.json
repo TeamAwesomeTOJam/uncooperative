@@ -37,7 +37,7 @@
     },
     "components" : ["MovementComponent", 
     				"ZombieAIComponent",
-    				"PlayerCollisionComponent", 
+    				"ZombieCollisionComponent", 
     				"AnimationComponent", 
     				"DrawComponent", 
     				"RegisterForDrawComponent"]

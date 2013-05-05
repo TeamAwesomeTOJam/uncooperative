@@ -190,12 +190,15 @@ class Render:
                 
                 self.screen.blit(text_surface,text_rect)
             
-            
-            
-        
-        
         pygame.display.flip()
-        self.draw_surface = self.world_surface.copy()
+        
+        for c in range(4):
+            r = pygame.Rect((0,0),self.screen_size)
+            r.center = self.cameras[0].pos()
+        
+            self.draw_surface.blit(self.world_surface,r,r)
+            
+#         self.draw_surface = self.world_surface.copy()
             
             
 
