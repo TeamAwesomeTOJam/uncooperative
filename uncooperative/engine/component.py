@@ -144,7 +144,7 @@ class ZombieAIComponent(object):
             entity.props.attacking = True
 
             for player in in_range_player_attack:
-                player.handle('attack', attack_strength=ZOMBIE_ATTACK_STRENGTH, zombie=entity)
+                player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
 
 
 class AttackComponent(object):
