@@ -2,6 +2,7 @@
 	"properties" : {"dx" : 0, "dy" : 0,  
 					"x_input" : 0 , "y_input" : 0, 
 					"width" : 20, "height" : 20,
+					"speed" : 80,
 					"animations" : {
 						"default" : {
 							"duration" : 0.5,
