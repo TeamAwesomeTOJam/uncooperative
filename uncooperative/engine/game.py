@@ -141,7 +141,8 @@ class Game(object):
     
                 for entity in self.entities_to_update:
                     entity.handle('update', dt)
-                    
+
+                self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
                 for entity in self.entities_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
                     
