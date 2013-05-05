@@ -152,7 +152,7 @@ class ZombieAIComponent(object):
         if in_range_player is not None:
             theirpos = Vec2d(in_range_player.props.x,in_range_player.props.y)
             dir = ZOMBIE_SPEED * (theirpos-mypos).normalized()
-            print "Following: ", dir.x,dir.y,in_range_player.props.player
+            # print "Following: ", dir.x,dir.y,in_range_player.props.player
             entity.props.dx = dir.x
             entity.props.dy = dir.y
 
