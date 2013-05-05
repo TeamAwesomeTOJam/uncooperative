@@ -38,7 +38,6 @@ class MovementComponent(object):
             entity.props.y += entity.props.dy * dt
             game.get_game().collision_grid.add_entity(entity)
             
-        entity.handle('draw', game.get_game().renderer.draw_surface)
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
         for collided_entity in collisions:
             collided_entity.handle('collision', entity)
