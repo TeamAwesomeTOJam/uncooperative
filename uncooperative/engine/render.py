@@ -84,6 +84,9 @@ class Render:
             t.handle('draw', self.world_surface)
 
         pygame.image.save(self.world_surface,"file.png")
+        self.minimap_scale = 0.025
+        self.minimap_size = Vec2d(int(self.minimap_scale*self.world_size[0]),int(self.minimap_scale*self.world_size[1]))
+        self.minimap = pygame.transform.smoothscale(self.world_surface,self.minimap_size)
 
         self.cameras = [Camera(p) for p in self.game.characters]
 #        self.cameras = [Camera(500,500) for m in xrange(4)]
@@ -135,6 +138,16 @@ class Render:
             
             pygame.draw.circle(self.screen,(0,0,0),radar_offset,20)
             self.screen.blit(compass_surface,compass_rect)
+            
+            minimap_offset = offset + Vec2d(10,190)
+            
+            self.screen.blit(self.minimap,minimap_offset)
+            
+            player_minimap_pos = self.minimap_scale*player_pos
+            player_minimap_pos = Vec2d(int(player_minimap_pos[0]),int(player_minimap_pos[1]))
+            
+            pygame.draw.circle(self.screen,(255,0,0),minimap_offset+player_minimap_pos,1)
+            
             
             
         

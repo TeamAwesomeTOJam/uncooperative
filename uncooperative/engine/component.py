@@ -58,7 +58,6 @@ class InputMovementComponent(object):
         entity.unregister_handler('move', self.handle_move)
     
     def handle_move(self, entity, event):
-        SPEED = 100
         DEADZONE = 0.15
         if entity.props.player == event.player:
             if event.axis == 0:
@@ -75,13 +74,13 @@ class InputMovementComponent(object):
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
-                entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
-                entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
+
+                entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * entity.props.speed
+                entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * entity.props.speed
                 
                 dir = Vec2d(entity.props.dx, entity.props.dy)
                 entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
                 entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
-
 
 class DrawComponent(object):
     
@@ -251,7 +250,7 @@ class PlayerCollisionComponent(object):
         try:
             dx = entity.props.dx
             dy = entity.props.dy
-        except:
+        except AttributeError:
             dx = None
             dy = None
 
