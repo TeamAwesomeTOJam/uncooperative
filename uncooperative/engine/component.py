@@ -67,7 +67,6 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
-                print entity.props.current_animation
                 if 'right' in entity.props.current_animation:
                     entity.handle('play-animation', 'idle-right', True)
                 if 'left' in entity.props.current_animation:
@@ -152,7 +151,6 @@ class ZombieAIComponent(object):
         if in_range_player is not None:
             theirpos = Vec2d(in_range_player.props.x,in_range_player.props.y)
             dir = ZOMBIE_SPEED * (theirpos-mypos).normalized()
-            print "Following: ", dir.x,dir.y,in_range_player.props.player
             entity.props.dx = dir.x
             entity.props.dy = dir.y
 
