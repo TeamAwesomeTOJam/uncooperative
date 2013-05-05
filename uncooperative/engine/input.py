@@ -77,7 +77,7 @@ class InputEvent:
                 if player_mapping.get("joystick") == self.joy:
                     self.player = player_number
                     if self.axis == 0 or self.hat == 0:
-                        if self.value > 0:
+                        if self.value >= 0:
                             self.action = "UP"
                             self.magnitude = self.value
                             return
@@ -86,7 +86,7 @@ class InputEvent:
                             self.magnitude = self.value
                             return
                     elif self.axis == 1 or self.hat == 1:
-                        if self.value > 0:
+                        if self.value >= 0:
                             self.action = "RIGHT"
                             self.magnitude = self.value
                             return
