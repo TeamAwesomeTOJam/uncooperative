@@ -14,5 +14,5 @@
 					}
 					
 					},
-	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent", "AnimationComponent", "DrawComponent"]
+	"components" : ["MovementComponent", "InputMovementComponent", "PlayerCollisionComponent", "AnimationComponent", "DrawComponent", "RegisterForDrawComponent"]
 }
