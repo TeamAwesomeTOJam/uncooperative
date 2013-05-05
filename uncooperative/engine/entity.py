@@ -33,7 +33,6 @@ class Entity(object):
         
         if properties is not None:
             for key, value in properties.items():
-                print key, value
                 setattr(self.props, key, value)
                 
         if components is not None:
