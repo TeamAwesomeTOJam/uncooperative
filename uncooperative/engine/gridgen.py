@@ -1,6 +1,6 @@
 from grid import Grid
 from grid import Vec2
-from random import randint
+from random import randint, gauss
 
 
 class GridGenerator:
@@ -18,7 +18,7 @@ class GridGenerator:
                     self.grid[m][n] = 0
 
     def makeSquare(self,center,side):#center: Vec2, radius: Vec2
-        for m in range(side.y,side.x):
+        for m in range(-side.x,side.x):
             for n in range(-side.y,side.y):
                 try:
                     self.grid[center.x+m][center.y+n] = 0
@@ -81,11 +81,11 @@ class GridGenerator:
                                 myrange = Vec2(.3, .3)
                                 start = Vec2(1,1)
                                 if move.x != 0:
-                                    myrange.y = .3
+                                    myrange.y = .2
                                     start.x = move.x * .25 + .5+.5
                                     
                                 if move.y != 0:
-                                    myrange.x = .3
+                                    myrange.x = .2
                                     start.y = move.y * .25 + .5+.5
                                 
     
@@ -108,9 +108,20 @@ class GridGenerator:
 
     def genMap(self):
         self.randomDepthFirstSearch()
-        for times in range(int(self.ni**.7)):
-            self.makeSquare(Vec2(randint(0,self.ni),randint(0,self.ni)),\
-                    Vec2(5*randint(0,int(self.ni/10)),5*randint(0,int(self.nj/10))))
+#         self.makeSquare(Vec2(7,7), Vec2(5,5))
+        for bigx in range(1,self.ni/self.blocksize.x,2):
+            for bigy in range(1,self.nj/self.blocksize.y,2):
+                if randint(0,1):
+                    sizex = max(int(4-gauss(0,1)),0)
+                    sizey = max(int(4-gauss(0,1)),0)
+                    shiftx = randint(-1,1)
+                    shifty = randint(-1,1)
+                    self.makeSquare(Vec2(7*bigx + shiftx,7*bigy+shifty), Vec2(sizex,sizey))
+                #print bigx*self.blocksize.x+self.blocksize.x/2,bigy*self.blocksize.y+self.blocksize.y/2
+                #self.makeSquare(Vec2(bigx*self.blocksize.x+self.blocksize.x/2,bigy*self.blocksize.y+self.blocksize.y/2), Vec2(self.blocksize.x-2,self.blocksize.y-2))
+#         for times in range(int(self.ni**.7)):
+#             self.makeSquare(Vec2(randint(0,self.ni),randint(0,self.ni)),\
+#                     Vec2(5*randint(0,int(self.ni/10)),5*randint(0,int(self.nj/10))))
         return self.grid
 
 
