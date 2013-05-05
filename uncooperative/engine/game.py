@@ -132,7 +132,6 @@ class Game(object):
             dt = self.clock.tick(60) / 1000.0
 
             if self.mode=='game':
-                print "Before get %s" % datetime.datetime.now()
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT: sys.exit()
                     if (e.type == pygame.JOYAXISMOTION or
@@ -142,7 +141,6 @@ class Game(object):
                             e.type == pygame.JOYHATMOTION or
                             e.type == pygame.KEYDOWN or
                             e.type == pygame.KEYUP):
-                        print "Before input %s" % datetime.datetime.now()
                         events = create_input_events(e)
                         for entity in self.entities_to_input:
                             for event in events:
@@ -150,17 +148,15 @@ class Game(object):
                                     entity.handle('move', event)
                                 else:
                                     entity.handle('input', event)
-                print "Before update %s" % datetime.datetime.now()
                 for entity in self.entities_to_update:
                     entity.handle('update', dt)
 
                 self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
-                print "Before draw %s" % datetime.datetime.now()
                 for entity in self.entities_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
-                print "Before render %s" % datetime.datetime.now()
+
                 self.renderer.render()
-                print "after render %s" % datetime.datetime.now()
+                
             elif self.mode == 'splash':
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT: sys.exit()
