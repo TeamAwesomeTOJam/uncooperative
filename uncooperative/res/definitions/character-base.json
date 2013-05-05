@@ -1,7 +1,5 @@
 {
-	"properties" : {"x" : 320, "y" : 320, 
-					"dx" : 0, "dy" : 0, 
-					"player" : "1", 
+	"properties" : {"dx" : 0, "dy" : 0,  
 					"x_input" : 0 , "y_input" : 0, 
 					"width" : 20, "height" : 20,
 					"animations" : {

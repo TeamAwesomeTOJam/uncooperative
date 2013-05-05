@@ -18,7 +18,8 @@ from component import (MovementComponent,
                        ExampleComponent, 
                        InputMovementComponent, 
                        DrawComponent, 
-                       PlayerCollisionComponent,)
+                       PlayerCollisionComponent,
+                       ZombieAIComponent,)
 
 from collision import CollisionGrid
 
@@ -52,6 +53,7 @@ class Game(object):
         self.component_manager.register_component('DrawComponent', DrawComponent())
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
+        self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
 
         self.entity_manager = EntityManager()
         
@@ -76,9 +78,13 @@ class Game(object):
         self.entities_to_input.add(entity)
         
     def run(self):
-        character = Entity('character')
-        self.characters = [character for m in xrange(4)]
+        #chars = Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')
+        self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.renderer = Render(self)
+        zombies = [Entity("zombie",properties={"x":randint(0,self.world_size[0]),"y":randint(0,self.world_size[1])}) for m in range(20)]
+        self.zombies = [Entity("zombie")]
+        for z in self.zombies:
+            self.collision_grid.add_entity(z)
         for c in self.characters:
             self.collision_grid.add_entity(c)
 
@@ -91,16 +97,7 @@ class Game(object):
             dt = self.clock.tick() / 1000.0
             for e in pygame.event.get():
                 if e.type == pygame.QUIT: sys.exit()
-                elif e.type == pygame.KEYDOWN:
-                    if e.key == pygame.K_TAB:
-                        self.current_camera = (self.current_camera +1)%4
-                    if e.key == pygame.K_a:
-                        #self.cameras[self.current_camera].props.dx = 1
-                        pass
-                elif e.type == pygame.KEYUP:
-                    if e.key == pygame.K_a:
-                        #self.cameras[self.current_camera].props.dx = 0
-                        pass
+                
                 if e.type == pygame.JOYAXISMOTION or \
                         e.type == pygame.JOYBALLMOTION or \
                         e.type == pygame.JOYBUTTONDOWN or \
@@ -111,7 +108,6 @@ class Game(object):
                     event = InputEvent(e)
 
                     for entity in self.entities_to_input:
-                        
                         if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
                             entity.handle('move', event)
                         else:

@@ -1,6 +1,11 @@
 import game
 import pygame
 import math
+import random
+from math import *
+
+from vec2d import Vec2d
+
 
 class ExampleComponent(object):
     
@@ -49,7 +54,7 @@ class InputMovementComponent(object):
     def handle_move(self, entity, event):
         SPEED = 20
         DEADZONE = 0.15
-        print event.__dict__
+
         if entity.props.player == event.player:
             if event.axis == 0:
                 entity.props.x_input = event.magnitude
@@ -94,16 +99,17 @@ class ZombieAIComponent(object):
         ZOMBIE_SPEED = 50
         ZOMBIE_ATTACK_DISTANCE = 10
         ZOMBIE_ATTACK_STRENGTH = 1
+        mypos = Vec2d(entity.props.x,entity.props.y)
         in_range_player = None
         in_range_player_attack = []
-        for player in game.get_game().player_list:
-            if abs(entity.props.x - player.props.x) <= ZOMBIE_DISTANCE or \
-                    abs(entity.props.y - player.props.y) <= ZOMBIE_DISTANCE:
+        for player in game.get_game().characters:
+            theirpos = Vec2d(player.props.x,player.props.y)
+            dist = mypos.dot(theirpos)**.5
+            if dist <= ZOMBIE_DISTANCE:
                 if in_range_player is None:
                     in_range_player = player
 
-                if abs(entity.props.x - player.props.x) <= ZOMBIE_ATTACK_DISTANCE or \
-                    abs(entity.props.y - player.props.y) <= ZOMBIE_ATTACK_DISTANCE:
+                if dist <= ZOMBIE_ATTACK_DISTANCE:
                     in_range_player_attack.append(player)
 
         if in_range_player is not None:
@@ -116,6 +122,20 @@ class ZombieAIComponent(object):
                 entity.props.dy = ZOMBIE_SPEED
             else:
                 in_range_player.props.dy = -ZOMBIE_SPEED
+        else:
+            dir = Vec2d(entity.props.dx,entity.props.dy)
+            if dir.length < 1:
+                ang = random.uniform(0,3.14159)
+
+                dir = ZOMBIE_SPEED * Vec2d(cos(ang),sin(ang))
+            else:
+                ang = atan(dir.y/dir.x)
+                ang += random.gauss(0,1)
+                dir = dir.length * Vec2d(cos(ang),sin(ang))
+            entity.props.dx = dir.x
+            entity.props.dy = dir.y
+
+
 
         if len(in_range_player_attack) > 0:
             entity.props.dx = 0

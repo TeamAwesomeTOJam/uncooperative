@@ -1,0 +1,7 @@
+{
+	"properties" : {
+        "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
+					,"width" : 20, "height" : 20
+    },
+    "components" : ["MovementComponent", "ZombieAIComponent"]
+}
