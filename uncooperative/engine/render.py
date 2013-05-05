@@ -5,7 +5,7 @@ from random import randint
 from camera import Camera
 from gridgen import GridGenerator
 from entity import Entity
-
+from vec2d import Vec2d
 
 class Render:
     def __init__(self, game):
@@ -102,8 +102,44 @@ class Render:
         self.screen.blit(self.draw_surface,(0,offy),rect)
         rect.center = self.cameras[3].pos()
         self.screen.blit(self.draw_surface,(offx,offy),rect)
+        
+        
+        #draw the HUD
+        
+        for player in range(4):
+            offset = Vec2d(0,0)
+            if player == 0:
+                offset = Vec2d(0,0)
+            elif player == 1:
+                offset = Vec2d(self.screen_size[0]/2,0)
+            elif player == 2:
+                offset = Vec2d(0,self.screen_size[1]/2)
+            elif player == 3:
+                offset = Vec2d(self.screen_size[0]/2,self.screen_size[1]/2)
+            width = self.screen_size[0]/2
+            height = self.screen_size[1]/2
+            
+            rect = pygame.Rect(offset,(width,height))
+            pygame.draw.rect(self.screen,(255,255,255),rect,3)
+            
+            player_pos = Vec2d(self.game.characters[player].props.x,self.game.characters[player].props.y)
+            car_pos = Vec2d(self.world_size[0]/2,self.world_size[1]/2)
+            dir = car_pos - player_pos
+            dir.length = 10
+            
+            
+            radar_offset = offset + Vec2d(width - 30,30)
+            pygame.draw.circle(self.screen,(0,0,0),radar_offset,25)
+            points = [radar_offset + 2*dir,radar_offset + 0.5*dir.rotated(90),radar_offset + 0.5*dir.rotated(-90)]
+            pygame.draw.polygon(self.screen,(0,255,0),points)
+            
+            
+        
+        
         pygame.display.flip()
         self.draw_surface = self.world_surface.copy()
+            
+            
 
 
 
