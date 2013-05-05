@@ -1,6 +1,7 @@
 {
 	"properties" : {"x" : 1950, "y" : 2010, 
-					"player" : "3"
+					"player" : "3",
+                    "name" : "Tao"
 					},
 	"components" : [],
 	"includes" : ["character-base"]
