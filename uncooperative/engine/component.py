@@ -107,7 +107,7 @@ class ZombieAIComponent(object):
         in_range_player_attack = []
         for player in game.get_game().characters:
             theirpos = Vec2d(player.props.x,player.props.y)
-            dist = mypos.dot(theirpos)**.5
+            dist = (mypos-theirpos).length
             if dist <= ZOMBIE_DISTANCE:
                 if in_range_player is None:
                     in_range_player = player
