@@ -1,8 +1,92 @@
 {
 	"properties" : {"x" : 2000, "y" : 1950, 
 					"player" : "2",
-                    "name": "Nish"
-
+					"animations" : {
+            "default" : {
+                "duration" : 0.5,
+                "frames" : ["chars/good_guys/Nish/stand/down/0.png"]
+            },
+                "idle-up" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/stand/up/0.png"]
+                },
+                "idle-down" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/stand/down/0.png"]
+                },
+                "idle-right" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/stand/right/0.png"]
+                },
+                "idle-left" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/stand/left/0.png"]
+                },
+                "carry-up" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/carry/up/0.png"]
+                },
+                "carry-down" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/carry/down/0.png"]
+                },
+                "carry-right" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/carry/right/0.png"]
+                },
+                "carry-left" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/carry/left/0.png"]
+                },
+                "crouch-up" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/crouch/up/0.png"]
+                },
+                "crouch-down" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/crouch/down/0.png"]
+                },
+                "crouch-right" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/crouch/right/0.png"]
+                },
+                "crouch-left" : {
+                    "duration" : 0.5,
+                    "frames" : ["chars/good_guys/Nish/crouch/left/0.png"]
+                },
+                "walk-up" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/run/up/"
+                },
+                "walk-down" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/run/down/"
+                },
+                "walk-right" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/run/right/"
+                },
+                "walk-left" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/run/left/"
+                },
+                "hold-up" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/hold/up/"
+                },
+                "hold-down" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/hold/down/"
+                },
+                "hold-right" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/hold/right/"
+                },
+                "hold-left" : {
+                    "duration" : 0.5,
+                    "frame-dir" : "chars/good_guys/Nish/hold/left/"
+                }
+                }
 					},
 	"components" : [],
 	"includes" : ["character-base"]

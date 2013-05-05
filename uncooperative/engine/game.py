@@ -85,7 +85,7 @@ class Game(object):
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
 
-        self.collision_grid = CollisionGrid(64)
+        self.collision_grid = CollisionGrid(32)
 
         self.entities_to_update = set()
         self.entities_to_input = set()
@@ -120,13 +120,16 @@ class Game(object):
 
         self.items = []
         for i in self.item_names:
-            #x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
-            #y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
-            self.items.append(Entity(i)) #, properties={
-            #"x": x_pos,
-            #"y": y_pos
-            #}))
-
+            x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
+            y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
+            self.items.append(Entity(i, properties={
+                "x": x_pos,
+                "y": y_pos
+            }))
+        
+        self.splash_screen = Entity('splashscreen')
+        self.screen.blit(self.resource_manager.get('sprite',self.splash_screen.props.image),(0,0))
+        pygame.display.flip()
         self.renderer = Render(self)
 
 
@@ -138,8 +141,6 @@ class Game(object):
                 "x": x_pos,
                 "y": y_pos
             }))
-        
-        self.splash_screen = Entity('splashscreen')
 
         while True:
             dt = self.clock.tick(60) / 1000.0

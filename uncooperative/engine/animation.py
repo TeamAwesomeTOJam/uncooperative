@@ -14,7 +14,7 @@ class AnimationComponent(object):
         entity.register_handler('play-animation', self.on_play_animation)
         game.get_game().register_for_updates(entity)
         
-        entity.props.current_animation = entity.props.name+'default'
+        entity.props.current_animation = 'default'
         entity.props.animation_pos = 0
         entity.props.animation_should_loop = True
         print entity.props.animations.keys()

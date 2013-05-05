@@ -74,9 +74,7 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
-                #entity.handle('play-animation', 'idle-%s' % (FACING[entity.props.facing],), True)
-                print entity.props.name
-                entity.handle('play-animation', '%sidle-%s' % (entity.props.name,FACING[entity.props.facing],), True)
+                entity.handle('play-animation', 'idle-%s' % (FACING[entity.props.facing],), True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
@@ -86,7 +84,7 @@ class InputMovementComponent(object):
                 
                 dir = Vec2d(entity.props.dx, entity.props.dy)
                 entity.props.facing = int(((dir.get_angle() + 45) % 360) / 90)
-                entity.handle('play-animation', '%swalk-%s' % (entity.props.name,FACING[entity.props.facing],), True)
+                entity.handle('play-animation', 'walk-%s' % (FACING[entity.props.facing],), True)
 
 
 class DrawComponent(object):
