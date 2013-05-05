@@ -111,7 +111,8 @@ class Game(object):
                     event = InputEvent(e)
 
                     for entity in self.entities_to_input:
-                        if e.type == pygame.JOYAXISMOTION:
+                        
+                        if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
                             entity.handle('move', event)
                         else:
                             entity.handle('input', event)
