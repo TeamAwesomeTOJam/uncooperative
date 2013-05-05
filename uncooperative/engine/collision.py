@@ -11,6 +11,8 @@ class CollisionGrid(object):
         self.map = {}
     
     def get_grid_squares(self, rect):
+        if None in rect:
+            print "what the hell?"
         min_grid_x = int(rect[0] / self.grid_size)
         max_grid_x = int((rect[0] + rect[2]) / self.grid_size + 1)
         min_grid_y = int(rect[1] / self.grid_size)
