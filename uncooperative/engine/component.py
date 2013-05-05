@@ -195,20 +195,18 @@ class AttackComponent(object):
     def remove(self, entity):
         entity.unregister_handler('attack', self.handle_attack)
 
-    def handle_attack(self, entity, attack_strength, zombie):
-        PLAYER_PUSHBACK_VELOCITY = 20
-
-        if entity.props.health - attack_strength <= 0:
+    def handle_attack(self, entity, attacker):
+        if entity.props.health - attacker.props.attack_strength <= 0:
             entity.props.health = 0
             entity.handle('dead')
         else:
-            entity.props.health -= attack_strength
+            entity.props.health -= attacker.props.attack_strength
 
-            x = entity.props.x - zombie.props.x
-            y = entity.props.y - zombie.props.y
+            x = entity.props.x - attacker.props.x
+            y = entity.props.y - attacker.props.y
 
-            entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(PLAYER_PUSHBACK_VELOCITY, 2))
-            entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(PLAYER_PUSHBACK_VELOCITY, 2))
+            entity.props.dx = -math.sqrt(math.pow(y, 2) - math.pow(attacker.props.pushback_velocity, 2))
+            entity.props.dy = -math.sqrt(math.pow(x, 2) - math.pow(attacker.props.pushback_velocity, 2))
 
 
 class PlayerCollisionComponent(object):
