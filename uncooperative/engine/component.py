@@ -67,13 +67,28 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
-                entity.handle('play-animation', 'default', True)
+                print entity.props.current_animation
+                if 'right' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-right', True)
+                if 'left' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-left', True)
+                if 'down' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-down', True)
+                if 'up' in entity.props.current_animation:
+                    entity.handle('play-animation', 'idle-up', True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
-                entity.handle('play-animation', 'walk', True)
+                if entity.props.dx > 0:
+                    entity.handle('play-animation', 'walk-right', True)
+                elif entity.props.dx < 0:
+                    entity.handle('play-animation', 'walk-left', True)
+                if entity.props.dy > 0:
+                    entity.handle('play-animation', 'walk-down', True)
+                elif entity.props.dy < 0:
+                    entity.handle('play-animation', 'walk-up', True)
 
 
 class DrawComponent(object):
@@ -164,6 +179,15 @@ class ZombieAIComponent(object):
 
             for player in in_range_player_attack:
                 player.handle('attack', ZOMBIE_ATTACK_STRENGTH, entity)
+                
+        if entity.props.dx > 0:
+            entity.handle('play-animation', 'walk-right', True)
+        elif entity.props.dx < 0:
+            entity.handle('play-animation', 'walk-left', True)
+        if entity.props.dy > 0:
+            entity.handle('play-animation', 'walk-down', True)
+        elif entity.props.dy < 0:
+            entity.handle('play-animation', 'walk-up', True)
 
 
 class AttackComponent(object):
@@ -206,13 +230,26 @@ class PlayerCollisionComponent(object):
         except:
             pass
         
+        entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
+        colliding_entity_rect = (colliding_entity.props.x, colliding_entity.props.y, colliding_entity.props.width, colliding_entity.props.height)
+        xcol = False
+        ycol = False
+        entity_rect_x, entity_rect_y, entity_rect_w, entity_rect_h = entity_rect
+        colliding_entity_rect_x, colliding_entity_rect_y, colliding_entity_rect_w, colliding_entity_rect_h = colliding_entity_rect
+        if  entity_rect_x > colliding_entity_rect_x + colliding_entity_rect_w  or colliding_entity_rect_x > entity_rect_x + entity_rect_w:
+            xcol = True
+        elif entity_rect_y > colliding_entity_rect_y + colliding_entity_rect_h or colliding_entity_rect_y > entity_rect_y + entity_rect_h:
+            ycol = True
+
+        good_y = 0
+        good_x = 0
         try:
             good_x = entity.props.last_good_x
             good_y = entity.props.last_good_y
         except AttributeError:
             good_x = entity.props.x 
             good_y = entity.props.y
-        
+
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -220,10 +257,22 @@ class PlayerCollisionComponent(object):
             dx = None
             dy = None
 
+        try:
+            player = entity.props.player
+            if player == "3":
+                print xcol,ycol
+                #print entity.props.__dict__
+                #print colliding_entity.props.__dict__
+        except:
+            pass
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            entity.props.x = good_x
-            entity.props.y = good_y
+            xcol = True
+            ycol = True
+            if xcol:
+                entity.props.x = good_x
+            if ycol:
+                entity.props.y = good_y
             game.get_game().collision_grid.add_entity(entity)
         
 

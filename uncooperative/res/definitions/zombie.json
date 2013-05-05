@@ -6,8 +6,45 @@
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
-							"frames" : ["testimpassable.png"]
+							"frames" : ["chars/bad_guys/down/12.png"]
+						},
+						"walk-up" : {
+							"duration" : 1.0,
+							"frames" : ["chars/bad_guys/up/1.png",
+										"chars/bad_guys/up/4.png",
+										"chars/bad_guys/up/8.png",
+										"chars/bad_guys/up/12.png",
+										"chars/bad_guys/up/16.png",
+										"chars/bad_guys/up/20.png"]
+						},
+						"walk-down" : {
+							"duration" : 1.0,
+							"frames" : ["chars/bad_guys/down/1.png",
+										"chars/bad_guys/down/4.png",
+										"chars/bad_guys/down/8.png",
+										"chars/bad_guys/down/12.png",
+										"chars/bad_guys/down/16.png",
+										"chars/bad_guys/down/20.png"]
+						},
+						"walk-right" : {
+							"duration" : 1.0,
+							"frames" : ["chars/bad_guys/right/1.png",
+										"chars/bad_guys/right/4.png",
+										"chars/bad_guys/right/8.png",
+										"chars/bad_guys/right/12.png",
+										"chars/bad_guys/right/16.png",
+										"chars/bad_guys/right/20.png"]
+						},
+						"walk-left" : {
+							"duration" : 1.0,
+							"frames" : ["chars/bad_guys/left/1.png",
+										"chars/bad_guys/left/4.png",
+										"chars/bad_guys/left/8.png",
+										"chars/bad_guys/left/12.png",
+										"chars/bad_guys/left/16.png",
+										"chars/bad_guys/left/20.png"]
 						}
+						
 					}
     },
     "components" : ["MovementComponent", "ZombieAIComponent","PlayerCollisionComponent", "AnimationComponent", "DrawComponent", "RegisterForDrawComponent"]
