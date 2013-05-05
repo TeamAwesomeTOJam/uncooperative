@@ -121,7 +121,7 @@ class GridGenerator:
                 pass
             elif self.visitedGrid[check.x][check.y]:
                 self.visitedGrid[check.x][check.y] = 0
-                self.makeSquare(centervec+((self.roomgridnumtiles/2)*d),Vec2d(2,2))
+                self.makeSquare(centervec+((self.roomgridnumtiles/2)*d),Vec2d(1,1)+abs(d))
                 self.recurse(check)
         
 
