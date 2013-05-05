@@ -150,8 +150,8 @@ class ZombieAIComponent(object):
             if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
                 entity.props.attacking = False
                 entity.props.attack_time = 0
-        else:
-            return
+            else:
+                return
 
         mypos = entity.props.get_midpoint()
         in_range_player = None
