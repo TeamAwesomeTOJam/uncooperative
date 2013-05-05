@@ -206,13 +206,26 @@ class PlayerCollisionComponent(object):
         except:
             pass
         
+        entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
+        colliding_entity_rect = (colliding_entity.props.x, colliding_entity.props.y, colliding_entity.props.width, colliding_entity.props.height)
+        xcol = False
+        ycol = False
+        entity_rect_x, entity_rect_y, entity_rect_w, entity_rect_h = entity_rect
+        colliding_entity_rect_x, colliding_entity_rect_y, colliding_entity_rect_w, colliding_entity_rect_h = colliding_entity_rect
+        if  entity_rect_x > colliding_entity_rect_x + colliding_entity_rect_w  or colliding_entity_rect_x > entity_rect_x + entity_rect_w:
+            xcol = True
+        elif entity_rect_y > colliding_entity_rect_y + colliding_entity_rect_h or colliding_entity_rect_y > entity_rect_y + entity_rect_h:
+            ycol = True
+
+        good_y = 0
+        good_x = 0
         try:
             good_x = entity.props.last_good_x
             good_y = entity.props.last_good_y
         except AttributeError:
             good_x = entity.props.x 
             good_y = entity.props.y
-        
+
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -220,10 +233,22 @@ class PlayerCollisionComponent(object):
             dx = None
             dy = None
 
+        try:
+            player = entity.props.player
+            if player == "3":
+                print xcol,ycol
+                #print entity.props.__dict__
+                #print colliding_entity.props.__dict__
+        except:
+            pass
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            entity.props.x = good_x
-            entity.props.y = good_y
+            xcol = True
+            ycol = True
+            if xcol:
+                entity.props.x = good_x
+            if ycol:
+                entity.props.y = good_y
             game.get_game().collision_grid.add_entity(entity)
         
 
