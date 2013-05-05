@@ -130,8 +130,19 @@ class Render:
             pygame.draw.rect(self.screen,(255,255,255),rect,3)
             
             player_pos = Vec2d(self.game.characters[player].props.x,self.game.characters[player].props.y)
-            car_pos = Vec2d(self.world_size[0]/2,self.world_size[1]/2)
-            dir = car_pos - player_pos
+            
+            p = Vec2d(self.game.items[0].props.x,self.game.items[0].props.y)
+            d = player_pos - p
+            min = d.length
+            min_pos = p
+            for item in self.game.items:
+                p = Vec2d(item.props.x,item.props.y)
+                d = player_pos - p
+                if d.length < min:
+                    min = d.length
+                    min_pos = p
+            dest_pos = min_pos
+            dir = dest_pos - player_pos
             
             compass_surface = pygame.transform.rotate(self.game.resource_manager.get('sprite','compass.png'),-1*dir.angle - 90)
             compass_rect = compass_surface.get_rect()
