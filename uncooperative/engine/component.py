@@ -143,7 +143,7 @@ class ZombieAIComponent(object):
             if in_range_player.props.dy >= entity.props.y:
                 entity.props.dy = ZOMBIE_SPEED
             else:
-                in_range_player.props.dy = -ZOMBIE_SPEED
+                entity.props.dy = -ZOMBIE_SPEED
         else:
             dir = Vec2d(entity.props.dx,entity.props.dy)
             if dir.length < 1:
@@ -180,7 +180,7 @@ class AttackComponent(object):
     def handle_attack(self, entity, attack_strength, zombie):
         PLAYER_PUSHBACK_VELOCITY = 20
 
-        if (entity.props.health - attack_strength <= 0):
+        if entity.props.health - attack_strength <= 0:
             entity.props.health = 0
             entity.handle('dead')
         else:
