@@ -214,7 +214,7 @@ class AttackComponent(object):
         entity.unregister_handler('attack', self.handle_attack)
 
     def handle_attack(self, entity, attacker, dt):
-        if entity.props.health - attacker.props.attack_strength <= 0:
+        if entity.props.health - (attacker.props.attack_strength * dt) <= 0:
             entity.props.health = 0
             entity.handle('dead')
         else:
@@ -242,6 +242,10 @@ class PlayerCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
+        if colliding_entity.props.car and entity.props.carrying_item:
+            colliding_entity.handle('use', entity.props.carring_item, entity)
+            return
+
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -347,24 +351,17 @@ class CarComponent(object):
         entity.unregister_handler('use', self.handle_use)
 
     def handle_use(self, entity, item, player):
-        CAR_USE_DISTANCE = 10
+        if item:
+            if item.type not in entity.item_types:
+                item.handle('drop', player)
 
-        if abs(entity.props.x - player.props.x) <= CAR_USE_DISTANCE and \
-            abs(entity.props.y - player.props.y) <= CAR_USE_DISTANCE:
-            if item:
-                if item.type not in entity.item_types:
-                    item.props.pickup = False
-                    item.props.carrying_player = None
-                    item.props.display = False
-                    entity.items.append(item)
-                else:
-                    item.props.pickup = False
-                    item.props.carrying_player = None
-            elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
-                if entity.props.driver is None:
-                    entity.props.driver = player
-                    player.props.draw = False
-                    player.props.x, player.props.y = entity.props.x, entity.props.y
+                entity.items.append(item)
+                entity.item_types.append(item.type)
+        elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
+            if entity.props.driver is None:
+                entity.props.driver = player
+                player.props.draw = False
+                player.props.x, player.props.y = entity.props.x, entity.props.y
 
 
 class InputActionComponent(object):
@@ -398,8 +395,11 @@ class DeadComponent(object):
 
     def handle_dead(self, entity):
         entity.props.dead = True
-        entity.props.dead_time = 0
-        game.get_game().component_manager('draw', entity)
-        game.get_game().component_manager('update', entity)
-        game.get_game().component_manager('input', entity)
-        game.get_game().component_manager('move', entity)
+        game.get_game().component_manager.remove('MovementComponent', entity)
+        game.get_game().component_manager.remove('InputMovementComponent', entity)
+        game.get_game().component_manager.remove('PlayerCollisionComponent', entity)
+        game.get_game().component_manager.remove('AnimationComponent', entity)
+        game.get_game().component_manager.remove('DrawComponent', entity)
+        game.get_game().component_manager.remove('RegisterForDrawComponent', entity)
+        game.get_game().component_manager.remove('AttackComponent', entity)
+        game.get_game().component_manager.remove('InputActionComponent', entity)
