@@ -150,7 +150,8 @@ class ZombieAIComponent(object):
             if entity.props.attack_time >= ZOMBIE_ATTACK_TIME:
                 entity.props.attacking = False
                 entity.props.attack_time = 0
-
+        else:
+            return
 
         mypos = entity.props.get_midpoint()
         in_range_player = None
@@ -236,25 +237,19 @@ class PlayerCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
+        vec_entity = Vec2d(entity.props.x, entity.props.y)
+        vec_colliding = Vec2d(colliding_entity.props.x, colliding_entity.props.y)
+        direc = vec_colliding - vec_entity
+        player = None
         try:
             player = entity.props.player
-            #if player != "4":
-                #print entity.props.__dict__
-                #print colliding_entity.props.__dict__
         except:
             pass
-        
-        entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
-        colliding_entity_rect = (colliding_entity.props.x, colliding_entity.props.y, colliding_entity.props.width, colliding_entity.props.height)
-        xcol = True
-        ycol = True
-        entity_rect_x, entity_rect_y, entity_rect_w, entity_rect_h = entity_rect
-        colliding_entity_rect_x, colliding_entity_rect_y, colliding_entity_rect_w, colliding_entity_rect_h = colliding_entity_rect
-        if  entity_rect_x > colliding_entity_rect_x + colliding_entity_rect_w  or colliding_entity_rect_x > entity_rect_x + entity_rect_w:
-            xcol = False
-        elif entity_rect_y > colliding_entity_rect_y + colliding_entity_rect_h or colliding_entity_rect_y > entity_rect_y + entity_rect_h:
-            ycol = False
+                    
+        quadrant = int(((direc.get_angle() + 45) % 360) / 90)
+        if player == "1":
 
+            print quadrant
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -262,21 +257,11 @@ class PlayerCollisionComponent(object):
             dx = None
             dy = None
 
-        try:
-            player = entity.props.player
-            if player == "3":
-                print xcol,ycol
-                #print entity.props.__dict__
-                #print colliding_entity.props.__dict__
-        except:
-            pass
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            #xcol = True
-            #ycol = True
-            if xcol:
+            if quadrant == 0 or quadrant == 2:
                 entity.props.x = entity.props.last_good_x
-            if ycol:
+            elif quadrant == 1 or quadrant == 3:
                 entity.props.y = entity.props.last_good_y
             game.get_game().collision_grid.add_entity(entity)
             
