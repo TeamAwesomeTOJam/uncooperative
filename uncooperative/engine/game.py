@@ -85,7 +85,7 @@ class Game(object):
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
 
-        self.collision_grid = CollisionGrid(64)
+        self.collision_grid = CollisionGrid(32)
 
         self.entities_to_update = set()
         self.entities_to_input = set()
