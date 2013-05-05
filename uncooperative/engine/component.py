@@ -109,6 +109,7 @@ class ZombieAIComponent(object):
     def add(self, entity):
         entity.register_handler('update', self.handle_update)
         game.get_game().register_for_updates(entity)
+        entity.props.facing = 1
 
     def remove(self, entity):
         entity.unregister_handler('update', self.handle_update)
