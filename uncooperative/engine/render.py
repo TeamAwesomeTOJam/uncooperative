@@ -167,6 +167,14 @@ class Render:
             pygame.draw.rect(self.screen,(0,0,0),health_bar_rect)
             if self.game.characters[player].props.health > 0:
                 pygame.draw.rect(self.screen,(255,0,0),health_rect)
+                
+            # you lose
+            if self.game.characters[player].props.health <= 0:
+                text_surface = self.game.resource_manager.get('sprite','Text/YouLose.png')
+                text_rect = text_surface.get_rect()
+                text_rect.center = offset + Vec2d(width/2,height/2)
+                
+                self.screen.blit(text_surface,text_rect)
             
             
             
