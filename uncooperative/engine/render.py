@@ -157,7 +157,7 @@ class Render:
             pygame.draw.circle(self.screen,(0,0,0),radar_offset,20)
             self.screen.blit(compass_surface,compass_rect)
             
-            minimap_offset = offset + Vec2d(10,190)
+            minimap_offset = offset + Vec2d(10,height - self.minimap_size[1] - 10)
             
             self.screen.blit(self.minimap,minimap_offset)
             
