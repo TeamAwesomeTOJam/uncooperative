@@ -5,9 +5,9 @@
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
-							"frames" : ["impassableCR.png"]
+							"frames" : ["impassableCTL.png"]
 						}
 					}
     },
-    "components" : ["MovementComponent", "ZombieAIComponent","PlayerCollisionComponent"]
+    "components" : ["MovementComponent", "ZombieAIComponent","PlayerCollisionComponent", "AnimationComponent", "DrawComponent", "RegisterForDrawComponent"]
 }
