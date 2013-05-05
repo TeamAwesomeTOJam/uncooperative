@@ -1,7 +1,8 @@
 {
 	"properties" : {"dx" : 0, "dy" : 0,
 					"x_input" : 0 , "y_input" : 0,
-					"width" : 20, "height" : 20
+					"width" : 20, "height" : 20,
+					"image_x" : -7, "image_y" : -10
 
 		},
 	"components" : ["PlayerCollisionComponent",
