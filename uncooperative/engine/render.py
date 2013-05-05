@@ -180,7 +180,7 @@ class Render:
                 pygame.draw.rect(self.screen,(255,0,0),health_rect)
                 
             # you lose
-            if self.game.characters[player].props.health <= 0:
+            if self.game.characters[player].props.dead:
                 text_surface = self.game.resource_manager.get('sprite','Text/YouLose.png')
                 text_rect = text_surface.get_rect()
                 text_rect.center = offset + Vec2d(width/2,height/2)
