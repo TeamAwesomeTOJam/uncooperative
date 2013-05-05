@@ -28,8 +28,8 @@ class MovementComponent(object):
         entity.props.last_good_x = entity.props.x
         entity.props.last_good_y = entity.props.y
         game.get_game().collision_grid.remove_entity(entity)
-        entity.props.x += entity.props.dx * dt
-        entity.props.y += entity.props.dy * dt
+        entity.props.x += entity.props.dx * dt * 8
+        entity.props.y += entity.props.dy * dt * 8
         game.get_game().collision_grid.add_entity(entity)
         entity.handle('draw', game.get_game().renderer.draw_surface)
         collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
