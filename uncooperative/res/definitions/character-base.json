@@ -6,6 +6,10 @@
 						"default" : {
 							"duration" : 1.0,
 							"frames" : ["impassableCR.png"]
+						},
+						"walk" : {
+							"duration" : 1.0,
+							"frames" : ["impassableCR.png"]
 						}
 					}
 					
