@@ -16,43 +16,43 @@
         "animations" : {
 						"default" : {
 							"duration" : 1.0,
-							"frames" : ["chars/bad_guys/down/12.png"]
+							"frames" : ["chars/bad_guys/stand/down/0.png"]
 						},
 						"walk-up" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/up/"
+							"frame-dir" : "chars/bad_guys/walk/up/"
 						},
 						"walk-down" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/down/"
+							"frame-dir" : "chars/bad_guys/walk/down/"
 						},
 						"walk-right" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/right/"
+							"frame-dir" : "chars/bad_guys/walk/right/"
 						},
 						"walk-left" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/left/"
+							"frame-dir" : "chars/bad_guys/walk/left/"
 						},
 						"zombiedefault" : {
 							"duration" : 1.0,
-							"frames" : ["chars/bad_guys/down/12.png"]
+							"frames" : ["chars/bad_guys/stand/down/0.png"]
 						},
 						"zombiewalk-up" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/up/"
+							"frame-dir" : "chars/bad_guys/walk/up/"
 						},
 						"zombiewalk-down" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/down/"
+							"frame-dir" : "chars/bad_guys/walk/down/"
 						},
 						"zombiewalk-right" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/right/"
+							"frame-dir" : "chars/bad_guys/walk/right/"
 						},
 						"zombiewalk-left" : {
 							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/left/"
+							"frame-dir" : "chars/bad_guys/walk/left/"
 						}
 					}
     },
