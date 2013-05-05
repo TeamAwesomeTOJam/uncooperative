@@ -224,6 +224,7 @@ class AttackComponent(object):
             #entity.props.dx += point_vec.x
             #entity.props.dy += point_vec.y
 
+
 class PlayerCollisionComponent(object):
     def add(self, entity):
         entity.register_handler('collision', self.handle_collision)
@@ -238,19 +239,6 @@ class PlayerCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
-        vec_entity = Vec2d(entity.props.x, entity.props.y)
-        vec_colliding = Vec2d(colliding_entity.props.x, colliding_entity.props.y)
-        direc = vec_colliding - vec_entity
-        player = None
-        try:
-            player = entity.props.player
-        except:
-            pass
-                    
-        quadrant = int(((direc.get_angle() + 45) % 360) / 90)
-        if player == "1":
-            pass
-            #print quadrant
         try:
             dx = entity.props.dx
             dy = entity.props.dy
@@ -260,10 +248,19 @@ class PlayerCollisionComponent(object):
 
         if dx or dy:
             game.get_game().collision_grid.remove_entity(entity)
-            if quadrant == 0 or quadrant == 2:
-                entity.props.x = entity.props.last_good_x
-            elif quadrant == 1 or quadrant == 3:
-                entity.props.y = entity.props.last_good_y
+            
+            keep_y = game.get_game().collision_grid.get_collisions((entity.props.last_good_x, entity.props.y, entity.props.width, entity.props.height))
+            keep_x = game.get_game().collision_grid.get_collisions((entity.props.x, entity.props.last_good_y, entity.props.width, entity.props.height))
+            
+            if len(keep_x) > 0 or len(keep_y) > 0:
+                if len(keep_x) == 0:
+                    entity.props.y = entity.props.last_good_y
+                elif len(keep_y) == 0 :
+                    entity.props.x = entity.props.last_good_x
+                else:
+                    entity.props.x = entity.props.last_good_x
+                    entity.props.y = entity.props.last_good_y
+            
             game.get_game().collision_grid.add_entity(entity)
             
         
