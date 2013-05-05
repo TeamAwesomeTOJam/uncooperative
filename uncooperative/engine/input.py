@@ -84,6 +84,10 @@ class InputEvent:
                             if self.axis == 1:
                                 self.value = -1 * self.value
                     
+                    action = player_mapping.get(self.button)
+                    if action:
+                        self.action = action
+
                     if self.axis == 0:
                         if self.value >= 0:
                             self.action = "UP"

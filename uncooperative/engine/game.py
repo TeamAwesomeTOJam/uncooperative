@@ -6,7 +6,6 @@ Created on May 2, 2013
 
 import os
 import sys
-
 import pygame
 
 import componentmanager
@@ -26,7 +25,8 @@ from component import (MovementComponent,
                        AttackComponent,
                        ItemComponent,
                        StaticCollisionComponent,
-                       InputActionComponent)
+                       InputActionComponent,
+                       ZombieCollisionComponent)
 
 from collision import CollisionGrid
 
@@ -43,6 +43,7 @@ from grid import Grid,Vec2
 class Game(object):
     
     def __init__(self):
+        #self.screen_size = (500,300)
         self.screen_size = (1280,720)
         self.map_size = (128,128)
         self.tile_size = (32,32)
@@ -70,7 +71,8 @@ class Game(object):
         self.component_manager.register_component('ItemComponent', ItemComponent())
         self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
         self.component_manager.register_component('InputActionComponent', InputActionComponent())
-
+        self.component_manager.register_component('ZombieCollisionComponent', ZombieCollisionComponent())
+        
         self.entity_manager = EntityManager()
         
         self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
@@ -128,7 +130,7 @@ class Game(object):
 
         while True:
             dt = self.clock.tick(60) / 1000.0
-            
+
             if self.mode=='game':
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT: sys.exit()
@@ -139,7 +141,6 @@ class Game(object):
                             e.type == pygame.JOYHATMOTION or
                             e.type == pygame.KEYDOWN or
                             e.type == pygame.KEYUP):
-                        
                         events = create_input_events(e)
                         for entity in self.entities_to_input:
                             for event in events:
@@ -147,15 +148,15 @@ class Game(object):
                                     entity.handle('move', event)
                                 else:
                                     entity.handle('input', event)
-    
                 for entity in self.entities_to_update:
                     entity.handle('update', dt)
 
                 self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
                 for entity in self.entities_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
-                    
+
                 self.renderer.render()
+                
             elif self.mode == 'splash':
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT: sys.exit()
