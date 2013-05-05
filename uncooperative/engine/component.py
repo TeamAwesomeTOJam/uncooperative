@@ -30,7 +30,6 @@ class MovementComponent(object):
         entity.unregister_handler('update', self.handle_update)
     
     def handle_update(self, entity, dt):
-        
         if entity.props.dx or entity.props.dy:
             entity.props.last_good_x = entity.props.x
             entity.props.last_good_y = entity.props.y
@@ -45,6 +44,7 @@ class MovementComponent(object):
             collided_entity.handle('collision', entity)
             entity.handle('collision', collided_entity)
 
+
 class InputMovementComponent(object):
     
     def add(self, entity):
@@ -57,7 +57,6 @@ class InputMovementComponent(object):
     def handle_move(self, entity, event):
         SPEED = 20 * 8
         DEADZONE = 0.15
-
         if entity.props.player == event.player:
             if event.axis == 0:
                 entity.props.x_input = event.magnitude
@@ -69,11 +68,13 @@ class InputMovementComponent(object):
             if magnitude < DEADZONE:
                 entity.props.dx = 0
                 entity.props.dy = 0
+                entity.handle('play-animation', 'default', True)
             else:
                 x_norm = entity.props.x_input / magnitude
                 y_norm = entity.props.y_input / magnitude
                 entity.props.dx = x_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
                 entity.props.dy = y_norm * ((magnitude - DEADZONE) / (1 - DEADZONE)) * SPEED
+                entity.handle('play-animation', 'walk', True)
 
 
 class DrawComponent(object):
@@ -87,6 +88,15 @@ class DrawComponent(object):
     def handle_draw(self, entity, surface):
         surface.blit(game.get_game().resource_manager.get('sprite', entity.props.image), (entity.props.x, entity.props.y))
 
+
+class RegisterForDrawComponent(object):
+    
+    def add(self, entity):
+        game.get_game().register_for_drawing(entity)
+        
+    def remove(self, entity):
+        pass
+    
 
 class ZombieAIComponent(object):
 
@@ -137,7 +147,6 @@ class ZombieAIComponent(object):
                 dir = dir.length * Vec2d(cos(ang),sin(ang))
             entity.props.dx = dir.x
             entity.props.dy = dir.y
-
 
 
         if len(in_range_player_attack) > 0:
@@ -219,3 +228,31 @@ class ItemComponent(object):
     def handle_move(self, entity):
         if entity.props.pickup and entity.props.carrying_player is not None:
             entity.props.x, entity.props.y = entity.props.carrying_player.props.x, entity.props.carrying_player.props.y
+
+
+class CarComponent(object):
+    def add(self, entity):
+        entity.register_handler('use', self.handle_use)
+
+    def remove(self, entity):
+        entity.unregister_handler('use', self.handle_use)
+
+    def handle_use(self, entity, item, player):
+        CAR_USE_DISTANCE = 10
+
+        if abs(entity.props.x - player.props.x) <= CAR_USE_DISTANCE and \
+            abs(entity.props.y - player.props.y) <= CAR_USE_DISTANCE:
+            if item:
+                if item.type not in entity.item_types:
+                    item.props.pickup = False
+                    item.props.carrying_player = None
+                    item.props.display = False
+                    entity.items.append(item)
+                else:
+                    item.props.pickup = False
+                    item.props.carrying_player = None
+            elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
+                if entity.props.driver is None:
+                    entity.props.driver = player
+                    player.props.draw = False
+                    player.props.x, player.props.y = entity.props.x, entity.props.y
