@@ -5,7 +5,8 @@
         "speed" : 120,
         "health" : 100,
         "image_x" : -31,
-        "image_y" : -45
+        "image_y" : -45,
+        "shove_power" : 20
 
 
     },

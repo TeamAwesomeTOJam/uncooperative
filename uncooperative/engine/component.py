@@ -361,10 +361,10 @@ class CarComponent(object):
 
     def handle_use(self, entity, item, player):
         CAR_IMAGES = ["items/car/Car-empty.png",
-              "items/car/Car-engine.png",
+                      "items/car/Car-rear-wheel.png",
+                      "items/car/Car-front-rear.png",
               "items/car/Car-engine-front.png",
               "items/car/Car-engine-rear.png",
-              "items/car/Car-full.png",
               "items/car/Car-full.png"]
         
         if item:
@@ -412,6 +412,11 @@ class InputActionComponent(object):
                         return
             else:
                 entity.props.carrying_item.handle('drop', entity)
+                
+        if hasattr(event, "player") and entity.props.player and entity.props.player == event.player and \
+                (event.button_down or event.key_down) and event.action == "USE":
+            for other in entity.get_entities_in_front():
+                other.handle('shove', entity.props.shove_power)
 
 
 class DeadComponent(object):
@@ -426,7 +431,8 @@ class DeadComponent(object):
             entity.props.win = True
         else:
             entity.props.dead = True
-
+        if entity.props.carrying_item:
+            entity.props.carrying_item.handle('drop', entity)
         game.get_game().component_manager.remove('MovementComponent', entity)
         game.get_game().component_manager.remove('InputMovementComponent', entity)
         game.get_game().component_manager.remove('PlayerCollisionComponent', entity)
@@ -435,3 +441,14 @@ class DeadComponent(object):
         game.get_game().component_manager.remove('RegisterForDrawComponent', entity)
         game.get_game().component_manager.remove('AttackComponent', entity)
         game.get_game().component_manager.remove('InputActionComponent', entity)
+        
+class ShoveComponent(object):
+    def add(self, entity):
+        entity.register_handler('shove', self.handle_shove)
+
+    def remove(self, entity):
+        entity.unregister_handler('shove', self.handle_shove) 
+        
+    def handle_shove(self, entity, power):
+        entity.props.shove_timeout = 2
+        entity.props.dx = 2
