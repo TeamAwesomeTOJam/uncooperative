@@ -352,6 +352,14 @@ class ItemComponent(object):
 
 
 class CarComponent(object):
+    
+    CAR_IMAGES = ["items/car/Car-empty.png",
+                  "items/car/Car-engine.png",
+                  "items/car/Car-engine-front.png",
+                  "items/car/Car-engine-rear.png",
+                  "items/car/Car-full.png",
+                  "items/car/Car-full.png"]
+    
     def add(self, entity):
         entity.register_handler('use', self.handle_use)
 
@@ -362,9 +370,17 @@ class CarComponent(object):
         if item:
             if item.props.type not in entity.props.item_types:
                 item.handle('drop', player)
-
+                
                 entity.props.items.append(item)
                 entity.props.item_types.append(item.props.item_type)
+                
+                game.get_game().component_manager.remove('DrawComponent', item)
+                game.get_game().component_manager.remove('RegisterForDrawComponent', item)
+                game.get_game().component_manager.remove('ItemComponent', item)
+                game.get_game().component_manager.remove('StaticCollisionComponent', item)
+                
+                entity.props.image = CAR_IMAGES[len(entity.props.items)]
+                
         elif player and set(entity.props.item_types).issuperset(entity.props.needed_item_types):
             if entity.props.driver is None:
                 game.get_game().component_manager.remove("StaticCollisionComponent", entity)
