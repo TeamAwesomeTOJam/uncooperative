@@ -11,8 +11,8 @@ class CollisionGrid(object):
         self.map = {}
     
     def get_grid_squares(self, rect):
-        if None in rect:
-            print "what the hell?"
+        #if None in rect:
+        #    print "what the hell?"
         min_grid_x = int(rect[0] / self.grid_size)
         max_grid_x = int((rect[0] + rect[2]) / self.grid_size + 1)
         min_grid_y = int(rect[1] / self.grid_size)
@@ -31,7 +31,8 @@ class CollisionGrid(object):
             for square in self.get_grid_squares_for_entity(entity):
                 self.map.setdefault(square, set()).remove(entity)
         except:
-            print "Can't remove", entity
+            pass
+            #print "Can't remove", entity
 
     def get_possible_collisions(self, rect):
         possible_collisions = set()
