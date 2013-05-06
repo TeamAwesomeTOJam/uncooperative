@@ -162,21 +162,25 @@ class Game(object):
                                     entity.handle('move', event)
                                 else:
                                     entity.handle('input', event)
-                items_in_area = []
+                
+                items_in_area = set()
                 for c in range(4):
                     r = pygame.Rect((0,0),self.screen_size)
                     r.center = self.renderer.cameras[c].pos()
-                    items_in_area += self.collision_grid.get_possible_collisions(r)
+                    items_in_area.update(self.collision_grid.get_possible_collisions(r))
                     #print items_in_area
                 
-                for entity in self.entities_to_update:
-                    if entity in items_in_area:
-                        entity.handle('update', dt)
+                #for entity in self.entities_to_update:
+                    #if entity in items_in_area:
+                    
+                for entity in items_in_area.intersection(self.entities_to_update):
+                    entity.handle('update', dt)
 
                 self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
-                for entity in self.entities_to_draw:
-                    if entity in items_in_area:
-                        entity.handle('draw', self.renderer.draw_surface)
+                #for entity in self.entities_to_draw:
+                    #if entity in items_in_area:
+                for entity in items_in_area.intersection(self.entities_to_draw):
+                    entity.handle('draw', self.renderer.draw_surface)
 
                 self.renderer.render()
                 
