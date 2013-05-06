@@ -130,7 +130,7 @@ class Render:
             
             player_pos = Vec2d(self.game.characters[player].props.x,self.game.characters[player].props.y)
             
-            if self.game.characters[player].props.carrying_item:
+            if self.game.characters[player].props.carrying_item or not self.game.items:
                 dest_pos = Vec2d(self.game.car.props.x,self.game.car.props.y)
             else:
                 p = Vec2d(self.game.items[0].props.x,self.game.items[0].props.y)
