@@ -359,11 +359,11 @@ class CarComponent(object):
                 entity.props.item_types.append(item.props.item_type)
         elif player and set(entity.props.item_types).issuperset(entity.props.needed_item_types):
             if entity.props.driver is None:
-                game.get_game().component_manager.remove("StaticCollisionComponent")
+                game.get_game().component_manager.remove("StaticCollisionComponent", entity)
                 entity.props.driver = player
                 player.props.draw = False
                 player.props.x, player.props.y = entity.props.x, entity.props.y
-                entity.props.dx = -40
+                entity.props.dx, entity.props.dy = -200, 2
                 player.handle('dead', True)
 
 
