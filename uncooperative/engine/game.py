@@ -176,11 +176,11 @@ class Game(object):
                 #for entity in self.entities_to_update:
                     #if entity in items_in_area:
                 
-                items_to_update = items_in_area.intersection(self.entities_to_update).union(self.items)
+                items_to_update = items_in_area.intersection(self.entities_to_update).union(self.items).union([self.car])
                 for entity in items_to_update:
                     entity.handle('update', dt)
                 
-                items_to_draw = items_in_area.intersection(self.entities_to_draw).union(self.items)
+                items_to_draw = items_in_area.intersection(self.entities_to_draw).union(self.items).union([self.car])
 
                 items_to_draw = sorted(items_to_draw, key=lambda entity: entity.props.y)
                 #for entity in self.entities_to_draw:
