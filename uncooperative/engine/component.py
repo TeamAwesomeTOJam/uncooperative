@@ -293,7 +293,7 @@ class ZombieCollisionComponent(object):
 
     def handle_collision(self, entity, colliding_entity):
         # zombies can't collide with other zombies
-        if colliding_entity.props.name != "zombie":
+        if colliding_entity.props.name != "zombie" and not colliding_entity.props.item:
             try:
                 dx = entity.props.dx
                 dy = entity.props.dy
