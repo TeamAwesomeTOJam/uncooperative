@@ -175,14 +175,17 @@ class Game(object):
                 
                 #for entity in self.entities_to_update:
                     #if entity in items_in_area:
-                    
-                for entity in items_in_area.intersection(self.entities_to_update):
+                
+                items_to_update = items_in_area.intersection(self.entities_to_update).union(self.items)
+                for entity in items_to_update:
                     entity.handle('update', dt)
+                
+                items_to_draw = items_in_area.intersection(self.entities_to_draw).union(self.items)
 
-                self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
+                items_to_draw = sorted(items_to_draw, key=lambda entity: entity.props.y)
                 #for entity in self.entities_to_draw:
                     #if entity in items_in_area:
-                for entity in items_in_area.intersection(self.entities_to_draw):
+                for entity in items_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
 
                 self.renderer.render()
