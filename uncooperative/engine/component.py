@@ -375,7 +375,7 @@ class InputActionComponent(object):
             if not entity.props.carrying_item:
                 entities_in_front = entity.get_entities_in_front()
 
-                print entities_in_front
+                #print entities_in_front
                 for i in entities_in_front:
                     if i.props.item:
                         i.handle('pickup', entity)

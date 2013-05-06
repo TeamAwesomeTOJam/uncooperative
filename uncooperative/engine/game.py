@@ -134,7 +134,7 @@ class Game(object):
 
 
         self.zombies = []
-        for m in range(20):
+        for m in range(200):
             x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
             y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
             self.zombies.append(Entity("zombie", properties={
@@ -162,12 +162,21 @@ class Game(object):
                                     entity.handle('move', event)
                                 else:
                                     entity.handle('input', event)
+                items_in_area = []
+                for c in range(4):
+                    r = pygame.Rect((0,0),self.screen_size)
+                    r.center = self.renderer.cameras[c].pos()
+                    items_in_area += self.collision_grid.get_possible_collisions(r)
+                    #print items_in_area
+                
                 for entity in self.entities_to_update:
-                    entity.handle('update', dt)
+                    if entity in items_in_area:
+                        entity.handle('update', dt)
 
                 self.entities_to_draw = sorted(self.entities_to_draw, key=lambda entity: entity.props.y)
                 for entity in self.entities_to_draw:
-                    entity.handle('draw', self.renderer.draw_surface)
+                    if entity in items_in_area:
+                        entity.handle('draw', self.renderer.draw_surface)
 
                 self.renderer.render()
                 
