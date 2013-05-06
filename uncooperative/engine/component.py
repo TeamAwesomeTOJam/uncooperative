@@ -242,7 +242,6 @@ class PlayerCollisionComponent(object):
     def handle_collision(self, entity, colliding_entity):
         if colliding_entity.props.car:
             colliding_entity.handle('use', entity.props.carrying_item, entity)
-            return
 
         try:
             dx = entity.props.dx
