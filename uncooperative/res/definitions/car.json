@@ -3,7 +3,7 @@
         "x": 1950,
         "y": 2100,
         "width" : 128,
-        "height" : 80,
+        "height" : 72,
         "image_y" : -16,
         "needed_item_types": ["tire", "engine", "wheel", "gas-can", "radiator", "toolbox"],
         "item_types": [],
