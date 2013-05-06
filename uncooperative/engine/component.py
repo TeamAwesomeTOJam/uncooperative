@@ -331,7 +331,7 @@ class ItemComponent(object):
         entity.unregister_handler('drop', self.handle_drop)
 
     def handle_pickup(self, entity, player):
-        print "Pickup", entity
+        #print "Pickup", entity
         entity.props.pickup = True
         entity.props.carrying_player = player
         player.props.carrying_item = entity
