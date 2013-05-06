@@ -53,6 +53,7 @@ class Game(object):
 
         pygame.init()
         
+        
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode(self.screen_size)
         
@@ -115,6 +116,7 @@ class Game(object):
 
         
     def run(self):
+        pygame.display.toggle_fullscreen()
         self.music = self.resource_manager.get('sound', 'Teamawesome_zombies_LOOP.wav')
         self.music.play(loops=-1)
         self.car = Entity('car')
@@ -150,7 +152,7 @@ class Game(object):
 
             if self.mode=='game':
                 for e in pygame.event.get():
-                    if e.type == pygame.QUIT: sys.exit()
+                    if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE): sys.exit()
                     if (e.type == pygame.JOYAXISMOTION or
                             e.type == pygame.JOYBALLMOTION or
                             e.type == pygame.JOYBUTTONDOWN or
@@ -192,7 +194,7 @@ class Game(object):
                 
             elif self.mode == 'splash':
                 for e in pygame.event.get():
-                    if e.type == pygame.QUIT: sys.exit()
+                    if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE): sys.exit()
                     if e.type == pygame.KEYDOWN:
                         self.mode = 'game'
                 self.splash_screen.handle('update',dt)
