@@ -12,7 +12,7 @@ import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
 from animation import AnimationComponent
-from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping
+from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping, LoadSound
 from component import (MovementComponent,
                        ExampleComponent, 
                        InputMovementComponent, 
@@ -81,6 +81,7 @@ class Game(object):
         self.resource_manager.register_loader('definition', LoadEntityDefinition)
         self.resource_manager.register_loader('sprite', LoadImage)
         self.resource_manager.register_loader('inputmap', LoadInputMapping)
+        self.resource_manager.register_loader('sound', LoadSound)
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
@@ -114,6 +115,8 @@ class Game(object):
 
         
     def run(self):
+        self.music = self.resource_manager.get('sound', 'Teamawesome_zombies_LOOP.wav')
+        self.music.play(loops=-1)
         self.car = Entity('car')
         self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
         self.item_names = ["engine", "gas-can", "radiator", "steering-wheel-2", "tire", "steering-wheel", "toolbox", "tire", "tire", "tire"]

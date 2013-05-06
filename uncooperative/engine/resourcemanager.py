@@ -65,3 +65,6 @@ def LoadInputMapping(prefix, key):
         definition = json.load(in_file)
         
     return definition['input']
+
+def LoadSound(prefix, key):
+    return pygame.mixer.Sound(os.path.join(prefix, 'sound', key))
