@@ -1,6 +1,6 @@
 {
 	"properties" : {"x" : 2050, "y" : 2100,
-					"item-type": "wheel",
+					"item_type": "wheel",
                     "image" : "items/steeringWheel01.png"
     },
 	"components" : [],

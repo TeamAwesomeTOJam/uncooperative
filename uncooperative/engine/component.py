@@ -214,7 +214,7 @@ class AttackComponent(object):
     def handle_attack(self, entity, attacker, dt):
         if entity.props.health - (attacker.props.attack_strength * dt) <= 0:
             entity.props.health = 0
-            entity.handle('dead')
+            entity.handle('dead', False)
         else:
             entity.props.health -= (attacker.props.attack_strength * dt)
 
@@ -240,7 +240,7 @@ class PlayerCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
-        if colliding_entity.props.car and entity.props.carrying_item:
+        if colliding_entity.props.car:
             colliding_entity.handle('use', entity.props.carrying_item, entity)
             return
 
@@ -292,20 +292,22 @@ class ZombieCollisionComponent(object):
         game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
-        try:
-            dx = entity.props.dx
-            dy = entity.props.dy
-        except AttributeError:
-            dx = None
-            dy = None
-
-        if dx or dy:
-            game.get_game().collision_grid.remove_entity(entity)
-            
-            entity.props.x = entity.props.last_good_x
-            entity.props.y = entity.props.last_good_y
-            
-            game.get_game().collision_grid.add_entity(entity)
+        # zombies can't collide with other zombies
+        if colliding_entity.props.name != "zombie":
+            try:
+                dx = entity.props.dx
+                dy = entity.props.dy
+            except AttributeError:
+                dx = None
+                dy = None
+    
+            if dx or dy:
+                game.get_game().collision_grid.remove_entity(entity)
+                
+                entity.props.x = entity.props.last_good_x
+                entity.props.y = entity.props.last_good_y
+                
+                game.get_game().collision_grid.add_entity(entity)
             
             
 class ItemComponent(object):
@@ -355,11 +357,14 @@ class CarComponent(object):
 
                 entity.props.items.append(item)
                 entity.props.item_types.append(item.props.item_type)
-        elif player and all(x in entity.props.needed_item_types for x in entity.props.item_types):
+        elif player and set(entity.props.item_types).issuperset(entity.props.needed_item_types):
             if entity.props.driver is None:
+                game.get_game().component_manager.remove("StaticCollisionComponent", entity)
                 entity.props.driver = player
                 player.props.draw = False
                 player.props.x, player.props.y = entity.props.x, entity.props.y
+                entity.props.dx, entity.props.dy = -200, 2
+                player.handle('dead', True)
 
 
 class InputActionComponent(object):
@@ -391,8 +396,12 @@ class DeadComponent(object):
     def remove(self, entity):
         entity.unregister_handler('dead', self.handle_dead)
 
-    def handle_dead(self, entity):
-        entity.props.dead = True
+    def handle_dead(self, entity, win):
+        if win:
+            entity.props.win = True
+        else:
+            entity.props.dead = True
+
         game.get_game().component_manager.remove('MovementComponent', entity)
         game.get_game().component_manager.remove('InputMovementComponent', entity)
         game.get_game().component_manager.remove('PlayerCollisionComponent', entity)

@@ -1,6 +1,6 @@
 {
 	"properties" : {"x" : 2100, "y" : 2050,
-					"item-type": "radiator",
+					"item_type": "radiator",
                     "image" : "items/radiator.png"
     },
 	"components" : [],

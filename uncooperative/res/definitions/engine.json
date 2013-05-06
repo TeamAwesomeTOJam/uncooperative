@@ -1,6 +1,6 @@
 {
 	"properties" : {"x" : 2050, "y" : 2050,
-					"item-type": "engine",
+					"item_type": "engine",
                     "image" : "items/engine.png"
     },
 	"components" : [],
