@@ -353,13 +353,6 @@ class ItemComponent(object):
 
 class CarComponent(object):
     
-    CAR_IMAGES = ["items/car/Car-empty.png",
-                  "items/car/Car-engine.png",
-                  "items/car/Car-engine-front.png",
-                  "items/car/Car-engine-rear.png",
-                  "items/car/Car-full.png",
-                  "items/car/Car-full.png"]
-    
     def add(self, entity):
         entity.register_handler('use', self.handle_use)
 
@@ -367,6 +360,13 @@ class CarComponent(object):
         entity.unregister_handler('use', self.handle_use)
 
     def handle_use(self, entity, item, player):
+        CAR_IMAGES = ["items/car/Car-empty.png",
+              "items/car/Car-engine.png",
+              "items/car/Car-engine-front.png",
+              "items/car/Car-engine-rear.png",
+              "items/car/Car-full.png",
+              "items/car/Car-full.png"]
+        
         if item:
             if item.props.type not in entity.props.item_types:
                 item.handle('drop', player)
@@ -374,6 +374,7 @@ class CarComponent(object):
                 entity.props.items.append(item)
                 entity.props.item_types.append(item.props.item_type)
                 
+                game.get_game().items.remove(item)
                 game.get_game().component_manager.remove('DrawComponent', item)
                 game.get_game().component_manager.remove('RegisterForDrawComponent', item)
                 game.get_game().component_manager.remove('ItemComponent', item)
