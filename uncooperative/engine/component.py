@@ -304,8 +304,17 @@ class ZombieCollisionComponent(object):
             if dx or dy:
                 game.get_game().collision_grid.remove_entity(entity)
                 
-                entity.props.x = entity.props.last_good_x
-                entity.props.y = entity.props.last_good_y
+                keep_y = game.get_game().collision_grid.get_collisions((entity.props.last_good_x, entity.props.y, entity.props.width, entity.props.height))
+                keep_x = game.get_game().collision_grid.get_collisions((entity.props.x, entity.props.last_good_y, entity.props.width, entity.props.height))
+                
+                if len(keep_x) > 0 or len(keep_y) > 0:
+                    if len(keep_x) == 0:
+                        entity.props.y = entity.props.last_good_y
+                    elif len(keep_y) == 0 :
+                        entity.props.x = entity.props.last_good_x
+                    else:
+                        entity.props.x = entity.props.last_good_x
+                        entity.props.y = entity.props.last_good_y
                 
                 game.get_game().collision_grid.add_entity(entity)
             
