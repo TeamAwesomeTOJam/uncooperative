@@ -78,7 +78,12 @@ class Game(object):
         
         self.entity_manager = EntityManager()
         
-        self.resource_manager = ResourceManager(os.path.join(sys.path[0], 'res'))
+        if getattr(sys, 'frozen', None):
+            basedir = sys._MEIPASS
+        else:
+            basedir = sys.path[0]
+            
+        self.resource_manager = ResourceManager(os.path.join(basedir, 'res'))
         self.resource_manager.register_loader('definition', LoadEntityDefinition)
         self.resource_manager.register_loader('sprite', LoadImage)
         self.resource_manager.register_loader('inputmap', LoadInputMapping)
