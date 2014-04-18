@@ -1,65 +1,63 @@
 {
-	"properties" : {
-        "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
-					,"width" : 32, "height" : 32,
-        "attack_time": 0,
-        "attacking": false,
-        "attack_strength" : 200,
-        "speed" : 110,
-        "attack_distance" : 40,
-        "total_attack_time" : 1,
-        "sight_distance" : 500,
-        "pushback_velocity" : 100,
-        "image_x" : -31,
-        "image_y" : -50,
-        "name" : "zombie",
-        "animations" : {
-						"default" : {
-							"duration" : 1.0,
-							"frames" : ["chars/bad_guys/stand/down/0.png"]
-						},
-						"walk-up" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/up/"
-						},
-						"walk-down" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/down/"
-						},
-						"walk-right" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/right/"
-						},
-						"walk-left" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/left/"
-						},
-						"zombiedefault" : {
-							"duration" : 1.0,
-							"frames" : ["chars/bad_guys/stand/down/0.png"]
-						},
-						"zombiewalk-up" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/up/"
-						},
-						"zombiewalk-down" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/down/"
-						},
-						"zombiewalk-right" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/right/"
-						},
-						"zombiewalk-left" : {
-							"duration" : 1.0,
-							"frame-dir" : "chars/bad_guys/walk/left/"
-						}
-					}
-    },
+    "x" : 320, "y" : 320, "dx" : 0, "dy" : 0 
+    			,"width" : 32, "height" : 32,
+    "attack_time": 0,
+    "attacking": false,
+    "attack_strength" : 200,
+    "speed" : 110,
+    "attack_distance" : 40,
+    "total_attack_time" : 1,
+    "sight_distance" : 500,
+    "pushback_velocity" : 100,
+    "image_x" : -31,
+    "image_y" : -50,
+    "name" : "zombie",
+    "animations" : {
+		"default" : {
+			"duration" : 1.0,
+			"frames" : ["chars/bad_guys/stand/down/0.png"]
+		},
+		"walk_up" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/up/"
+		},
+		"walk_down" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/down/"
+		},
+		"walk_right" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/right/"
+		},
+		"walk_left" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/left/"
+		},
+		"zombiedefault" : {
+			"duration" : 1.0,
+			"frames" : ["chars/bad_guys/stand/down/0.png"]
+		},
+		"zombiewalk_up" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/up/"
+		},
+		"zombiewalk_down" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/down/"
+		},
+		"zombiewalk_right" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/right/"
+		},
+		"zombiewalk_left" : {
+			"duration" : 1.0,
+			"frame_dir" : "chars/bad_guys/walk/left/"
+		}
+	},
     "components" : ["MovementComponent", 
     				"ZombieAIComponent",
     				"ZombieCollisionComponent", 
     				"AnimationComponent", 
-    				"DrawComponent", 
-    				"RegisterForDrawComponent"]
+    				"DrawComponent"],
+    "tags" : ["draw", "update", "zombie"]
 }

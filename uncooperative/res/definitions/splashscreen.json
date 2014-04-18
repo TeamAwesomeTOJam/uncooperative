@@ -1,12 +1,11 @@
 {
-	"properties" : {"animations" : {
-						"default" : {
-							"duration" : 4,
-							"frame-dir" : "Screens/Title Screen/"
-						}
-					},
-                        "name" : ""
-					
-		},
-	"components" : ["AnimationComponent"]
+    "animations" : {
+		"default" : {
+			"duration" : 4,
+			"frame_dir" : "Screens/Title Screen/"
+		}
+	},
+    "name" : "splashscreen",
+	"components" : ["AnimationComponent"],
+	"tags" : ["splashscreen"]
 }

@@ -12,13 +12,12 @@ import componentmanager
 from entitymanager import EntityManager
 from entity import Entity
 from animation import AnimationComponent
-from resourcemanager import ResourceManager, LoadEntityDefinition, LoadImage, LoadInputMapping, LoadSound
+from resourcemanager import ResourceManager, LoadEntityData, LoadImage, LoadInputMapping, LoadSound
 from component import (MovementComponent,
                        ExampleComponent, 
                        InputMovementComponent, 
                        DrawComponent, 
                        PlayerCollisionComponent,
-                       RegisterForDrawComponent,
                        ZombieAIComponent,
                        CarComponent,
                        DrawHitBoxComponent,
@@ -32,7 +31,7 @@ from component import (MovementComponent,
 from collision import CollisionGrid
 
 from render import Render
-from input import InputEvent, InputManager, create_input_events
+from input import InputManager
 
 from random import randint
 
@@ -65,7 +64,6 @@ class Game(object):
         self.component_manager.register_component('InputMovementComponent', InputMovementComponent())
         self.component_manager.register_component('PlayerCollisionComponent', PlayerCollisionComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
-        self.component_manager.register_component('RegisterForDrawComponent', RegisterForDrawComponent())
         self.component_manager.register_component('ZombieAIComponent', ZombieAIComponent())
         self.component_manager.register_component('CarComponent', CarComponent())
         self.component_manager.register_component('DrawHitBoxComponent', DrawHitBoxComponent()) 
@@ -84,7 +82,7 @@ class Game(object):
             basedir = sys.path[0]
             
         self.resource_manager = ResourceManager(os.path.join(basedir, 'res'))
-        self.resource_manager.register_loader('definition', LoadEntityDefinition)
+        self.resource_manager.register_loader('definition', LoadEntityData)
         self.resource_manager.register_loader('sprite', LoadImage)
         self.resource_manager.register_loader('inputmap', LoadInputMapping)
         self.resource_manager.register_loader('sound', LoadSound)
@@ -93,105 +91,57 @@ class Game(object):
         self.input_manager.init_joysticks()
 
         self.collision_grid = CollisionGrid(32)
-
-        self.entities_to_update = set()
-        self.entities_to_input = set()
-        self.entities_to_draw = set()
         
         self.mode = 'splash'
-        
-    def register_for_updates(self, entity):
-        self.entities_to_update.add(entity)
-        
-    def register_for_input(self, entity):
-        self.entities_to_input.add(entity)
-        
-    def register_for_drawing(self, entity):
-        self.entities_to_draw.add(entity)
-
-    def unregister_for_updates(self, entity):
-        self.entities_to_update.remove(entity)
-
-    def unregister_for_input(self, entity):
-        self.entities_to_input.remove(entity)
-
-    def unregister_for_drawing(self, entity):
-        self.entities_to_draw.remove(entity)
-
-
         
     def run(self):
         pygame.display.toggle_fullscreen()
         self.music = self.resource_manager.get('sound', 'Teamawesome_zombies_LOOP.wav')
         self.music.play(loops=-1)
-        self.car = Entity('car')
-        self.characters = [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]
+        self.entity_manager.add_entity(Entity('car'))
+        for e in [Entity('character1'), Entity('character2'), Entity('character3'), Entity('character4')]:
+            self.entity_manager.add_entity(e)
         self.item_names = ["engine", "gas-can", "radiator", "steering-wheel-2", "tire", "steering-wheel", "toolbox", "tire", "tire", "tire"]
 
-        self.items = []
         for i in self.item_names:
             x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
             y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
-            self.items.append(Entity(i, properties={
-                "x": x_pos,
-                "y": y_pos
-            }))
+            self.entity_manager.add_entity(Entity(i, x=x_pos, y=y_pos))
         
-        self.splash_screen = Entity('splashscreen')
-        self.screen.blit(self.resource_manager.get('sprite',self.splash_screen.props.image),(0,0))
+        self.entity_manager.add_entity(Entity('splashscreen'))
+        self.screen.blit(self.resource_manager.get('sprite', self.entity_manager.get_by_name('splashscreen').image),(0,0))
         pygame.display.flip()
         self.renderer = Render(self)
 
-
         self.zombies = []
-        for m in range(50):
+        for _ in range(50):
             x_pos = (self.world_size[0]/self.world_rooms[0] * randint(0, self.world_rooms[0]-1)) + self.world_size[0]/self.world_rooms[0]/2
             y_pos = (self.world_size[1]/self.world_rooms[1] * randint(0, self.world_rooms[1]-1)) + self.world_size[1]/self.world_rooms[1]/2
-            self.zombies.append(Entity("zombie", properties={
-                "x": x_pos,
-                "y": y_pos
-            }))
+            self.entity_manager.add_entity(Entity("zombie", x=x_pos, y=y_pos))
 
         while True:
             dt = self.clock.tick(60) / 1000.0
 
             if self.mode=='game':
-                for e in pygame.event.get():
-                    if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE): sys.exit()
-                    if (e.type == pygame.JOYAXISMOTION or
-                            e.type == pygame.JOYBALLMOTION or
-                            e.type == pygame.JOYBUTTONDOWN or
-                            e.type == pygame.JOYBUTTONUP or
-                            e.type == pygame.JOYHATMOTION or
-                            e.type == pygame.KEYDOWN or
-                            e.type == pygame.KEYUP):
-                        events = create_input_events(e)
-                        for entity in self.entities_to_input:
-                            for event in events:
-                                if event.action in ['UP', 'DOWN', 'LEFT', 'RIGHT']:
-                                    entity.handle('move', event)
-                                else:
-                                    entity.handle('input', event)
+                events = self.input_manager.process_events()
+                for entity in self.entity_manager.get_by_tag('input'):
+                    for event in events:
+                        entity.handle('input', event)
                 
                 items_in_area = set()
                 for c in range(4):
                     r = pygame.Rect((0,0),self.screen_size)
                     r.center = self.renderer.cameras[c].pos()
                     items_in_area.update(self.collision_grid.get_possible_collisions(r))
-                    #print items_in_area
                 
-                #for entity in self.entities_to_update:
-                    #if entity in items_in_area:
-                
-                items_to_update = items_in_area.intersection(self.entities_to_update).union(self.items).union([self.car])
+                items_to_update = items_in_area.intersection(self.entity_manager.get_by_tag('update')).union(self.entity_manager.get_by_tag('item')).union(self.entity_manager.get_by_tag('car'))
                 for entity in items_to_update:
                     entity.handle('update', dt)
                 
-                items_to_draw = items_in_area.intersection(self.entities_to_draw).union(self.items).union([self.car])
+                items_to_draw = items_in_area.intersection(self.entity_manager.get_by_tag('draw')).union(self.entity_manager.get_by_tag('item')).union(self.entity_manager.get_by_tag('car'))
 
-                items_to_draw = sorted(items_to_draw, key=lambda entity: entity.props.y)
-                #for entity in self.entities_to_draw:
-                    #if entity in items_in_area:
+                items_to_draw = sorted(items_to_draw, key=lambda entity: entity.y)
+
                 for entity in items_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
 
@@ -202,8 +152,8 @@ class Game(object):
                     if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE): sys.exit()
                     if e.type == pygame.KEYDOWN:
                         self.mode = 'game'
-                self.splash_screen.handle('update',dt)
-                self.screen.blit(self.resource_manager.get('sprite',self.splash_screen.props.image),(0,0))
+                self.entity_manager.get_by_name('splashscreen').handle('update', dt)
+                self.screen.blit(self.resource_manager.get('sprite', self.entity_manager.get_by_name('splashscreen').image), (0,0))
                 pygame.display.flip()
                 
             pygame.display.set_caption('fps: ' + str(self.clock.get_fps()))

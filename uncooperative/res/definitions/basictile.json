@@ -1,1 +1,1 @@
-{"properties" : {"height" : 32, "width" : 32}, "components" : ["DrawComponent"]}
+{"height" : 32, "width" : 32, "components" : ["DrawComponent"], "tags" : ["draw", "tile"]}

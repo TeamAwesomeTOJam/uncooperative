@@ -28,56 +28,56 @@ class Render:
                     down = self.grid[x][(y+1) % self.map_size[1]]
                     left = self.grid[(x-1)% self.map_size[0]][y]
                     right = self.grid[(x+1)% self.map_size[0]][y]
-                    type = 'impassabletileA'
+                    tile_type = 'impassabletileA'
                     if up and down and left and right:
                         upleft = self.grid[(x-1)% self.map_size[0]][(y-1)% self.map_size[1]]
                         upright = self.grid[(x+1)% self.map_size[0]][(y-1)% self.map_size[1]]
                         downleft = self.grid[(x-1)% self.map_size[0]][(y+1)% self.map_size[1]]
                         downright = self.grid[(x+1)% self.map_size[0]][(y+1)% self.map_size[1]]
                         if not upleft:
-                            type = 'impassabletileBR'
+                            tile_type = 'impassabletileBR'
                         elif not upright:
-                            type = 'impassabletileBL'
+                            tile_type = 'impassabletileBL'
                         elif not downleft:
-                            type = 'impassabletileTR'
+                            tile_type = 'impassabletileTR'
                         elif not downright:
-                            type = 'impassabletileTL'
+                            tile_type = 'impassabletileTL'
                         else:
-                            type = 'impassabletileA'
+                            tile_type = 'impassabletileA'
                     elif up and down and left and not right:
-                        type = 'impassabletileL'
+                        tile_type = 'impassabletileL'
                     elif up and down and not left and right:
-                        type = 'impassabletileR'
+                        tile_type = 'impassabletileR'
                     elif up and down and not left and not right:
-                        type = 'impassabletileCV'
+                        tile_type = 'impassabletileCV'
                     elif up and not down and left and right:
-                        type = 'impassabletileT'
+                        tile_type = 'impassabletileT'
                     elif up and not down and left and not right:
-                        type = 'impassabletileCBR'
+                        tile_type = 'impassabletileCBR'
                     elif up and not down and not left and right:
-                        type = 'impassabletileCBL'
+                        tile_type = 'impassabletileCBL'
                     elif up and not down and not left and not right:
-                        type = 'impassabletileCT'
+                        tile_type = 'impassabletileCT'
                     elif not up and down and left and right:
-                        type = 'impassabletileB'
+                        tile_type = 'impassabletileB'
                     elif not up and down and left and not right:
-                        type = 'impassabletileCTR'
+                        tile_type = 'impassabletileCTR'
                     elif not up and down and not left and right:
-                        type = 'impassabletileCTL'
+                        tile_type = 'impassabletileCTL'
                     elif not up and down and not left and not right:
-                        type = 'impassabletileCB'
+                        tile_type = 'impassabletileCB'
                     elif not up and not down and left and right:
-                        type = 'impassabletileCH'
+                        tile_type = 'impassabletileCH'
                     elif not up and not down and left and not right:
-                        type = 'impassabletileCR'
+                        tile_type = 'impassabletileCR'
                     elif not up and not down and not left and right:
-                        type = 'impassabletileCL'
+                        tile_type = 'impassabletileCL'
                     elif not up and not down and not left and not right:
-                        type = 'impassabletileC'
-                    tile = Entity(type,{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
+                        tile_type = 'impassabletileC'
+                    tile = Entity(tile_type, x=x*self.tile_size[0], y=y*self.tile_size[1])
                 else:
                     #passable
-                    tile = Entity('passabletile',{'x':x*self.tile_size[0],'y':y*self.tile_size[1]})
+                    tile = Entity('passabletile', x=x*self.tile_size[0], y=y*self.tile_size[1])
                 self.tiles.append(tile)
         
         for t in self.tiles:
@@ -91,7 +91,7 @@ class Render:
         except:
             self.minimap = pygame.transform.scale(self.world_surface,self.minimap_size)
 
-        self.cameras = [Camera(p) for p in self.game.characters]
+        self.cameras = [Camera(p) for p in self.game.entity_manager.get_by_tag('player')]
 #        self.cameras = [Camera(500,500) for m in xrange(4)]
         self.draw_surface = self.world_surface.copy()
 
@@ -112,41 +112,43 @@ class Render:
         
         #draw the HUD
         
-        for player in range(4):
+        for player in self.game.entity_manager.get_by_tag('player'):
             offset = Vec2d(0,0)
-            if player == 0:
+            if player.name == 'player1':
                 offset = Vec2d(0,0)
-            elif player == 1:
+            elif player.name == 'player2':
                 offset = Vec2d(self.screen_size[0]/2,0)
-            elif player == 2:
+            elif player.name == 'player3':
                 offset = Vec2d(0,self.screen_size[1]/2)
-            elif player == 3:
+            elif player.name == 'player4':
                 offset = Vec2d(self.screen_size[0]/2,self.screen_size[1]/2)
             width = self.screen_size[0]/2
             height = self.screen_size[1]/2
             
             rect = pygame.Rect(offset,(width,height))
             pygame.draw.rect(self.screen,(255,255,255),rect,3)
+
+            player_pos = Vec2d(player.x, player.y)
             
-            player_pos = Vec2d(self.game.characters[player].props.x,self.game.characters[player].props.y)
-            
-            if self.game.characters[player].props.carrying_item or not self.game.items:
-                dest_pos = Vec2d(self.game.car.props.x,self.game.car.props.y)
+            if player.carrying_item or not self.game.entity_manager.get_by_tag('item'):
+                car = self.game.entity_manager.get_by_name('car')
+                dest_pos = Vec2d(car.x, car.y)
             else:
-                p = Vec2d(self.game.items[0].props.x,self.game.items[0].props.y)
+                item = self.game.entity_manager.get_by_tag('item').__iter__().next()
+                p = Vec2d(item.x, item.y)
                 d = player_pos - p
                 min = d.length
                 min_pos = p
-                for item in self.game.items:
-                    p = Vec2d(item.props.x,item.props.y)
+                for item in self.game.entity_manager.get_by_tag('item'):
+                    p = Vec2d(item.x,item.y)
                     d = player_pos - p
                     if d.length < min:
                         min = d.length
                         min_pos = p
                 dest_pos = min_pos
-            dir = dest_pos - player_pos
+            direction = dest_pos - player_pos
             
-            compass_surface = pygame.transform.rotate(self.game.resource_manager.get('sprite','compass.png'),-1*dir.angle - 90)
+            compass_surface = pygame.transform.rotate(self.game.resource_manager.get('sprite','compass.png'),-1*direction.angle - 90)
             compass_rect = compass_surface.get_rect()
             
             
@@ -166,29 +168,29 @@ class Render:
             pygame.draw.circle(self.screen,(255,0,0),minimap_offset+player_minimap_pos,1)
             
             #for z in self.game.zombies:
-            #    zombie_minimap_pos = self.minimap_scale*Vec2d(z.props.x,z.props.y)
+            #    zombie_minimap_pos = self.minimap_scale*Vec2d(z.x,z.y)
             #    zombie_minimap_pos = Vec2d(int(zombie_minimap_pos[0]),int(zombie_minimap_pos[1]))
             #    pygame.draw.circle(self.screen,(0,255,0),minimap_offset+zombie_minimap_pos,1)
             
             health_pos = Vec2d(15,15)
             
             health_bar_rect = pygame.Rect(offset+health_pos,(100,10))
-            health_rect = pygame.Rect((0,0),(self.game.characters[player].props.health,10))
+            health_rect = pygame.Rect((0,0),(player.health,10))
             health_rect.inflate_ip(-2,-2)
             health_rect.midleft = health_bar_rect.midleft + Vec2d(2,0)
             
             pygame.draw.rect(self.screen,(0,0,0),health_bar_rect)
-            if self.game.characters[player].props.health > 0:
+            if player.health > 0:
                 pygame.draw.rect(self.screen,(255,0,0),health_rect)
                 
             # you lose
-            if self.game.characters[player].props.dead:
+            if player.dead:
                 text_surface = self.game.resource_manager.get('sprite','Text/YouLose.png')
                 text_rect = text_surface.get_rect()
                 text_rect.center = offset + Vec2d(width/2,height/2)
                 
                 self.screen.blit(text_surface,text_rect)
-            elif self.game.characters[player].props.win:
+            elif player.win:
                 text_surface = self.game.resource_manager.get('sprite','Text/YouWin.png')
                 text_rect = text_surface.get_rect()
                 text_rect.center = offset + Vec2d(width/2,height/2)

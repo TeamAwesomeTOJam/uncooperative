@@ -1,93 +1,91 @@
 {
-	"properties" : {"x" : 1950, "y" : 1950, 
-					"player" : "1",
-                    "animations" : {
-                                "default" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/stand/down/0.png"]
-            },
-            "idle-up" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/stand/up/0.png"]
-            },
-            "idle-down" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/stand/down/0.png"]
-            },
-            "idle-right" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/stand/right/0.png"]
-            },
-            "idle-left" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/stand/left/0.png"]
-            },
-            "carry-up" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/carry/up/0.png"]
-            },
-            "carry-down" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/carry/down/0.png"]
-            },
-            "carry-right" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/carry/right/0.png"]
-            },
-            "carry-left" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/carry/left/0.png"]
-            },
-            "crouch-up" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/crouch/up/0.png"]
-            },
-            "crouch-down" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/crouch/down/0.png"]
-            },
-            "crouch-right" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/crouch/right/0.png"]
-            },
-            "crouch-left" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Doda/crouch/left/0.png"]
-            },
-            "walk-up" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/run/up/"
-            },
-            "walk-down" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/run/down/"
-            },
-            "walk-right" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/run/right/"
-            },
-            "walk-left" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/run/left/"
-            },
-            "hold-up" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/hold/up/"
-            },
-            "hold-down" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/hold/down/"
-            },
-            "hold-right" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/hold/right/"
-            },
-            "hold-left" : {
-                "duration" : 0.5,
-                "frame-dir" : "chars/good_guys/Doda/hold/left/"
-            }
-                    }
-					},
-	"components" : [],
+    "x" : 1950, "y" : 1950, "player" : 1, "name" : "player1",
+    "animations" : {
+        "default" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/stand/down/0.png"]
+        },
+        "idle_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/stand/up/0.png"]
+        },
+        "idle_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/stand/down/0.png"]
+        },
+        "idle_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/stand/right/0.png"]
+        },
+        "idle_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/stand/left/0.png"]
+        },
+        "carry_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/carry/up/0.png"]
+        },
+        "carry_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/carry/down/0.png"]
+        },
+        "carry_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/carry/right/0.png"]
+        },
+        "carry_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/carry/left/0.png"]
+        },
+        "crouch_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/crouch/up/0.png"]
+        },
+        "crouch_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/crouch/down/0.png"]
+        },
+        "crouch_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/crouch/right/0.png"]
+        },
+        "crouch_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Doda/crouch/left/0.png"]
+        },
+        "walk_up" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/run/up/"
+        },
+        "walk_down" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/run/down/"
+        },
+        "walk_right" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/run/right/"
+        },
+        "walk_left" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/run/left/"
+        },
+        "hold_up" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/hold/up/"
+        },
+        "hold_down" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/hold/down/"
+        },
+        "hold_right" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/hold/right/"
+        },
+        "hold_left" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Doda/hold/left/"
+        }
+    },
+    "tags+" : ["player1"],
 	"includes" : ["character-base"]
 }

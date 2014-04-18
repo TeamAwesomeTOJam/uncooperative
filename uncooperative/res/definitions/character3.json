@@ -1,93 +1,92 @@
 {
-	"properties" : {"x" : 1950, "y" : 2010, 
-					"player" : "3",
-                   	"animations" : {
-                   	            "default" : {
-                "duration" : 0.5,
-                "frames" : ["chars/good_guys/Tao/stand/down/0.png"]
-            },
-                "idle-up" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/stand/up/0.png"]
-                },
-                "idle-down" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/stand/down/0.png"]
-                },
-                "idle-right" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/stand/right/0.png"]
-                },
-                "idle-left" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/stand/left/0.png"]
-                },
-                "carry-up" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/carry/up/0.png"]
-                },
-                "carry-down" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/carry/down/0.png"]
-                },
-                "carry-right" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/carry/right/0.png"]
-                },
-                "carry-left" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/carry/left/0.png"]
-                },
-                "crouch-up" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/crouch/up/0.png"]
-                },
-                "crouch-down" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/crouch/down/0.png"]
-                },
-                "crouch-right" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/crouch/right/0.png"]
-                },
-                "crouch-left" : {
-                    "duration" : 0.5,
-                    "frames" : ["chars/good_guys/Tao/crouch/left/0.png"]
-                },
-                "walk-up" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/run/up/"
-                },
-                "walk-down" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/run/down/"
-                },
-                "walk-right" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/run/right/"
-                },
-                "walk-left" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/run/left/"
-                },
-                "hold-up" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/hold/up/"
-                },
-                "hold-down" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/hold/down/"
-                },
-                "hold-right" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/hold/right/"
-                },
-                "hold-left" : {
-                    "duration" : 0.5,
-                    "frame-dir" : "chars/good_guys/Tao/hold/left/"
-                }
-                   	}
-					},
-	"components" : [],
+    "x" : 1950, "y" : 2010, 
+					"player" : 3, "name" : "player3",
+   	"animations" : {
+        "default" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/stand/down/0.png"]
+        },
+        "idle_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/stand/up/0.png"]
+        },
+        "idle_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/stand/down/0.png"]
+        },
+        "idle_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/stand/right/0.png"]
+        },
+        "idle_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/stand/left/0.png"]
+        },
+        "carry_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/carry/up/0.png"]
+        },
+        "carry_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/carry/down/0.png"]
+        },
+        "carry_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/carry/right/0.png"]
+        },
+        "carry_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/carry/left/0.png"]
+        },
+        "crouch_up" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/crouch/up/0.png"]
+        },
+        "crouch_down" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/crouch/down/0.png"]
+        },
+        "crouch_right" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/crouch/right/0.png"]
+        },
+        "crouch_left" : {
+            "duration" : 0.5,
+            "frames" : ["chars/good_guys/Tao/crouch/left/0.png"]
+        },
+        "walk_up" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/run/up/"
+        },
+        "walk_down" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/run/down/"
+        },
+        "walk_right" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/run/right/"
+        },
+        "walk_left" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/run/left/"
+        },
+        "hold_up" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/hold/up/"
+        },
+        "hold_down" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/hold/down/"
+        },
+        "hold_right" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/hold/right/"
+        },
+        "hold_left" : {
+            "duration" : 0.5,
+            "frame_dir" : "chars/good_guys/Tao/hold/left/"
+        }
+   	},
+   	"tags+" : ["player3"],
 	"includes" : ["character-base"]
 }

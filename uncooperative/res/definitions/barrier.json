@@ -1,12 +1,14 @@
 {
-    "properties": {
-        "x": 500,
-        "y": 500,
-		"width" : 64,
-		"height": 64,
-        "animations" : "barrier.png
-    },
+
+    "x": 500,
+    "y": 500,
+	"width" : 64,
+	"height": 64,
+    "animations" : "barrier.png,
+
     "components": [
         "DrawComponent"
-    ]
+    ],
+    
+    "tags" : ["draw"]
 }

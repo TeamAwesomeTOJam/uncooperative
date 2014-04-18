@@ -1,8 +1,6 @@
 {
-	"properties" : {"x" : 2100, "y" : 2100,
+    "x" : 2100, "y" : 2100,
 					"item_type": "gas-can",
-                    "image" : "items/gasCan.png"
-    },
-	"components" : [],
+                    "image" : "items/gasCan.png",
 	"includes" : ["item-base"]
 }

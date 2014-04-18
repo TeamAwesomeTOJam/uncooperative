@@ -1,8 +1,6 @@
 {
-	"properties" : {"x" : 2200, "y" : 1950,
+    "x" : 2200, "y" : 1950,
 					"item_type": "tire",
-                    "image" : "items/tire.png"
-    },
-	"components" : [],
+                    "image" : "items/tire.png",
 	"includes" : ["item-base"]
 }

@@ -9,6 +9,9 @@ import os
 
 import pygame
 
+import freezejson
+import game
+
 
 class ResourceManager(object):
     
@@ -32,23 +35,34 @@ class ResourceManager(object):
         self.cache = {}
         
         
-def LoadEntityDefinition(prefix, key):
+def LoadEntityData(prefix, key):
     with open(os.path.join(prefix, 'definitions', key + '.json')) as in_file:
         definition = json.load(in_file)
-    for required_key in ['properties', 'components']:
-        if required_key not in definition:
-            raise KeyError("Definitions must have a '%s' property, but this one doesn't" % (required_key,))
     
-    if 'animations' in definition['properties']:
-        for animation in definition['properties']['animations'].values():
-            if 'frame-dir' in animation:
-                frame_dir = os.path.join(prefix, 'sprites', animation['frame-dir'])
+    if 'animations' in definition:
+        for animation in definition['animations'].values():
+            if 'frame_dir' in animation:
+                frame_dir = os.path.join(prefix, 'sprites', animation['frame_dir'])
                 frames = sorted(os.listdir(frame_dir))
                 animation['frames'] = []
                 for frame in frames:
                     animation['frames'].append(os.path.join(frame_dir, frame))
     
-    return definition
+    if 'includes' in definition:
+        flattened = {}
+        for include_name in definition['includes']:
+            include = game.get_game().resource_manager.get('definition', include_name)
+            for field in include._fields:
+                flattened[field] = getattr(include, field)
+        for key, value in definition.iteritems():
+            if key.endswith('+'):
+                base_key = key[:-1]
+                flattened[base_key] = flattened.get(base_key, tuple()) + tuple(value)
+            else:
+                flattened[key] = value
+        definition = flattened
+    
+    return freezejson.freeze_value(definition)
     
 def LoadImage(prefix, key):
     image_surface = pygame.image.load(os.path.join(prefix, 'sprites', key))
@@ -61,10 +75,13 @@ def LoadImage(prefix, key):
     return image_surface
 
 def LoadInputMapping(prefix, key):
-    with open(os.path.join(prefix, 'definitions', 'keymapping.json')) as in_file:
+    with open(os.path.join(prefix, 'input', key + '.json')) as in_file:
         definition = json.load(in_file)
         
-    return definition['input']
+    return definition
+
+def LoadAnimation(prefix, key):
+    pass
 
 def LoadSound(prefix, key):
     return pygame.mixer.Sound(os.path.join(prefix, 'sound', key))

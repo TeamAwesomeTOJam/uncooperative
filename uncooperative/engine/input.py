@@ -1,129 +1,25 @@
-import pygame, game
+from collections import namedtuple
 
-def enum(**enums):
-    return type("Enum", (), enums)
+import pygame
 
-InputSource = enum(JOYSTICK=1, KEYBOARD=2)
-
-class InputEvent:
-    def __init__(self, event, **kwargs):
-        """
-        @type event: pygame.event.Event
-        """
-        input_map = game.get_game().resource_manager.get('inputmap', "input")
-
-        self.event = event
-        self.event_source, self.joy, self.axis, self.value = None, None, None, None
-        self.ball, self.rel, self.button, self.button_down = None, None, None, None
-        self.hat, self.action, self.magnitude = None, None, None
-        self.key_up, self.key_down = None, None
-
-        if event.type == pygame.JOYAXISMOTION or \
-                event.type == pygame.JOYBALLMOTION or \
-                event.type == pygame.JOYBUTTONDOWN or \
-                event.type == pygame.JOYBUTTONUP or \
-                event.type == pygame.JOYHATMOTION:
-            self.event_source = InputSource.JOYSTICK
-            self.joy = event.joy
-        elif event.type == pygame.KEYDOWN or \
-                event.type == pygame.KEYUP:
-            self.event_source = InputSource.KEYBOARD
+import game
 
 
-        if event.type == pygame.JOYAXISMOTION:
-            self.axis = event.axis
-            self.value = event.value
-        elif event.type == pygame.JOYBALLMOTION:
-            self.ball = event.ball
-            self.rel = event.rel
-        elif event.type == pygame.JOYBUTTONDOWN:
-            self.button = event.button
-            self.button_down = True
-        elif event.type == pygame.JOYBUTTONUP:
-            self.button = event.button
-            self.button_down = False
-        elif event.type == pygame.JOYHATMOTION:
-            self.hat = event.hat
-            self.value = event.value
-        elif event.type == pygame.KEYDOWN:
-            self.key = event.key
-            self.key_down = True
-        elif event.type == pygame.KEYUP:
-            self.key = event.key
-            self.key_down = False
-        
-        for player_number, player_mapping in input_map.iteritems():
-            if self.event_source == InputSource.KEYBOARD and player_mapping['input'] == "KEYBOARD":
-                string_key = pygame.key.name(self.key)
-                if player_mapping.get(string_key):
-                    self.action = player_mapping[string_key]
-                    if self.action == "DOWN" or self.action == "RIGHT":
-                        if self.key_down:
-                            self.magnitude = 1
-                        else:
-                            self.magnitude = 0
-                    else:
-                        if self.key_down:
-                            self.magnitude = -1
-                        else:
-                            self.magnitude = 0
-                    if self.action == "UP" or self.action == "DOWN":
-                        self.axis = 1
-                    else:
-                        self.axis = 0
+DEADZONE = 0.15
 
-                    self.player = player_number
-                    return
-            elif self.event_source == InputSource.JOYSTICK and player_mapping['input'] == "JOYSTICK":
-                if player_mapping.get("joystick") == self.joy:
-                    self.player = player_number
-                    if self.hat == player_mapping['hat']:
-                        if kwargs["axis"] is not None:
-                            self.axis = kwargs["axis"]
-                            self.value = event.value[kwargs["axis"]]
-                            if self.axis == 1:
-                                self.value = -1 * self.value
-                    
-                    action = player_mapping.get(str(self.button))
-                    if action:
-                        self.action = action
 
-                    if self.axis == 0:
-                        if self.value >= 0:
-                            self.action = "UP"
-                            self.magnitude = self.value
-                            return
-                        elif self.value < 0:
-                            self.action = "DOWN"
-                            self.magnitude = self.value
-                            return
-                    elif self.axis == 1:
-                        if self.value >= 0:
-                            self.action = "RIGHT"
-                            self.magnitude = self.value
-                            return
-                        elif self.value < 0:
-                            self.action = "LEFT"
-                            self.magnitude = self.value
-                            return
-                    
-                    if self.button is not None and self.button == player_mapping.get(self.button):
-                        self.action = player_mapping[self.button]
-                        return
+InputEvent = namedtuple('InputEvent', ['player', 'control', 'value'])
 
-def create_input_events(event):
-    events = []
-    if event.type == pygame.JOYHATMOTION:
-        events.append(InputEvent(event, axis=0))
-        events.append(InputEvent(event, axis=1))
-    else:
-        events.append(InputEvent(event))
-    
-    return events
 
 class InputManager:
+
     def __init__(self):
-        pass
+        self._input_map = None
+        pygame.joystick.init()
+        joystick_count = pygame.joystick.get_count()
+        for i in range(joystick_count):
+            joystick = pygame.joystick.Joystick(i)
+            joystick.init()
 
     def init_joysticks(self):
         pygame.joystick.init()
@@ -131,3 +27,66 @@ class InputManager:
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
+            
+    def process_events(self):
+        self._input_map = game.get_game().resource_manager.get('inputmap', 'default')
+        processed_events = []
+        
+        for e in pygame.event.get():
+            if e.type == pygame.JOYAXISMOTION:
+                event_type = 'AXIS'
+                device_id = e.which
+                value, _ = self._normalize_axis(e.value, 0)
+                if value >= 0:
+                    event = self._new_event(event_type, device_id, "+%d" % e.axis, value)
+                if value <= 0:
+                    value = -1 * value
+                    event =  self._new_event(event_type, device_id, "-%d" % e.axis, value)
+                if event != None:
+                    processed_events.append(event) 
+            elif e.type == pygame.JOYBUTTONDOWN:
+                event = self._new_event('BUTTON', e.which, e.button, 1)
+                if event != None:
+                    processed_events.append(event)
+            elif e.type == pygame.JOYBUTTONUP:
+                event = self._new_event('BUTTON', e.which, e.button, 0)
+                if event != None:
+                    processed_events.append(event)
+            elif e.type == pygame.KEYDOWN:
+                event = self._new_event('KEY', None, e.key, 1)
+                if event != None:
+                    processed_events.append(event)
+            elif e.type == pygame.KEYUP:
+                event = self._new_event('KEY', None, e.key, 0)
+                if event != None:
+                    processed_events.append(event)
+            elif e.type == pygame.JOYHATMOTION:
+                pass # TODO: this is going to get complicated
+            else:
+                pass
+        
+        return processed_events
+    
+    def _new_event(self, event_type, device_id, device_control, value):
+        if device_id == None:
+            pandc = self._input_map.get('%s %s' % (event_type, device_control))
+        else:
+            pandc = self._input_map.get('%s %s %s' % (event_type, device_id, device_control))
+        
+        if pandc == None:
+            return None
+        else:
+            player, control = pandc
+            return InputEvent(player, control, value)
+    
+    def _normalize_axis(self, x, y):              
+        magnitude = ((x**2) + (y**2)) ** 0.5
+
+        if magnitude < DEADZONE:
+            new_x = 0
+            new_y = 0
+        else:
+            new_x = (x / magnitude) * (magnitude - DEADZONE) / (1 - DEADZONE)
+            new_y = (y / magnitude) * (magnitude - DEADZONE) / (1 - DEADZONE)
+        
+        return new_x, new_y

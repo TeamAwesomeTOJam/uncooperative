@@ -1,23 +1,21 @@
 {
-    "properties": {
-        "x": 1950,
-        "y": 2100,
-        "width" : 128,
-        "height" : 72,
-        "image_y" : -16,
-        "needed_item_types": ["tire", "engine", "wheel", "gas-can", "radiator", "toolbox"],
-        "item_types": [],
-        "items": [],
-        "driver": null,
-        "passengers": [],
-        "image" : "items/car/Car-empty.png",
-        "car": true
-    },
+    "x": 1950,
+    "y": 2100,
+    "width" : 128,
+    "height" : 72,
+    "image_y" : -16,
+    "needed_item_types": ["tire", "engine", "wheel", "gas-can", "radiator", "toolbox"],
+    "image" : "items/car/Car-empty.png",
+    "name" : "car",
     "components": [
         "CarComponent",
         "StaticCollisionComponent",
         "DrawComponent",
-        "RegisterForDrawComponent",
         "MovementComponent"
+    ],
+    "tags" : [
+        "draw",
+        "update",
+        "car"
     ]
 }

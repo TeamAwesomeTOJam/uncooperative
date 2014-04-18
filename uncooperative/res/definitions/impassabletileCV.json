@@ -1,1 +1,1 @@
-{"properties" : {"image" : "impassableCV.png"}, "components" : [],"includes" : ["impassabletile"]}
+{"image" : "impassableCV.png", "includes" : ["impassabletile"]}

@@ -5,10 +5,10 @@ class Camera(object):
         self.player = player
 
     def x(self):
-        return self.player.props.x
+        return self.player.x
 
     def y(self):
-        return self.player.props.y
+        return self.player.y
 
     def pos(self):
         return (self.x(),self.y())

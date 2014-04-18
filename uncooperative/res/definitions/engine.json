@@ -1,8 +1,6 @@
 {
-	"properties" : {"x" : 2050, "y" : 2050,
+    "x" : 2050, "y" : 2050,
 					"item_type": "engine",
-                    "image" : "items/engine.png"
-    },
-	"components" : [],
+                    "image" : "items/engine.png",
 	"includes" : ["item-base"]
 }

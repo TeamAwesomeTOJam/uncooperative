@@ -16,7 +16,7 @@ class Grid:
         self.ni = rows
         self.nj = cols
 
-        self.data = [[1 for m in range(cols)] for m in range(rows)]
+        self.data = [[1 for _ in range(cols)] for _ in range(rows)]
 
 #    def __delitem__(self, key):
     def __getitem__(self, key): #key: int

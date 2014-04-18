@@ -20,7 +20,7 @@ class CollisionGrid(object):
         return [(x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1)]
     
     def get_grid_squares_for_entity(self, entity):
-        return self.get_grid_squares((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        return self.get_grid_squares((entity.x, entity.y, entity.width, entity.height))
     
     def add_entity(self, entity):
         for square in self.get_grid_squares_for_entity(entity):
@@ -42,7 +42,7 @@ class CollisionGrid(object):
         return possible_collisions
     
     def get_possible_collisions_for_entity(self, entity):
-        possible_collisions = self.get_possible_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        possible_collisions = self.get_possible_collisions((entity.x, entity.y, entity.width, entity.height))
         possible_collisions.discard(entity)
         return possible_collisions
     
@@ -50,13 +50,13 @@ class CollisionGrid(object):
         possible_collisions = self.get_possible_collisions(rect)
         collisions = set()
         for entity in possible_collisions:
-            entity_rect = (entity.props.x, entity.props.y, entity.props.width, entity.props.height)
+            entity_rect = (entity.x, entity.y, entity.width, entity.height)
             if self.rects_collide(rect, entity_rect):
                 collisions.add(entity)
         return collisions
              
     def get_collisions_for_entity(self, entity):
-        collisions = self.get_collisions((entity.props.x, entity.props.y, entity.props.width, entity.props.height))
+        collisions = self.get_collisions((entity.x, entity.y, entity.width, entity.height))
         collisions.discard(entity)
         return collisions
     
