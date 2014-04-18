@@ -124,9 +124,13 @@ class Game(object):
 
             if self.mode=='game':
                 events = self.input_manager.process_events()
-                for entity in self.entity_manager.get_by_tag('input'):
-                    for event in events:
-                        entity.handle('input', event)
+                for event in events:
+                    if event.target == 'GAME':
+                        if event.action == 'QUIT':
+                            sys.exit()
+                    else:
+                        for entity in self.entity_manager.get_by_tag('input'):
+                            entity.handle('input', event)  
                 
                 items_in_area = set()
                 for c in range(4):

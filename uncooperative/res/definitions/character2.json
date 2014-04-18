@@ -1,6 +1,5 @@
 {
-    "x" : 2000, "y" : 1950, 
-					"player" : 2, "name" : "player2",
+    "x" : 2000, "y" : 1950, "name" : "player2",
 	"animations" : {
         "default" : {
             "duration" : 0.5,
@@ -87,6 +86,5 @@
             "frame_dir" : "chars/good_guys/Nish/hold/left/"
         }
     },
-    "tags+" : ["player2"],
 	"includes" : ["character-base"]
 }

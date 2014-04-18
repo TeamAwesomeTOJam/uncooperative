@@ -1,6 +1,5 @@
 {
-    "x" : 2000, "y" : 2010, 
-					"player" : 4, "name" : "player4",
+    "x" : 2000, "y" : 2010, "name" : "player4",
     "animations" : {
 
         "default" : {
@@ -88,6 +87,5 @@
             "frame_dir" : "chars/good_guys/Dan/hold/left/"
         }
     },
-    "tags+" : ["player4"],
 	"includes" : ["character-base"]
 }

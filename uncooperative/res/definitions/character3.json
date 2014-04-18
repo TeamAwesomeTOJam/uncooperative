@@ -1,6 +1,5 @@
 {
-    "x" : 1950, "y" : 2010, 
-					"player" : 3, "name" : "player3",
+    "x" : 1950, "y" : 2010, "name" : "player3",
    	"animations" : {
         "default" : {
             "duration" : 0.5,
@@ -87,6 +86,5 @@
             "frame_dir" : "chars/good_guys/Tao/hold/left/"
         }
    	},
-   	"tags+" : ["player3"],
 	"includes" : ["character-base"]
 }

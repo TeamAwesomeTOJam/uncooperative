@@ -8,7 +8,7 @@ import game
 DEADZONE = 0.15
 
 
-InputEvent = namedtuple('InputEvent', ['player', 'control', 'value'])
+InputEvent = namedtuple('InputEvent', ['target', 'action', 'value'])
 
 
 class InputManager:
@@ -33,31 +33,33 @@ class InputManager:
         processed_events = []
         
         for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                processed_events.append(InputEvent('GAME', 'QUIT', 1))
             if e.type == pygame.JOYAXISMOTION:
-                event_type = 'AXIS'
+                control_type = 'AXIS'
                 device_id = e.which
                 value, _ = self._normalize_axis(e.value, 0)
                 if value >= 0:
-                    event = self._new_event(event_type, device_id, "+%d" % e.axis, value)
+                    event = self._new_event(device_id, control_type, "+%d" % e.axis, value)
                 if value <= 0:
                     value = -1 * value
-                    event =  self._new_event(event_type, device_id, "-%d" % e.axis, value)
+                    event =  self._new_event(device_id, control_type, "-%d" % e.axis, value)
                 if event != None:
                     processed_events.append(event) 
             elif e.type == pygame.JOYBUTTONDOWN:
-                event = self._new_event('BUTTON', e.which, e.button, 1)
+                event = self._new_event(e.which, 'BUTTON', e.button, 1)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.JOYBUTTONUP:
-                event = self._new_event('BUTTON', e.which, e.button, 0)
+                event = self._new_event(e.which, 'BUTTON', e.button, 0)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.KEYDOWN:
-                event = self._new_event('KEY', None, e.key, 1)
+                event = self._new_event(None, 'KEY', e.key, 1)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.KEYUP:
-                event = self._new_event('KEY', None, e.key, 0)
+                event = self._new_event(None, 'KEY', e.key, 0)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.JOYHATMOTION:
@@ -67,17 +69,17 @@ class InputManager:
         
         return processed_events
     
-    def _new_event(self, event_type, device_id, device_control, value):
+    def _new_event(self, device_id, control_type, control_id, value):
         if device_id == None:
-            pandc = self._input_map.get('%s %s' % (event_type, device_control))
+            target_and_action = self._input_map.get('%s %s' % (control_type, control_id))
         else:
-            pandc = self._input_map.get('%s %s %s' % (event_type, device_id, device_control))
+            target_and_action = self._input_map.get('%s %s %s' % (device_id, control_type, control_id))
         
-        if pandc == None:
+        if target_and_action == None:
             return None
         else:
-            player, control = pandc
-            return InputEvent(player, control, value)
+            target, action = target_and_action
+            return InputEvent(target, action, value)
     
     def _normalize_axis(self, x, y):              
         magnitude = ((x**2) + (y**2)) ** 0.5

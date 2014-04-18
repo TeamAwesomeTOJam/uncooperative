@@ -49,7 +49,7 @@ class MovementComponent(object):
 class InputMovementComponent(object):
     
     def add(self, entity):
-        verify_attrs(entity, [('dx', 0), ('dy', 0), 'player'])
+        verify_attrs(entity, [('dx', 0), ('dy', 0), 'name'])
         entity.facing = 1
               
         entity.register_handler('input', self.handle_input)
@@ -58,16 +58,16 @@ class InputMovementComponent(object):
         entity.unregister_handler('input', self.handle_input)
     
     def handle_input(self, entity, event):
-        if event.player != entity.player or event.control not in ['RIGHT', 'UP', 'LEFT', 'DOWN']:
+        if event.target != entity.name or event.action not in ['RIGHT', 'UP', 'LEFT', 'DOWN']:
             return
         
-        if event.control == 'RIGHT':
+        if event.action == 'RIGHT':
             entity.dx = event.value * entity.speed
-        elif event.control == 'UP':
+        elif event.action == 'UP':
             entity.dy = -1 * event.value * entity.speed
-        elif event.control == 'LEFT':
+        elif event.action == 'LEFT':
             entity.dx = -1 * event.value * entity.speed
-        elif event.control == 'DOWN':
+        elif event.action == 'DOWN':
             entity.dy = event.value * entity.speed 
         
         if entity.dx != 0 or entity.dy != 0:
@@ -332,13 +332,13 @@ class CarComponent(object):
               "items/car/Car-full.png"]
         
         if item:
-            if item.type not in entity.item_types:
+            if item.item_type not in entity.item_types:
                 item.handle('drop', player)
                 
                 entity.items.append(item)
                 entity.item_types.append(item.item_type)
                 
-                game.get_game().items.remove(item)
+                game.get_game().entity_manager.remove_entity(item)
                 game.get_game().component_manager.remove('DrawComponent', item)
                 game.get_game().component_manager.remove('ItemComponent', item)
                 game.get_game().component_manager.remove('StaticCollisionComponent', item)
@@ -358,7 +358,7 @@ class CarComponent(object):
 class InputActionComponent(object):
     
     def add(self, entity):
-        verify_attrs(entity, ['player', 'shove_power'])
+        verify_attrs(entity, ['name', 'shove_power'])
         entity.carrying_item = None
         
         entity.register_handler('input', self.handle_input)
@@ -367,10 +367,10 @@ class InputActionComponent(object):
         entity.unregister_handler('input', self.handle_input)
 
     def handle_input(self, entity, event):
-        if event.player != entity.player:
+        if event.target != entity.name:
             return
         
-        if event.control == 'PICKUP':
+        if event.action == 'PICKUP' and event.value > 0:
             if not entity.carrying_item:
                 entities_in_front = get_entities_in_front(entity)
 
@@ -382,7 +382,7 @@ class InputActionComponent(object):
             else:
                 entity.carrying_item.handle('drop', entity)
                 
-        if event.control == "USE":
+        if event.action == "USE" and event.value > 0:
             for other in get_entities_in_front(entity):
                 other.handle('shove', entity.shove_power)
 

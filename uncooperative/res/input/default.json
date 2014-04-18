@@ -1,8 +1,9 @@
 {
-    "KEY 119": [1, "UP"],
-    "KEY 115": [1, "DOWN"],
-    "KEY 97": [1, "LEFT"],
-    "KEY 100": [1, "RIGHT"],
-    "KEY 113": [1, "USE"],
-    "KEY 101": [1, "PICKUP"]
+    "KEY 27": ["GAME", "QUIT"],
+    "KEY 119": ["player1", "UP"],
+    "KEY 115": ["player1", "DOWN"],
+    "KEY 97": ["player1", "LEFT"],
+    "KEY 100": ["player1", "RIGHT"],
+    "KEY 113": ["player1", "USE"],
+    "KEY 101": ["player1", "PICKUP"]
 }

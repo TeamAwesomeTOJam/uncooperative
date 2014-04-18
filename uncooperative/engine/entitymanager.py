@@ -25,8 +25,19 @@ class EntityManager(object):
                 else:
                     self._entities_by_tag[tag] = {entity}
     
+    def remove_entity(self, entity):
+        if hasattr(entity, 'tags'):
+            for tag in entity.tags:
+                self._entities_by_tag[tag].remove(entity)
+        
+        if hasattr(entity, 'name'):
+            del self._entities_by_name[entity.name]
+        
+        self.entities.remove(entity)
+        
+    
     def get_by_name(self, name):
         return self._entities_by_name[name]
         
     def get_by_tag(self, tag):
-        return self._entities_by_tag[tag]
+        return self._entities_by_tag.get(tag, set())
