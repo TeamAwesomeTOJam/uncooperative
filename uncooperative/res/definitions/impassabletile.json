@@ -1,1 +1,1 @@
-{"passable" : 0, "components+" : ["StaticCollisionComponent"], "includes" : ["basictile"]}
+{"passable" : 0, "tags+" : ["collide"], "includes" : ["basictile"]}

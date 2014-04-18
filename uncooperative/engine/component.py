@@ -25,7 +25,6 @@ class MovementComponent(object):
     
     def add(self, entity):
         verify_attrs(entity, ['x', 'y', ('last_good_x', entity.x), ('last_good_y', entity.y)])
-        
         entity.register_handler('update', self.handle_update)
     
     def remove(self, entity):
@@ -35,12 +34,12 @@ class MovementComponent(object):
         if entity.dx or entity.dy:
             entity.last_good_x = entity.x
             entity.last_good_y = entity.y
-            game.get_game().collision_grid.remove_entity(entity)
             entity.x += entity.dx * dt
             entity.y += entity.dy * dt
-            game.get_game().collision_grid.add_entity(entity)
+            game.get_game().entity_manager.update_position(entity)
             
-            collisions = game.get_game().collision_grid.get_collisions_for_entity(entity)
+            collisions = (game.get_game().entity_manager.get_in_area((entity.x, entity.y, entity.width, entity.height)) 
+                          & game.get_game().entity_manager.get_by_tag('collide'))
             for collided_entity in collisions:
                 collided_entity.handle('collision', entity)
                 entity.handle('collision', collided_entity)
@@ -193,85 +192,53 @@ class AttackComponent(object):
         else:
             entity.health -= (attacker.attack_strength * dt)
 
-            #entity_vec = entity.get_midpoint() - attacker.get_midpoint()
-            #point_vec = entity_vec.normalized() * attacker.pushback_velocity
-            #print entity_vec, point_vec
-
-            #entity.dx += point_vec.x
-            #entity.dy += point_vec.y
-
 
 class PlayerCollisionComponent(object):
     def add(self, entity):
         verify_attrs(entity, ['x', 'y', ('dx', 0), ('dy', 0), ('last_good_x', entity.x), ('last_good_y', entity.y)])
-        
         entity.register_handler('collision', self.handle_collision)
-        game.get_game().collision_grid.add_entity(entity)
 
     def remove(self, entity):
         entity.unregister_handler('collision', self.handle_collision)
-        game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
         if 'car' in colliding_entity.tags:
             colliding_entity.handle('use', entity.carrying_item, entity)
+        
+        y_axis_collisions = game.get_game().entity_manager.get_in_area((entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
+        x_axis_collisions = game.get_game().entity_manager.get_in_area((entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
+        
+        if len(x_axis_collisions) > 0:
+            entity.x = entity.last_good_x
+        
+        if len(y_axis_collisions) > 0:
+            entity.y = entity.last_good_y
+        
+        game.get_game().entity_manager.update_position(entity)
 
-        game.get_game().collision_grid.remove_entity(entity)
-        
-        keep_y = game.get_game().collision_grid.get_collisions((entity.last_good_x, entity.y, entity.width, entity.height))
-        keep_x = game.get_game().collision_grid.get_collisions((entity.x, entity.last_good_y, entity.width, entity.height))
-        
-        if len(keep_x) > 0 or len(keep_y) > 0:
-            if len(keep_x) == 0:
-                entity.y = entity.last_good_y
-            elif len(keep_y) == 0 :
-                entity.x = entity.last_good_x
-            else:
-                entity.x = entity.last_good_x
-                entity.y = entity.last_good_y
-        
-        game.get_game().collision_grid.add_entity(entity)
-            
-        
-class StaticCollisionComponent(object):
-    
-    def add(self, entity):
-        game.get_game().collision_grid.add_entity(entity)
-        
-    def remove(self, entity):
-        game.get_game().collision_grid.remove_entity(entity)
-        
         
 class ZombieCollisionComponent(object):
     
     def add(self, entity):
         verify_attrs(entity, ['x', 'y', ('dx', 0), ('dy', 0), ('last_good_x', entity.x), ('last_good_y', entity.y)])
-
         entity.register_handler('collision', self.handle_collision)
-        game.get_game().collision_grid.add_entity(entity)
 
     def remove(self, entity):
         entity.unregister_handler('collision', self.handle_collision)
-        game.get_game().collision_grid.remove_entity(entity)
 
     def handle_collision(self, entity, colliding_entity):
         # zombies can't collide with other zombies
         if not 'zombie' in colliding_entity.tags and not 'item' in colliding_entity.tags:
-            game.get_game().collision_grid.remove_entity(entity)
+            y_axis_collisions = game.get_game().entity_manager.get_in_area((entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
+            x_axis_collisions = game.get_game().entity_manager.get_in_area((entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
             
-            keep_y = game.get_game().collision_grid.get_collisions((entity.last_good_x, entity.y, entity.width, entity.height))
-            keep_x = game.get_game().collision_grid.get_collisions((entity.x, entity.last_good_y, entity.width, entity.height))
+            if len(x_axis_collisions) > 0:
+                entity.x = entity.last_good_x
             
-            if len(keep_x) > 0 or len(keep_y) > 0:
-                if len(keep_x) == 0:
-                    entity.y = entity.last_good_y
-                elif len(keep_y) == 0 :
-                    entity.x = entity.last_good_x
-                else:
-                    entity.x = entity.last_good_x
-                    entity.y = entity.last_good_y
+            if len(y_axis_collisions) > 0:
+                entity.y = entity.last_good_y
             
-            game.get_game().collision_grid.add_entity(entity)
+            game.get_game().entity_manager.update_position(entity)
             
             
 class ItemComponent(object):
@@ -294,13 +261,11 @@ class ItemComponent(object):
         entity.pickup = True
         entity.carrying_player = player
         player.carrying_item = entity
-        game.get_game().component_manager.remove("StaticCollisionComponent", entity)
 
     def handle_drop(self, entity, player):
         entity.pickup = False
         entity.carrying_player = None
         player.carrying_item = None
-        game.get_game().component_manager.add("StaticCollisionComponent", entity)
 
     def handle_update(self, entity, dt):
         if entity.pickup and entity.carrying_player is not None:
@@ -445,7 +410,7 @@ def get_entities_in_front(entity):
     COLLIDE_BOX_HEIGHT = 100
     collision_box = get_box_in_front(entity, COLLIDE_BOX_WIDTH, COLLIDE_BOX_HEIGHT)
 
-    return game.get_game().collision_grid.get_collisions(collision_box)
+    return game.get_game().entity_manager.get_in_area(collision_box)
 
 def get_box_in_front(entity, width, height):
     midpoint = get_midpoint(entity)

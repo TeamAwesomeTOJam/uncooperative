@@ -9,13 +9,13 @@
     "name" : "car",
     "components": [
         "CarComponent",
-        "StaticCollisionComponent",
         "DrawComponent",
         "MovementComponent"
     ],
     "tags" : [
         "draw",
         "update",
-        "car"
+        "car",
+        "collide"
     ]
 }

@@ -23,27 +23,21 @@ from component import (MovementComponent,
                        DrawHitBoxComponent,
                        AttackComponent,
                        ItemComponent,
-                       StaticCollisionComponent,
                        InputActionComponent,
                        DeadComponent,
                        ZombieCollisionComponent)
 
-from collision import CollisionGrid
-
 from render import Render
 from input import InputManager
-
 from random import randint
 
+
 _game = None
-from gridgen import GridGenerator
-from grid import Grid,Vec2
 
 
 class Game(object):
     
     def __init__(self):
-        #self.screen_size = (500,300)
         self.screen_size = (1280,720)
         self.map_size = (128,128)
         self.tile_size = (32,32)
@@ -51,7 +45,6 @@ class Game(object):
         self.world_rooms = (8,8)
 
         pygame.init()
-        
         
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode(self.screen_size)
@@ -69,7 +62,6 @@ class Game(object):
         self.component_manager.register_component('DrawHitBoxComponent', DrawHitBoxComponent()) 
         self.component_manager.register_component('AttackComponent', AttackComponent())
         self.component_manager.register_component('ItemComponent', ItemComponent())
-        self.component_manager.register_component('StaticCollisionComponent', StaticCollisionComponent())
         self.component_manager.register_component('InputActionComponent', InputActionComponent())
         self.component_manager.register_component('DeadComponent', DeadComponent())
         self.component_manager.register_component('ZombieCollisionComponent', ZombieCollisionComponent())
@@ -89,13 +81,11 @@ class Game(object):
 
         self.input_manager = InputManager()
         self.input_manager.init_joysticks()
-
-        self.collision_grid = CollisionGrid(32)
         
         self.mode = 'splash'
         
     def run(self):
-        pygame.display.toggle_fullscreen()
+        #pygame.display.toggle_fullscreen()
         self.music = self.resource_manager.get('sound', 'Teamawesome_zombies_LOOP.wav')
         self.music.play(loops=-1)
         self.entity_manager.add_entity(Entity('car'))
@@ -132,21 +122,21 @@ class Game(object):
                         for entity in self.entity_manager.get_by_tag('input'):
                             entity.handle('input', event)  
                 
-                items_in_area = set()
+                entities_in_area = set()
                 for c in range(4):
                     r = pygame.Rect((0,0),self.screen_size)
                     r.center = self.renderer.cameras[c].pos()
-                    items_in_area.update(self.collision_grid.get_possible_collisions(r))
+                    entities_in_area.update(self.entity_manager.get_in_area(r, precise=False))
                 
-                items_to_update = items_in_area.intersection(self.entity_manager.get_by_tag('update')).union(self.entity_manager.get_by_tag('item')).union(self.entity_manager.get_by_tag('car'))
-                for entity in items_to_update:
+                entities_to_update = entities_in_area & self.entity_manager.get_by_tag('update')
+                for entity in entities_to_update:
                     entity.handle('update', dt)
                 
-                items_to_draw = items_in_area.intersection(self.entity_manager.get_by_tag('draw')).union(self.entity_manager.get_by_tag('item')).union(self.entity_manager.get_by_tag('car'))
+                entities_to_draw = entities_in_area & self.entity_manager.get_by_tag('draw')
 
-                items_to_draw = sorted(items_to_draw, key=lambda entity: entity.y)
+                entities_to_draw = sorted(entities_to_draw, key=lambda entity: entity.y)
 
-                for entity in items_to_draw:
+                for entity in entities_to_draw:
                     entity.handle('draw', self.renderer.draw_surface)
 
                 self.renderer.render()

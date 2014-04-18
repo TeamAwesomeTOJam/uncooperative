@@ -1,13 +1,13 @@
 #from OpenGL import *;
 
 import pygame
-from random import randint
 from camera import Camera
 from gridgen import GridGenerator
 from entity import Entity
 from vec2d import Vec2d
 
 class Render:
+    
     def __init__(self, game):
         self.game = game
         self.screen = self.game.screen
@@ -18,8 +18,6 @@ class Render:
         self.world_surface = pygame.Surface(self.world_size)
         self.world_surface.convert()
         self.grid = GridGenerator(self.map_size).genMap()
-        
-        self.tiles = []
         
         for x in range(self.map_size[0]):
             for y in range(self.map_size[1]):
@@ -78,9 +76,9 @@ class Render:
                 else:
                     #passable
                     tile = Entity('passabletile', x=x*self.tile_size[0], y=y*self.tile_size[1])
-                self.tiles.append(tile)
+                self.game.entity_manager.add_entity(tile)
         
-        for t in self.tiles:
+        for t in self.game.entity_manager.get_by_tag('tile'):
             t.handle('draw', self.world_surface)
 
         self.minimap_scale = 0.025
@@ -92,9 +90,7 @@ class Render:
             self.minimap = pygame.transform.scale(self.world_surface,self.minimap_size)
 
         self.cameras = [Camera(p) for p in self.game.entity_manager.get_by_tag('player')]
-#        self.cameras = [Camera(500,500) for m in xrange(4)]
         self.draw_surface = self.world_surface.copy()
-
 
     def render(self):
         offx = int(self.screen_size[0] / 2)
@@ -108,7 +104,6 @@ class Render:
         self.screen.blit(self.draw_surface,(0,offy),rect)
         rect.center = self.cameras[3].pos()
         self.screen.blit(self.draw_surface,(offx,offy),rect)
-        
         
         #draw the HUD
         
@@ -206,8 +201,4 @@ class Render:
             self.draw_surface.blit(self.world_surface,r,r)
             
 #         self.draw_surface = self.world_surface.copy()
-            
-            
-
-
 

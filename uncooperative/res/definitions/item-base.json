@@ -4,7 +4,6 @@
 					"width" : 20, "height" : 20,
 					"image_x" : -7, "image_y" : -10,
 	"components" : ["DrawComponent",
-					"ItemComponent",
-                    "StaticCollisionComponent"],
-    "tags" : ["draw", "item", "update"]
+					"ItemComponent"],
+    "tags" : ["draw", "item", "update", "collide"]
 }
