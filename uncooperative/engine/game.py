@@ -126,11 +126,13 @@ class Game(object):
                         for entity in self.entity_manager.get_by_tag('input'):
                             entity.handle('input', event)  
 
-                entities_in_view = set()
-                for view in self.renderer.views:
-                    entities_in_view.update(view.entities_in_view())
+                entities_to_update = set()
+                for player in self.entity_manager.get_by_tag('player'):
+                    update_area = pygame.Rect(0, 0, 800, 800)
+                    update_area.center = (player.x, player.y)
+                    entities_to_update.update(self.entity_manager.get_in_area('update', update_area, precise=False))
                     
-                for entity in (entities_in_view & self.entity_manager.get_by_tag('update')) | self.entity_manager.get_by_tag('item') | {self.entity_manager.get_by_name('car')}:
+                for entity in entities_to_update:
                     entity.handle('update', dt)
 
                 self.renderer.render()

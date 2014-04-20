@@ -121,12 +121,6 @@ class View(object):
             layer.draw(self)
             
         self.surface.set_clip(None)
-    
-    def entities_in_view(self):
-        entities_in_view = set()
-        for layer in self.layers:
-            entities_in_view.update(layer.entities_to_draw(self))
-        return entities_in_view
 
 
 class StaticLayer(object):
@@ -146,9 +140,6 @@ class StaticLayer(object):
         area_to_blit = pygame.Rect(view.area)
         area_to_blit.center = (view.entity.x, view.entity.y)
         view.surface.blit(self.surface, view.area, area_to_blit)
-
-    def entities_to_draw(self, view):
-        return set()
     
 
 class DepthSortedLayer(object):
@@ -160,18 +151,12 @@ class DepthSortedLayer(object):
         area_to_blit = pygame.Rect(view.area)
         area_to_blit.center = (view.entity.x, view.entity.y)   
 
-        entities_to_draw = sorted(self.entities_to_draw(view), key=lambda entity: entity.y)
+        entities_to_draw = sorted(game.get_game().entity_manager.get_in_area(self.tag, area_to_blit, precise=False), key=lambda entity: entity.y)
 
         transform = lambda x, y : (x - area_to_blit.x + view.area.x, y - area_to_blit.y + view.area.y)
         
         for entity in entities_to_draw:
             entity.handle('draw', view.surface, transform)
-
-    def entities_to_draw(self, view):
-        area_to_blit = pygame.Rect(view.area)
-        area_to_blit.center = (view.entity.x, view.entity.y)
-          
-        return game.get_game().entity_manager.get_in_area(self.tag, area_to_blit, precise=False)
         
 
 class UILayer(object):
@@ -244,6 +229,3 @@ class UILayer(object):
             text_rect.center = offset + Vec2d(width/2,height/2)
     
             view.surface.blit(text_surface,text_rect)
-            
-    def entities_to_draw(self, view):
-        return set()
