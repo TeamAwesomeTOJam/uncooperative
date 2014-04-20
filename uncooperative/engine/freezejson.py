@@ -12,6 +12,8 @@ def freeze_value(value):
         return _freeze_object(value)
     elif isinstance(value, list):
         return _freeze_array(value)
+    elif isinstance(value, unicode):
+        return value.encode('ascii', 'ignore')
     else:
         return value
     

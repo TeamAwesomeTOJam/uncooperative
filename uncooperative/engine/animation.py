@@ -27,15 +27,18 @@ class AnimationComponent(object):
                 entity.animation_pos = entity.animation_pos % getattr(entity.animations, entity.current_animation).duration
             else:
                 entity.handle('animation-finished', entity.current_animation)
-                entity.current_animation = entity.name+'default'
+                entity.current_animation = 'default'
                 entity.animation_pos = 0
                 entity.animation_should_loop = True
         frame_number = int(entity.animation_pos / getattr(entity.animations, entity.current_animation).duration * len(getattr(entity.animations, entity.current_animation).frames))
         entity.image = getattr(entity.animations, entity.current_animation).frames[frame_number]
         
     def on_play_animation(self, entity, animation, loop=False):
-        entity.current_animation = animation
-        entity.animation_should_loop = loop
-        entity.animation_pos = 0
+        if animation == entity.current_animation and entity.animation_should_loop and loop:
+            pass
+        else:
+            entity.current_animation = animation
+            entity.animation_should_loop = loop
+            entity.animation_pos = 0
         
         

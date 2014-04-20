@@ -38,8 +38,7 @@ class MovementComponent(object):
             entity.y += entity.dy * dt
             game.get_game().entity_manager.update_position(entity)
             
-            collisions = (game.get_game().entity_manager.get_in_area((entity.x, entity.y, entity.width, entity.height)) 
-                          & game.get_game().entity_manager.get_by_tag('collide'))
+            collisions = game.get_game().entity_manager.get_in_area('collide', (entity.x, entity.y, entity.width, entity.height)) - {entity} 
             for collided_entity in collisions:
                 collided_entity.handle('collision', entity)
                 entity.handle('collision', collided_entity)
@@ -87,9 +86,8 @@ class DrawComponent(object):
     def remove(self, entity):
         entity.unregister_handler('draw', self.handle_draw)
         
-    def handle_draw(self, entity, surface):
-        surface.blit(game.get_game().resource_manager.get('sprite', entity.image), 
-                     (entity.x + entity.image_x, entity.y + entity.image_y))
+    def handle_draw(self, entity, surface, transform):
+        surface.blit(game.get_game().resource_manager.get('sprite', entity.image), transform(entity.x + entity.image_x, entity.y + entity.image_y))
 
 
 class DrawHitBoxComponent(object):
@@ -202,11 +200,14 @@ class PlayerCollisionComponent(object):
         entity.unregister_handler('collision', self.handle_collision)
 
     def handle_collision(self, entity, colliding_entity):
+        if colliding_entity == entity.carrying_item:
+            return
+        
         if 'car' in colliding_entity.tags:
             colliding_entity.handle('use', entity.carrying_item, entity)
         
-        y_axis_collisions = game.get_game().entity_manager.get_in_area((entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
-        x_axis_collisions = game.get_game().entity_manager.get_in_area((entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
+        y_axis_collisions = game.get_game().entity_manager.get_in_area('collide', (entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
+        x_axis_collisions = game.get_game().entity_manager.get_in_area('collide', (entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
         
         if len(x_axis_collisions) > 0:
             entity.x = entity.last_good_x
@@ -229,8 +230,8 @@ class ZombieCollisionComponent(object):
     def handle_collision(self, entity, colliding_entity):
         # zombies can't collide with other zombies
         if not 'zombie' in colliding_entity.tags and not 'item' in colliding_entity.tags:
-            y_axis_collisions = game.get_game().entity_manager.get_in_area((entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
-            x_axis_collisions = game.get_game().entity_manager.get_in_area((entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
+            y_axis_collisions = game.get_game().entity_manager.get_in_area('collide', (entity.last_good_x, entity.y, entity.width, entity.height)) - {entity}
+            x_axis_collisions = game.get_game().entity_manager.get_in_area('collide', (entity.x, entity.last_good_y, entity.width, entity.height)) - {entity}
             
             if len(x_axis_collisions) > 0:
                 entity.x = entity.last_good_x
@@ -272,6 +273,7 @@ class ItemComponent(object):
             box_in_front = get_box_in_front(entity.carrying_player, entity.width, entity.height)
 
             entity.x, entity.y = box_in_front[0], box_in_front[1]
+            game.get_game().entity_manager.update_position(entity)
 
 
 class CarComponent(object):
@@ -306,7 +308,6 @@ class CarComponent(object):
                 game.get_game().entity_manager.remove_entity(item)
                 game.get_game().component_manager.remove('DrawComponent', item)
                 game.get_game().component_manager.remove('ItemComponent', item)
-                game.get_game().component_manager.remove('StaticCollisionComponent', item)
                 
                 entity.image = CAR_IMAGES[len(entity.items)]
                 
@@ -410,7 +411,7 @@ def get_entities_in_front(entity):
     COLLIDE_BOX_HEIGHT = 100
     collision_box = get_box_in_front(entity, COLLIDE_BOX_WIDTH, COLLIDE_BOX_HEIGHT)
 
-    return game.get_game().entity_manager.get_in_area(collision_box)
+    return game.get_game().entity_manager.get_in_area('collide', collision_box)
 
 def get_box_in_front(entity, width, height):
     midpoint = get_midpoint(entity)

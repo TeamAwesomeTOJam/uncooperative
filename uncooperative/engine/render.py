@@ -1,22 +1,20 @@
-#from OpenGL import *;
+import sys
 
 import pygame
-from camera import Camera
 from gridgen import GridGenerator
 from entity import Entity
 from vec2d import Vec2d
+import game
+
 
 class Render:
     
     def __init__(self, game):
         self.game = game
-        self.screen = self.game.screen
         self.tile_size = game.tile_size
         self.map_size = game.map_size
         self.screen_size = game.screen_size
         self.world_size = game.world_size
-        self.world_surface = pygame.Surface(self.world_size)
-        self.world_surface.convert()
         self.grid = GridGenerator(self.map_size).genMap()
         
         for x in range(self.map_size[0]):
@@ -77,128 +75,175 @@ class Render:
                     #passable
                     tile = Entity('passabletile', x=x*self.tile_size[0], y=y*self.tile_size[1])
                 self.game.entity_manager.add_entity(tile)
-        
-        for t in self.game.entity_manager.get_by_tag('tile'):
-            t.handle('draw', self.world_surface)
 
         self.minimap_scale = 0.025
         self.minimap_size = Vec2d(int(self.minimap_scale*self.world_size[0]),int(self.minimap_scale*self.world_size[1]))
         
+        layers = [StaticLayer(game.world_size, 'tile'), DepthSortedLayer('draw'), UILayer()]
+        
         try:
-            self.minimap = pygame.transform.smoothscale(self.world_surface,self.minimap_size)
+            self.minimap = pygame.transform.smoothscale(layers[0].surface, self.minimap_size)
         except:
-            self.minimap = pygame.transform.scale(self.world_surface,self.minimap_size)
+            self.minimap = pygame.transform.scale(layers[0].surface, self.minimap_size)
 
-        self.cameras = [Camera(p) for p in self.game.entity_manager.get_by_tag('player')]
-        self.draw_surface = self.world_surface.copy()
+        self.views = []
+        self.views.append(View(game.screen, pygame.Rect(0, 0, game.screen_size[0]/2, game.screen_size[1]/2), layers, 'player1'))
+        self.views.append(View(game.screen, pygame.Rect(game.screen_size[0]/2, 0, game.screen_size[0]/2, game.screen_size[1]/2), layers, 'player2'))
+        self.views.append(View(game.screen, pygame.Rect(0, game.screen_size[1]/2, game.screen_size[0]/2, game.screen_size[1]/2), layers, 'player3'))
+        self.views.append(View(game.screen, pygame.Rect(game.screen_size[0]/2, game.screen_size[1]/2, game.screen_size[0]/2, game.screen_size[1]/2), layers, 'player4'))
 
     def render(self):
-        offx = int(self.screen_size[0] / 2)
-        offy = int(self.screen_size[1] / 2)
-        rect = pygame.Rect(0,0,offx,offy)
-        rect.center = self.cameras[0].pos()
-        self.screen.blit(self.draw_surface,(0,0),rect)
-        rect.center = self.cameras[1].pos()
-        self.screen.blit(self.draw_surface,(offx,0),rect)
-        rect.center = self.cameras[2].pos()
-        self.screen.blit(self.draw_surface,(0,offy),rect)
-        rect.center = self.cameras[3].pos()
-        self.screen.blit(self.draw_surface,(offx,offy),rect)
-        
-        #draw the HUD
-        
-        for player in self.game.entity_manager.get_by_tag('player'):
-            offset = Vec2d(0,0)
-            if player.name == 'player1':
-                offset = Vec2d(0,0)
-            elif player.name == 'player2':
-                offset = Vec2d(self.screen_size[0]/2,0)
-            elif player.name == 'player3':
-                offset = Vec2d(0,self.screen_size[1]/2)
-            elif player.name == 'player4':
-                offset = Vec2d(self.screen_size[0]/2,self.screen_size[1]/2)
-            width = self.screen_size[0]/2
-            height = self.screen_size[1]/2
-            
-            rect = pygame.Rect(offset,(width,height))
-            pygame.draw.rect(self.screen,(255,255,255),rect,3)
-
-            player_pos = Vec2d(player.x, player.y)
-            
-            if player.carrying_item or not self.game.entity_manager.get_by_tag('item'):
-                car = self.game.entity_manager.get_by_name('car')
-                dest_pos = Vec2d(car.x, car.y)
-            else:
-                item = self.game.entity_manager.get_by_tag('item').__iter__().next()
-                p = Vec2d(item.x, item.y)
-                d = player_pos - p
-                min = d.length
-                min_pos = p
-                for item in self.game.entity_manager.get_by_tag('item'):
-                    p = Vec2d(item.x,item.y)
-                    d = player_pos - p
-                    if d.length < min:
-                        min = d.length
-                        min_pos = p
-                dest_pos = min_pos
-            direction = dest_pos - player_pos
-            
-            compass_surface = pygame.transform.rotate(self.game.resource_manager.get('sprite','compass.png'),-1*direction.angle - 90)
-            compass_rect = compass_surface.get_rect()
-            
-            
-            radar_offset = offset + Vec2d(width - 30,30)
-            compass_rect.center = radar_offset
-            
-            pygame.draw.circle(self.screen,(0,0,0),radar_offset,20)
-            self.screen.blit(compass_surface,compass_rect)
-            
-            minimap_offset = offset + Vec2d(10,height - self.minimap_size[1] - 10)
-            
-            self.screen.blit(self.minimap,minimap_offset)
-            
-            player_minimap_pos = self.minimap_scale*player_pos
-            player_minimap_pos = Vec2d(int(player_minimap_pos[0]),int(player_minimap_pos[1]))
-            
-            pygame.draw.circle(self.screen,(255,0,0),minimap_offset+player_minimap_pos,1)
-            
-            #for z in self.game.zombies:
-            #    zombie_minimap_pos = self.minimap_scale*Vec2d(z.x,z.y)
-            #    zombie_minimap_pos = Vec2d(int(zombie_minimap_pos[0]),int(zombie_minimap_pos[1]))
-            #    pygame.draw.circle(self.screen,(0,255,0),minimap_offset+zombie_minimap_pos,1)
-            
-            health_pos = Vec2d(15,15)
-            
-            health_bar_rect = pygame.Rect(offset+health_pos,(100,10))
-            health_rect = pygame.Rect((0,0),(player.health,10))
-            health_rect.inflate_ip(-2,-2)
-            health_rect.midleft = health_bar_rect.midleft + Vec2d(2,0)
-            
-            pygame.draw.rect(self.screen,(0,0,0),health_bar_rect)
-            if player.health > 0:
-                pygame.draw.rect(self.screen,(255,0,0),health_rect)
-                
-            # you lose
-            if player.dead:
-                text_surface = self.game.resource_manager.get('sprite','Text/YouLose.png')
-                text_rect = text_surface.get_rect()
-                text_rect.center = offset + Vec2d(width/2,height/2)
-                
-                self.screen.blit(text_surface,text_rect)
-            elif player.win:
-                text_surface = self.game.resource_manager.get('sprite','Text/YouWin.png')
-                text_rect = text_surface.get_rect()
-                text_rect.center = offset + Vec2d(width/2,height/2)
-
-                self.screen.blit(text_surface,text_rect)
+        for view in self.views:
+            view.draw()
             
         pygame.display.flip()
-        
-        for c in range(4):
-            r = pygame.Rect((0,0),self.screen_size)
-            r.center = self.cameras[c].pos()
-        
-            self.draw_surface.blit(self.world_surface,r,r)
-            
-#         self.draw_surface = self.world_surface.copy()
 
+
+class View(object):
+    
+    def __init__(self, surface, area, layers, entity_name):
+        self.surface = surface
+        self.area = area
+        self.layers = layers
+        self.entity_name = entity_name
+    
+    @property
+    def entity(self):
+        return game.get_game().entity_manager.get_by_name(self.entity_name)
+    
+    def add_layer(self, layer):
+        self.layers.append(layer)
+        
+    def draw(self):
+        self.surface.set_clip(self.area)
+        
+        for layer in self.layers:
+            layer.draw(self)
+            
+        self.surface.set_clip(None)
+    
+    def entities_in_view(self):
+        entities_in_view = set()
+        for layer in self.layers:
+            entities_in_view.update(layer.entities_to_draw(self))
+        return entities_in_view
+
+
+class StaticLayer(object):
+    
+    def __init__(self, size, tag):
+        self.size = size
+        self.tag = tag
+        self.surface = pygame.Surface(self.size)
+        self.surface.convert()
+        
+        transform = lambda x, y : (x, y)
+        
+        for entity in game.get_game().entity_manager.get_by_tag(tag):
+            entity.handle('draw', self.surface, transform)
+        
+    def draw(self, view):
+        area_to_blit = pygame.Rect(view.area)
+        area_to_blit.center = (view.entity.x, view.entity.y)
+        view.surface.blit(self.surface, view.area, area_to_blit)
+
+    def entities_to_draw(self, view):
+        return set()
+    
+
+class DepthSortedLayer(object):
+    
+    def __init__(self, tag):
+        self.tag = tag
+        
+    def draw(self, view):
+        area_to_blit = pygame.Rect(view.area)
+        area_to_blit.center = (view.entity.x, view.entity.y)   
+
+        entities_to_draw = sorted(self.entities_to_draw(view), key=lambda entity: entity.y)
+
+        transform = lambda x, y : (x - area_to_blit.x + view.area.x, y - area_to_blit.y + view.area.y)
+        
+        for entity in entities_to_draw:
+            entity.handle('draw', view.surface, transform)
+
+    def entities_to_draw(self, view):
+        area_to_blit = pygame.Rect(view.area)
+        area_to_blit.center = (view.entity.x, view.entity.y)
+          
+        return game.get_game().entity_manager.get_in_area(self.tag, area_to_blit, precise=False)
+        
+
+class UILayer(object):
+
+    def draw(self, view):
+        player = view.entity
+        offset = Vec2d(view.area.left, view.area.top)
+        width = view.area.width
+        height = view.area.height
+        
+        rect = view.area
+        pygame.draw.rect(view.surface, (255,255,255), rect, 3)
+    
+        player_pos = Vec2d(player.x, player.y)
+        
+        if player.carrying_item or not game.get_game().entity_manager.get_by_tag('item'):
+            car = game.get_game().entity_manager.get_by_name('car')
+            dest_pos = Vec2d(car.x, car.y)
+        else:
+            min_distance = sys.maxint
+            for item in game.get_game().entity_manager.get_by_tag('item'):
+                position = Vec2d(item.x,item.y)
+                distance = player_pos - position
+                if distance.length < min_distance:
+                    min_distance = distance.length
+                    min_pos = position
+            dest_pos = min_pos
+        direction = dest_pos - player_pos
+        
+        compass_surface = pygame.transform.rotate(game.get_game().resource_manager.get('sprite','compass.png'),-1*direction.angle - 90)
+        compass_rect = compass_surface.get_rect()
+        
+        
+        radar_offset = offset + Vec2d(width - 30,30)
+        compass_rect.center = radar_offset
+        
+        pygame.draw.circle(view.surface,(0,0,0),radar_offset,20)
+        view.surface.blit(compass_surface,compass_rect)
+        
+        minimap_offset = offset + Vec2d(10,height - game.get_game().renderer.minimap_size[1] - 10)
+        
+        view.surface.blit(game.get_game().renderer.minimap, minimap_offset)
+        
+        player_minimap_pos = game.get_game().renderer.minimap_scale*player_pos
+        player_minimap_pos = Vec2d(int(player_minimap_pos[0]),int(player_minimap_pos[1]))
+        
+        pygame.draw.circle(view.surface,(255,0,0),minimap_offset+player_minimap_pos,1)
+        
+        health_pos = Vec2d(15,15)
+        
+        health_bar_rect = pygame.Rect(offset+health_pos,(100,10))
+        health_rect = pygame.Rect((0,0),(player.health,10))
+        health_rect.inflate_ip(-2,-2)
+        health_rect.midleft = health_bar_rect.midleft + Vec2d(2,0)
+        
+        pygame.draw.rect(view.surface,(0,0,0),health_bar_rect)
+        if player.health > 0:
+            pygame.draw.rect(view.surface,(255,0,0),health_rect)
+            
+        # you lose
+        if player.dead:
+            text_surface = game.get_game().resource_manager.get('sprite','Text/YouLose.png')
+            text_rect = text_surface.get_rect()
+            text_rect.center = offset + Vec2d(width/2,height/2)
+            
+            view.surface.blit(text_surface,text_rect)
+        elif player.win:
+            text_surface = game.get_game().resource_manager.get('sprite','Text/YouWin.png')
+            text_rect = text_surface.get_rect()
+            text_rect.center = offset + Vec2d(width/2,height/2)
+    
+            view.surface.blit(text_surface,text_rect)
+            
+    def entities_to_draw(self, view):
+        return set()

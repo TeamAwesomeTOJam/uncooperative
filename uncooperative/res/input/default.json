@@ -1,9 +1,34 @@
 {
     "KEY 27": ["GAME", "QUIT"],
+    "KEY 292" : ["GAME", "FULLSCREEN"],
+    "KEY 293" : ["GAME", "RELOAD"],
+    
     "KEY 119": ["player1", "UP"],
     "KEY 115": ["player1", "DOWN"],
     "KEY 97": ["player1", "LEFT"],
     "KEY 100": ["player1", "RIGHT"],
     "KEY 113": ["player1", "USE"],
-    "KEY 101": ["player1", "PICKUP"]
+    "KEY 101": ["player1", "PICKUP"],
+    
+    "KEY 273" : ["player2", "UP"],
+    "KEY 274" : ["player2", "DOWN"],
+    "KEY 276" : ["player2", "LEFT"],
+    "KEY 275" : ["player2", "RIGHT"],
+    "KEY 62" : ["player2", "USE"],
+    "KEY 47" : ["player2", "PICKUP"],
+    
+    "0 AXIS -1" : ["player3", "UP"],
+    "0 AXIS +1" : ["player3", "DOWN"],
+    "0 AXIS -0" : ["player3", "LEFT"],
+    "0 AXIS +0" : ["player3", "RIGHT"],
+    "0 BUTTON 0" : ["player3", "USE"],
+    "0 BUTTON 1" : ["player3", "PICKUP"],
+    
+    "1 AXIS -1" : ["player3", "UP"],
+    "1 AXIS +1" : ["player3", "DOWN"],
+    "1 AXIS -0" : ["player3", "LEFT"],
+    "1 AXIS +0" : ["player3", "RIGHT"],
+    "1 BUTTON 0" : ["player3", "USE"],
+    "1 BUTTON 1" : ["player3", "PICKUP"]
+    
 }

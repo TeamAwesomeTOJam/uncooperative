@@ -31,13 +31,13 @@ class InputManager:
     def process_events(self):
         self._input_map = game.get_game().resource_manager.get('inputmap', 'default')
         processed_events = []
-        
+
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 processed_events.append(InputEvent('GAME', 'QUIT', 1))
             if e.type == pygame.JOYAXISMOTION:
                 control_type = 'AXIS'
-                device_id = e.which
+                device_id = e.joy
                 value, _ = self._normalize_axis(e.value, 0)
                 if value >= 0:
                     event = self._new_event(device_id, control_type, "+%d" % e.axis, value)
@@ -47,11 +47,11 @@ class InputManager:
                 if event != None:
                     processed_events.append(event) 
             elif e.type == pygame.JOYBUTTONDOWN:
-                event = self._new_event(e.which, 'BUTTON', e.button, 1)
+                event = self._new_event(e.joy, 'BUTTON', e.button, 1)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.JOYBUTTONUP:
-                event = self._new_event(e.which, 'BUTTON', e.button, 0)
+                event = self._new_event(e.joy, 'BUTTON', e.button, 0)
                 if event != None:
                     processed_events.append(event)
             elif e.type == pygame.KEYDOWN:

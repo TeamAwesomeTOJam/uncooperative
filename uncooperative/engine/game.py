@@ -116,28 +116,22 @@ class Game(object):
                 events = self.input_manager.process_events()
                 for event in events:
                     if event.target == 'GAME':
-                        if event.action == 'QUIT':
+                        if event.action == 'QUIT' and event.value > 0:
                             sys.exit()
+                        elif event.action == 'FULLSCREEN' and event.value > 0:
+                            pygame.display.toggle_fullscreen()
+                        elif event.action == 'RELOAD' and event.value > 0:
+                            self.resource_manager.clear()
                     else:
                         for entity in self.entity_manager.get_by_tag('input'):
                             entity.handle('input', event)  
-                
-                entities_in_area = set()
-                for c in range(4):
-                    r = pygame.Rect((0,0),self.screen_size)
-                    r.center = self.renderer.cameras[c].pos()
-                    entities_in_area.update(self.entity_manager.get_in_area(r, precise=False))
-                
-                entities_to_update = entities_in_area & self.entity_manager.get_by_tag('update')
-                for entity in entities_to_update:
+
+                entities_in_view = set()
+                for view in self.renderer.views:
+                    entities_in_view.update(view.entities_in_view())
+                    
+                for entity in (entities_in_view & self.entity_manager.get_by_tag('update')) | self.entity_manager.get_by_tag('item') | {self.entity_manager.get_by_name('car')}:
                     entity.handle('update', dt)
-                
-                entities_to_draw = entities_in_area & self.entity_manager.get_by_tag('draw')
-
-                entities_to_draw = sorted(entities_to_draw, key=lambda entity: entity.y)
-
-                for entity in entities_to_draw:
-                    entity.handle('draw', self.renderer.draw_surface)
 
                 self.renderer.render()
                 

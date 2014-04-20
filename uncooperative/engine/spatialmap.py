@@ -15,7 +15,10 @@ class SpatialMap(object):
         try:
             grid_squares = self._get_grid_squares((entity.x, entity.y, entity.width, entity.height))
             for square in grid_squares:
-                self.map.setdefault(square, set()).add(entity)
+                if square in self.map:
+                    self.map[square].add(entity)
+                else:
+                    self.map[square] = {entity}
                 
             self.reverse_map[entity] = grid_squares
         except AttributeError:
@@ -24,10 +27,12 @@ class SpatialMap(object):
     def remove(self, entity):
         try:
             for square in self.reverse_map[entity]:
-                self.map.setdefault(square, set()).discard(entity)            
+                if square in self.map:
+                    self.map[square].discard(entity)          
             
             for square in self._get_grid_squares((entity.x, entity.y, entity.width, entity.height)):
-                self.map.setdefault(square, set()).discard(entity)
+                if square in self.map:
+                    self.map[square].discard(entity) 
                 
             del self.reverse_map[entity]
         except AttributeError:
