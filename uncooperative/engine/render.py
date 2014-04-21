@@ -76,15 +76,12 @@ class Render:
                     tile = Entity('passabletile', x=x*self.tile_size[0], y=y*self.tile_size[1])
                 self.game.entity_manager.add_entity(tile)
 
-        self.minimap_scale = 0.025
-        self.minimap_size = Vec2d(int(self.minimap_scale*self.world_size[0]),int(self.minimap_scale*self.world_size[1]))
+
+        tile_layer = StaticLayer(game.world_size, 'tile')
+        mid_layer = DepthSortedLayer('draw')
+        ui_layer = UILayer(tile_layer, self.world_size) 
         
-        layers = [StaticLayer(game.world_size, 'tile'), DepthSortedLayer('draw'), UILayer()]
-        
-        try:
-            self.minimap = pygame.transform.smoothscale(layers[0].surface, self.minimap_size)
-        except:
-            self.minimap = pygame.transform.scale(layers[0].surface, self.minimap_size)
+        layers = [tile_layer, mid_layer, ui_layer]
 
         self.views = []
         self.views.append(View(game.screen, pygame.Rect(0, 0, game.screen_size[0]/2, game.screen_size[1]/2), layers, 'player1'))
@@ -161,6 +158,15 @@ class DepthSortedLayer(object):
 
 class UILayer(object):
 
+    def __init__(self, tile_layer, world_size):
+        self.minimap_scale = 0.025
+        self.minimap_size = Vec2d(int(self.minimap_scale*world_size[0]),int(self.minimap_scale*world_size[1]))
+        
+        try:
+            self.minimap = pygame.transform.smoothscale(tile_layer.surface, self.minimap_size)
+        except:
+            self.minimap = pygame.transform.scale(tile_layer.surface, self.minimap_size)
+
     def draw(self, view):
         player = view.entity
         offset = Vec2d(view.area.left, view.area.top)
@@ -196,11 +202,11 @@ class UILayer(object):
         pygame.draw.circle(view.surface,(0,0,0),radar_offset,20)
         view.surface.blit(compass_surface,compass_rect)
         
-        minimap_offset = offset + Vec2d(10,height - game.get_game().renderer.minimap_size[1] - 10)
+        minimap_offset = offset + Vec2d(10,height - self.minimap_size[1] - 10)
         
-        view.surface.blit(game.get_game().renderer.minimap, minimap_offset)
+        view.surface.blit(self.minimap, minimap_offset)
         
-        player_minimap_pos = game.get_game().renderer.minimap_scale*player_pos
+        player_minimap_pos = self.minimap_scale*player_pos
         player_minimap_pos = Vec2d(int(player_minimap_pos[0]),int(player_minimap_pos[1]))
         
         pygame.draw.circle(view.surface,(255,0,0),minimap_offset+player_minimap_pos,1)

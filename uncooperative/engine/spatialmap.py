@@ -26,7 +26,7 @@ class SpatialMap(object):
                 
     def remove(self, entity):
         try:
-            for square in self.reverse_map[entity] + self._get_grid_squares((entity.x, entity.y, entity.width, entity.height)):
+            for square in self.reverse_map[entity] | self._get_grid_squares((entity.x, entity.y, entity.width, entity.height)):
                 if square in self.map:
                     self.map[square].discard(entity)
                     if len(self.map[square]) == 0:
@@ -37,8 +37,21 @@ class SpatialMap(object):
             pass
     
     def update(self, entity):
-        self.remove(entity)
-        self.add(entity)     
+        old_squares = self.reverse_map[entity]
+        new_squares = self._get_grid_squares((entity.x, entity.y, entity.width, entity.height))
+        
+        for square in old_squares - new_squares:
+            self.map[square].discard(entity)
+            if len(self.map[square]) == 0:
+                del self.map[square]
+                
+        for square in new_squares - old_squares:
+            if square in self.map:
+                self.map[square].add(entity)
+            else:
+                self.map[square] = {entity}
+                
+        self.reverse_map[entity] = new_squares  
     
     def get(self, rect, precise=True):
         possible_intersections = set()
@@ -73,4 +86,4 @@ class SpatialMap(object):
         max_grid_x = int((rect[0] + rect[2]) / self.grid_size + 1)
         min_grid_y = int(rect[1] / self.grid_size)
         max_grid_y = int((rect[1] + rect[2]) / self.grid_size + 1)
-        return [(x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1)]
+        return set((x, y) for x in range(min_grid_x, max_grid_x + 1) for y in range(min_grid_y, max_grid_y + 1))
