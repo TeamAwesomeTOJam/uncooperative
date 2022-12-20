@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "uncooperative"
+version = "0.1.0"
+description = ""
+authors = ["Jonathan Doda <jonathan@jdoda.ca>"]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+pygame = "^2.1.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+pyinstaller = "^5.7"
+
+[tool.poetry.scripts]
+uncooperative = "uncooperative:run"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

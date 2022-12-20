@@ -1,6 +1,6 @@
 import pygame
 
-import game
+from . import game
 
 
 class AttractMode(object):

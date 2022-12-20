@@ -4,7 +4,7 @@ Created on May 2, 2013
 @author: jonathan
 '''
 
-import game
+from . import game
 
 
 class Entity(object):
@@ -13,7 +13,7 @@ class Entity(object):
         self._static_data_name = static_data_name      
         self._handlers = {}
         
-        for attribute, value in kwargs.items():
+        for attribute, value in list(kwargs.items()):
             setattr(self, attribute, value)
             
         if 'components' in self.__dict__ or 'components' in self.static._fields:

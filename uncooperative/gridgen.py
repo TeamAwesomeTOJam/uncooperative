@@ -1,7 +1,7 @@
-from grid import Grid
-from grid import Vec2
+from .grid import Grid
+from .grid import Vec2
 from random import randint, gauss, shuffle, random
-from vec2d import Vec2d
+from .vec2d import Vec2d
 
 
 class GridGenerator:
@@ -23,7 +23,7 @@ class GridGenerator:
         for m in range(-side.x,side.x):
             for n in range(-side.y,side.y):
                 try:
-                    self.grid[center.x+m][center.y+n] = 0
+                    self.grid[int(center.x+m)][int(center.y+n)] = 0
                 except IndexError:
                     continue
         
@@ -132,11 +132,11 @@ class GridGenerator:
 
     def genMap(self):
         
-        self.roomgridx = self.ni/self.roomgridnumtiles
-        self.roomgridy = self.nj/self.roomgridnumtiles
+        self.roomgridx = int(self.ni/self.roomgridnumtiles)
+        self.roomgridy = int(self.nj/self.roomgridnumtiles)
         self.visitedGrid = Grid(self.roomgridx,self.roomgridy)
-        currentroomx = self.roomgridx/2
-        currentroomy = self.roomgridy/2
+        currentroomx = int(self.roomgridx/2)
+        currentroomy = int(self.roomgridy/2)
         self.recurse(Vec2d(currentroomx,currentroomy))
         
         

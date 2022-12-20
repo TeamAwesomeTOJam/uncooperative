@@ -12,16 +12,14 @@ def freeze_value(value):
         return _freeze_object(value)
     elif isinstance(value, list):
         return _freeze_array(value)
-    elif isinstance(value, unicode):
-        return value.encode('ascii', 'ignore')
     else:
         return value
     
 def _freeze_object(obj):
-    for key, value in obj.items():
+    for key, value in list(obj.items()):
         obj[key] = freeze_value(value)
 
-    named_tuple = collections.namedtuple('object', obj.keys())
+    named_tuple = collections.namedtuple('object', list(obj.keys()))
     return named_tuple(**obj)
 
 def _freeze_array(array):

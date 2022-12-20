@@ -9,8 +9,8 @@ import os
 
 import pygame
 
-import freezejson
-import game
+from . import freezejson
+from . import game
 
 
 class ResourceManager(object):
@@ -40,13 +40,13 @@ def LoadEntityData(prefix, key):
         definition = json.load(in_file)
     
     if 'animations' in definition:
-        for animation in definition['animations'].values():
+        for animation in list(definition['animations'].values()):
             if 'frame_dir' in animation:
                 frame_dir = os.path.join(prefix, 'sprites', animation['frame_dir'])
                 frames = sorted(os.listdir(frame_dir))
                 animation['frames'] = []
                 for frame in frames:
-                    animation['frames'].append(os.path.join(frame_dir, frame))
+                    animation['frames'].append(os.path.join(animation['frame_dir'], frame))
     
     if 'includes' in definition:
         flattened = {}
@@ -54,7 +54,7 @@ def LoadEntityData(prefix, key):
             include = game.get_game().resource_manager.get('definition', include_name)
             for field in include._fields:
                 flattened[field] = getattr(include, field)
-        for key, value in definition.iteritems():
+        for key, value in definition.items():
             if key.endswith('+'):
                 base_key = key[:-1]
                 flattened[base_key] = flattened.get(base_key, tuple()) + tuple(value)

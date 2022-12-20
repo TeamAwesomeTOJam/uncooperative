@@ -1,9 +1,9 @@
-import game
+from . import game
 import pygame
 import random
 from math import *
 
-from vec2d import Vec2d
+from .vec2d import Vec2d
 
 
 FACING = ['right', 'down', 'left', 'up']
@@ -18,7 +18,7 @@ class ExampleComponent(object):
         entity.unregister_handler('update', self.handle_update)
     
     def handle_update(self, entity, dt):
-        print '%f seconds have elapsed!' % (dt,)
+        print('%f seconds have elapsed!' % (dt,))
 
 
 class AnimationComponent(object):

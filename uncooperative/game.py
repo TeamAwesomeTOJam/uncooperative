@@ -7,11 +7,11 @@ Created on May 2, 2013
 import sys
 import pygame
 
-import componentmanager
-from entitymanager import EntityManager
-from entity import Entity
-from resourcemanager import ResourceManager, LoadEntityData, LoadImage, LoadInputMapping, LoadSound
-from component import (AnimationComponent,
+from . import componentmanager
+from .entitymanager import EntityManager
+from .entity import Entity
+from .resourcemanager import ResourceManager, LoadEntityData, LoadImage, LoadInputMapping, LoadSound
+from .component import (AnimationComponent,
                        MovementComponent,
                        ExampleComponent, 
                        InputMovementComponent, 
@@ -26,8 +26,8 @@ from component import (AnimationComponent,
                        DeadComponent,
                        ZombieCollisionComponent)
 
-from render import Render
-from input import InputManager
+from .render import Render
+from .input import InputManager
 from random import randint
 
 
@@ -75,7 +75,6 @@ class Game(object):
         self.resource_manager.register_loader('sound', LoadSound)
 
         self.input_manager = InputManager()
-        self.input_manager.init_joysticks()
         
     def run(self, mode):
         #pygame.display.toggle_fullscreen()

@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import pygame
 
-import game
+from . import game
 
 
 DEADZONE = 0.15
@@ -15,18 +15,12 @@ class InputManager:
 
     def __init__(self):
         self._input_map = None
+        self._joysticks = []
         pygame.joystick.init()
         joystick_count = pygame.joystick.get_count()
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
-            joystick.init()
-
-    def init_joysticks(self):
-        pygame.joystick.init()
-        joystick_count = pygame.joystick.get_count()
-        for i in range(joystick_count):
-            joystick = pygame.joystick.Joystick(i)
-            joystick.init()
+            self._joysticks.append(joystick)
             
     def process_events(self):
         self._input_map = game.get_game().resource_manager.get('inputmap', 'default')

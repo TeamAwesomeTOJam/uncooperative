@@ -1,10 +1,10 @@
 import sys
 
 import pygame
-from gridgen import GridGenerator
-from entity import Entity
-from vec2d import Vec2d
-import game
+from .gridgen import GridGenerator
+from .entity import Entity
+from .vec2d import Vec2d
+from . import game
 
 
 class Render:
@@ -182,7 +182,7 @@ class UILayer(object):
             car = game.get_game().entity_manager.get_by_name('car')
             dest_pos = Vec2d(car.x, car.y)
         else:
-            min_distance = sys.maxint
+            min_distance = sys.maxsize
             for item in game.get_game().entity_manager.get_by_tag('item'):
                 position = Vec2d(item.x,item.y)
                 distance = player_pos - position

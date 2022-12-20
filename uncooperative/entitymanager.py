@@ -4,7 +4,7 @@ Created on May 2, 2013
 @author: jonathan
 '''
 
-import spatialmap
+from . import spatialmap
 
 
 GRID_SIZE = 32
